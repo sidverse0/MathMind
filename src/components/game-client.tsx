@@ -234,42 +234,42 @@ function GameClientContent() {
                 )}
 
                 {state.phase === 'pre-config' && (
-                    <div className={cn(phaseWrapperClass, "gap-8 max-w-2xl mx-auto relative")}>
+                    <div className={cn(phaseWrapperClass, "gap-8 max-w-3xl mx-auto relative")}>
                         <Button variant="ghost" size="icon" className="absolute top-0 right-0" onClick={backToConfig}>
                             <ArrowLeft className="h-6 w-6 text-muted-foreground" />
                             <span className="sr-only">Back to Categories</span>
                         </Button>
                         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
                             <h2 className="text-3xl md:text-4xl font-bold">Configure Challenge</h2>
-                            <p className="text-muted-foreground mt-2 text-lg">Set your preferences and get started.</p>
+                            <p className="text-muted-foreground mt-2 text-lg">Set your preferences for this round.</p>
                         </motion.div>
                         
                         <motion.div className="w-full grid md:grid-cols-2 gap-8" initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: 0.1 }}}}>
                            <motion.div variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }}>
-                             <Card className="p-6 text-left shadow-lg">
+                             <Card className="p-6 text-left shadow-lg h-full transition-all hover:border-primary/50">
                                  <CardHeader className="p-0 mb-4">
                                      <CardTitle>Difficulty</CardTitle>
                                      <CardDescription>How tough should the questions be?</CardDescription>
                                  </CardHeader>
-                                 <RadioGroup value={difficulty} onValueChange={(val) => setDifficulty(val as DifficultyLevel)} className="gap-3">
-                                     <div className="flex items-center space-x-2">
+                                 <RadioGroup value={difficulty} onValueChange={(val) => setDifficulty(val as DifficultyLevel)} className="gap-4">
+                                     <div className="flex items-center space-x-3">
                                          <RadioGroupItem value="easy" id="easy" />
-                                         <Label htmlFor="easy" className="text-base font-medium">Easy</Label>
+                                         <Label htmlFor="easy" className="text-base font-medium cursor-pointer">Easy</Label>
                                      </div>
-                                     <div className="flex items-center space-x-2">
+                                     <div className="flex items-center space-x-3">
                                          <RadioGroupItem value="medium" id="medium" />
-                                         <Label htmlFor="medium" className="text-base font-medium">Medium</Label>
+                                         <Label htmlFor="medium" className="text-base font-medium cursor-pointer">Medium</Label>
                                      </div>
-                                     <div className="flex items-center space-x-2">
+                                     <div className="flex items-center space-x-3">
                                          <RadioGroupItem value="hard" id="hard" />
-                                         <Label htmlFor="hard" className="text-base font-medium">Hard</Label>
+                                         <Label htmlFor="hard" className="text-base font-medium cursor-pointer">Hard</Label>
                                      </div>
                                  </RadioGroup>
                              </Card>
                            </motion.div>
                            
                             <motion.div variants={{ hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0 } }}>
-                                <Card className="p-6 text-left shadow-lg">
+                                <Card className="p-6 text-left shadow-lg h-full transition-all hover:border-primary/50">
                                     <CardHeader className="p-0 mb-4">
                                         <CardTitle>Number of Questions</CardTitle>
                                         <CardDescription>How many questions to solve?</CardDescription>
@@ -277,17 +277,17 @@ function GameClientContent() {
                                     <RadioGroup 
                                         value={isCustomQuestions ? 'custom' : String(numQuestions)} 
                                         onValueChange={handleNumQuestionsChange} 
-                                        className="gap-3"
+                                        className="gap-4"
                                     >
                                         {[10, 20, 30, 50].map(num => (
-                                            <div key={num} className="flex items-center space-x-2">
+                                            <div key={num} className="flex items-center space-x-3">
                                                 <RadioGroupItem value={String(num)} id={`q-${num}`} />
-                                                <Label htmlFor={`q-${num}`} className="text-base font-medium">{num} Questions</Label>
+                                                <Label htmlFor={`q-${num}`} className="text-base font-medium cursor-pointer">{num} Questions</Label>
                                             </div>
                                         ))}
-                                        <div className="flex items-center space-x-2">
+                                        <div className="flex items-center space-x-3">
                                             <RadioGroupItem value="custom" id="q-custom" />
-                                            <Label htmlFor="q-custom" className="text-base font-medium">Custom</Label>
+                                            <Label htmlFor="q-custom" className="text-base font-medium cursor-pointer">Custom</Label>
                                         </div>
                                     </RadioGroup>
                                     {isCustomQuestions && (
@@ -318,8 +318,8 @@ function GameClientContent() {
                             </motion.div>
                         </motion.div>
 
-                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0, transition: { delay: 0.2 } }}>
-                            <Button size="lg" className="w-full max-w-md text-lg shadow-lg" onClick={handleStartChallenge}>
+                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0, transition: { delay: 0.3 } }}>
+                            <Button size="lg" className="w-full max-w-md text-lg shadow-lg hover:shadow-primary/30 transition-shadow" onClick={handleStartChallenge}>
                                 Start Challenge
                             </Button>
                         </motion.div>
@@ -361,7 +361,7 @@ function GameClientContent() {
                         initial={{ opacity: 0, y: -20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
-                        className="text-2xl md:text-3xl font-bold my-4 md:my-6 p-4 bg-gradient-to-br from-primary/10 to-background rounded-2xl text-primary tracking-wider shadow-inner"
+                        className="text-xl md:text-2xl font-bold my-4 md:my-6 p-4 bg-gradient-to-br from-primary/10 to-background rounded-2xl text-primary tracking-wider shadow-inner"
                     >
                         {state.currentChallenge?.question}
                     </motion.div>
