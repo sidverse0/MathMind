@@ -3,13 +3,14 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Coins, Zap, Shield, Eye, Package, ShoppingCart } from "lucide-react";
+import { ArrowLeft, Coins, Zap, Shield, Eye, Package, ShoppingCart } from "lucide-react";
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useToast } from "@/hooks/use-toast";
 import type { PowerUpType } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 const COINS_KEY = 'mathmagix_coins';
 const INVENTORY_KEY = 'mathmagix_inventory';
@@ -80,7 +81,7 @@ export default function ShopPage() {
   return (
     <div className="flex flex-col gap-8">
       <motion.div 
-        className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
+        className="flex flex-row flex-wrap items-center justify-between gap-4"
         initial={{opacity: 0, y: -20}}
         animate={{opacity: 1, y: 0}}
       >
@@ -88,10 +89,18 @@ export default function ShopPage() {
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight flex items-center gap-3"><ShoppingCart className="h-8 w-8 text-primary" />Power-up Shop</h1>
             <p className="text-muted-foreground mt-2 text-base">Spend your coins on helpful power-ups.</p>
         </div>
-        <div className="flex items-center gap-2 p-3 rounded-xl bg-background shadow-lg border-2 border-yellow-400/50">
-            <Coins className="w-8 h-8 text-yellow-500" /> 
-            <span className="text-3xl font-bold tracking-tight">{coins.toLocaleString()}</span>
-            <span className="text-muted-foreground self-end pb-1">Coins</span>
+        <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 p-3 rounded-xl bg-background shadow-lg border-2 border-yellow-400/50">
+                <Coins className="w-8 h-8 text-yellow-500" /> 
+                <span className="text-3xl font-bold tracking-tight">{coins.toLocaleString()}</span>
+                <span className="text-muted-foreground self-end pb-1">Coins</span>
+            </div>
+            <Link href="/app" passHref>
+                <Button variant="ghost" size="icon" className="h-12 w-12">
+                    <ArrowLeft className="h-6 w-6" />
+                    <span className="sr-only">Back to Dashboard</span>
+                </Button>
+            </Link>
         </div>
       </motion.div>
       <motion.div 
