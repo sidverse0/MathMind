@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { LayoutDashboard, Plus, Minus, X, Divide, Sparkles, Sigma, Percent, FunctionSquare, SquareRadical, Braces, Square, RectangleHorizontal, Triangle, Circle, Combine, Milestone, Anchor, Key, BarChart, BetweenHorizontalStart, Pilcrow, UnfoldVertical, PercentCircle, Banknote, UtilityPole, Timer, Puzzle, LayoutGrid } from 'lucide-react';
+import { LayoutDashboard, Plus, Minus, X, Divide, Sparkles, Sigma, Percent, FunctionSquare, SquareRadical, Braces, Square, RectangleHorizontal, Triangle, Circle, Combine, Milestone, Anchor, Key, BarChart, BetweenHorizontalStart, Pilcrow, UnfoldVertical, PercentCircle, Banknote, UtilityPole, Timer, Puzzle, LayoutGrid, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import type { MathCategory } from '@/lib/types';
@@ -73,6 +73,12 @@ export default function CategoriesPage() {
                     <p className="text-muted-foreground mt-1 text-base">Pick a challenge to test your skills.</p>
                 </div>
             </div>
+            <Link href="/app" passHref>
+              <Button variant="ghost" size="icon">
+                <ArrowLeft className="h-6 w-6" />
+                <span className="sr-only">Back to Dashboard</span>
+              </Button>
+            </Link>
         </motion.div>
 
         {Object.entries(categoryGroups).map(([groupName, categories]) => (
