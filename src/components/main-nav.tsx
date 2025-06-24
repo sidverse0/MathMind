@@ -2,13 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Gamepad2, Trophy, Store, User } from 'lucide-react';
+import { LayoutDashboard, BrainCircuit, TrendingUp, Trophy, Store, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 
 const navItems = [
   { href: '/app', label: 'Dashboard', icon: <LayoutDashboard className="h-8 w-8" /> },
-  { href: '/app/play', label: 'Play', icon: <Gamepad2 className="h-8 w-8" /> },
+  { href: '/app/challenge', label: 'Challenge', icon: <BrainCircuit className="h-8 w-8" /> },
+  { href: '/app/progress', label: 'Progress', icon: <TrendingUp className="h-8 w-8" /> },
   { href: '/app/leaderboard', label: 'Leaderboard', icon: <Trophy className="h-8 w-8" /> },
   { href: '/app/shop', label: 'Shop', icon: <Store className="h-8 w-8" /> },
   { href: '/app/profile', label: 'Profile', icon: <User className="h-8 w-8" /> },
@@ -42,7 +43,7 @@ export function MainNav() {
       {navItems.map((item) => (
         <motion.div key={item.href} variants={itemVariants} whileHover={{scale: 1.03}} whileTap={{scale: 0.98}}>
             <Button
-              variant={pathname === item.href ? 'default' : 'outline'}
+              variant={pathname.startsWith(item.href) && (item.href !== '/app' || pathname === '/app') ? 'default' : 'outline'}
               className="w-full h-20 justify-start text-lg p-6 shadow-sm"
               asChild
             >

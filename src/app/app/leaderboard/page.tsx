@@ -8,13 +8,13 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const leaderboardData = [
-  { rank: 1, name: "Alex", score: 15420, avatar: "A" },
-  { rank: 2, name: "Maria", score: 14890, avatar: "M" },
-  { rank: 3, name: "You", score: 14500, avatar: "Y" },
-  { rank: 4, name: "David", score: 13900, avatar: "D" },
-  { rank: 5, name: "Sophia", score: 13750, avatar: "S" },
-  { rank: 6, name: "Liam", score: 12100, avatar: "L" },
-  { rank: 7, name: "Olivia", score: 11500, avatar: "O" },
+  { rank: 1, name: "Alex", score: 15420, avatar: "https://placehold.co/48x48.png", hint: "man portrait" },
+  { rank: 2, name: "Maria", score: 14890, avatar: "https://placehold.co/48x48.png", hint: "woman portrait" },
+  { rank: 3, name: "You", score: 14500, avatar: "https://placehold.co/48x48.png", hint: "smiling woman" },
+  { rank: 4, name: "David", score: 13900, avatar: "https://placehold.co/48x48.png", hint: "man glasses" },
+  { rank: 5, name: "Sophia", score: 13750, avatar: "https://placehold.co/48x48.png", hint: "woman red hair" },
+  { rank: 6, name: "Liam", score: 12100, avatar: "https://placehold.co/48x48.png", hint: "man smiling" },
+  { rank: 7, name: "Olivia", score: 11500, avatar: "https://placehold.co/48x48.png", hint: "woman curly hair" },
 ];
 
 export default function LeaderboardPage() {
@@ -50,7 +50,7 @@ export default function LeaderboardPage() {
         <Trophy className="h-10 w-10 text-yellow-500" />
         <div>
             <h1 className="text-4xl font-bold tracking-tight">Leaderboard</h1>
-            <p className="text-muted-foreground mt-1">See how you stack up against other players.</p>
+            <p className="text-muted-foreground mt-1">See how you stack up against the top MathMinds.</p>
         </div>
       </motion.div>
       <Card className="shadow-lg">
@@ -66,7 +66,6 @@ export default function LeaderboardPage() {
             <motion.tbody variants={containerVariants} initial="hidden" animate="visible">
               {leaderboardData.map((player) => (
                 <motion.tr 
-                    as={TableRow} 
                     key={player.rank} 
                     variants={itemVariants} 
                     className={cn(
@@ -85,8 +84,8 @@ export default function LeaderboardPage() {
                   <TableCell>
                     <div className="flex items-center gap-4">
                         <Avatar className={cn("h-12 w-12 border-4 shadow-md", getRankColor(player.rank))}>
-                            <AvatarImage src={`https://avatar.vercel.sh/${player.name}.png?size=48`} />
-                            <AvatarFallback>{player.avatar}</AvatarFallback>
+                            <AvatarImage src={player.avatar} data-ai-hint={player.hint} />
+                            <AvatarFallback>{player.name.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <span className="font-medium text-base">{player.name}</span>
                     </div>
