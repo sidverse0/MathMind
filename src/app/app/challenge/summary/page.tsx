@@ -124,23 +124,19 @@ function SummaryContent() {
                 <motion.div variants={itemVariants} className="lg:col-span-2">
                     <Card className="shadow-lg h-full">
                         <CardHeader>
-                            <CardTitle>Total Score & Coins</CardTitle>
-                             <CardDescription>Your rewards from this round.</CardDescription>
+                            <CardTitle>Your Rewards</CardTitle>
+                             <CardDescription>Your score and coins from this round.</CardDescription>
                         </CardHeader>
-                        <CardContent className="flex flex-col gap-4 justify-center h-full pt-4">
-                            <div className="flex items-center justify-between p-4 rounded-lg bg-secondary/50">
-                                <div className="flex items-center gap-3">
-                                    <Trophy className="h-6 w-6 text-orange-400" />
-                                    <span className="font-medium">Total Score</span>
-                                </div>
-                                <span className="font-bold text-xl">{score}</span>
+                        <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-6">
+                            <div className="flex flex-col items-center justify-center gap-2 p-6 rounded-xl bg-secondary/50 text-center h-full border hover:bg-secondary transition-colors">
+                                <Trophy className="h-8 w-8 text-orange-400" />
+                                <p className="text-sm font-medium text-muted-foreground">Total Score</p>
+                                <p className="font-bold text-3xl tracking-tight">{score}</p>
                             </div>
-                            <div className="flex items-center justify-between p-4 rounded-lg bg-secondary/50">
-                                <div className="flex items-center gap-3">
-                                    <Coins className="h-6 w-6 text-yellow-400" />
-                                    <span className="font-medium">Coins Earned</span>
-                                </div>
-                                <span className="font-bold text-xl">{coins}</span>
+                            <div className="flex flex-col items-center justify-center gap-2 p-6 rounded-xl bg-secondary/50 text-center h-full border hover:bg-secondary transition-colors">
+                                <Coins className="h-8 w-8 text-yellow-400" />
+                                <p className="text-sm font-medium text-muted-foreground">Coins Earned</p>
+                                <p className="font-bold text-3xl tracking-tight">{coins}</p>
                             </div>
                         </CardContent>
                     </Card>
