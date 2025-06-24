@@ -63,9 +63,6 @@ export default function LandingPage() {
             </h1>
           </Link>
           <div className="flex items-center space-x-2">
-            <Link href="/app">
-              <Button variant="ghost">Sign In</Button>
-            </Link>
             <ThemeToggle />
           </div>
         </div>
