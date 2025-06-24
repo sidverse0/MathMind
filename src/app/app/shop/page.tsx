@@ -16,9 +16,9 @@ const INVENTORY_KEY = 'mathmagix_inventory';
 const DEFAULT_COINS = 500;
 
 const shopItems: { name: string; type: PowerUpType; description: string; price: number; icon: React.ReactNode; image: string; hint: string }[] = [
-    { name: "Extra Time", type: 'extraTime', description: "Get 5 extra seconds in the solve phase.", price: 50, icon: <Zap/>, image: "https://placehold.co/300x200.png", hint: "lightning bolt" },
-    { name: "Mistake Shield", type: 'mistakeShield', description: "Your first mistake won't count against you.", price: 100, icon: <Shield/>, image: "https://placehold.co/300x200.png", hint: "glowing shield" },
-    { name: "Number Reveal", type: 'numberReveal', description: "Briefly see the numbers one more time.", price: 200, icon: <Eye/>, image: "https://placehold.co/300x200.png", hint: "magic eye" },
+    { name: "Extra Time", type: 'extraTime', description: "Get 5 extra seconds in the solve phase.", price: 50, icon: <Zap/>, image: "https://files.catbox.moe/hi5fse.png", hint: "lightning bolt" },
+    { name: "Mistake Shield", type: 'mistakeShield', description: "Your first mistake won't count against you.", price: 100, icon: <Shield/>, image: "https://files.catbox.moe/ixplmb.jpg", hint: "glowing shield" },
+    { name: "Number Reveal", type: 'numberReveal', description: "Briefly see the numbers one more time.", price: 200, icon: <Eye/>, image: "https://files.catbox.moe/p4i1e6.png", hint: "magic eye" },
 ];
 
 const getInitialInventory = (): Record<PowerUpType, number> => ({
