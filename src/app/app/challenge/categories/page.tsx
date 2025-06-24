@@ -3,7 +3,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ArrowLeft, Plus, Minus, X, Divide, Sparkles, Sigma, Percent, FunctionSquare, SquareRoot, Braces, Square, RectangleHorizontal, Triangle, Circle, Combine, Milestone, Anchor, Key, BarChart, BetweenHorizontalStart, Pilcrow, UnfoldVertical, PercentCircle, Banknote, UtilityPole, Timer, Puzzle } from 'lucide-react';
+import { ArrowLeft, Plus, Minus, X, Divide, Sparkles, Sigma, Percent, FunctionSquare, SquareRadical, Braces, Square, RectangleHorizontal, Triangle, Circle, Combine, Milestone, Anchor, Key, BarChart, BetweenHorizontalStart, Pilcrow, UnfoldVertical, PercentCircle, Banknote, UtilityPole, Timer, Puzzle } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import type { MathCategory } from '@/lib/types';
@@ -24,7 +24,7 @@ const categoryGroups: Record<string, MathCategory[]> = {
 const categoryIcons: Record<MathCategory, React.ReactNode> = {
   addition: <Plus />, subtraction: <Minus />, multiplication: <X />, division: <Divide />, mixed: <Sparkles />,
   algebra: <Sigma />, percentages: <Percent />, exponents: <FunctionSquare />, fractions: <Sigma />, decimals: <Milestone />,
-  ratios: <BetweenHorizontalStart />, 'square-roots': <SquareRoot />, 'order-of-operations': <Braces />,
+  ratios: <BetweenHorizontalStart />, 'square-roots': <SquareRadical />, 'order-of-operations': <Braces />,
   'area-of-squares': <Square />, 'area-of-rectangles': <RectangleHorizontal />, 'area-of-triangles': <Triangle />,
   circumference: <Circle />, 'pythagorean-theorem': <Combine />, 'linear-equations': <Milestone />,
   'quadratic-equations': <Sigma />, 'prime-numbers': <Anchor />, 'factors': <Key />, 'multiples': <Pilcrow />,
