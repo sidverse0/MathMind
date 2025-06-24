@@ -73,12 +73,6 @@ export default function CategoriesPage() {
                     <p className="text-muted-foreground mt-1 text-base">Pick a challenge to test your skills.</p>
                 </div>
             </div>
-             <Link href="/app">
-                <Button variant="outline" className="shadow-sm">
-                    <LayoutDashboard className="mr-2 h-4 w-4" />
-                    Dashboard
-                </Button>
-            </Link>
         </motion.div>
 
         {Object.entries(categoryGroups).map(([groupName, categories]) => (

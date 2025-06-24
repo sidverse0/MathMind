@@ -222,10 +222,6 @@ function GameClientContent() {
 
                 {state.phase === 'pre-config' && (
                     <div className={cn(phaseWrapperClass, "gap-8 max-w-2xl mx-auto relative")}>
-                        <Button variant="ghost" size="icon" className="absolute top-4 right-4 text-muted-foreground" onClick={resetGame}>
-                            <ArrowLeft className="h-6 w-6" />
-                            <span className="sr-only">Back</span>
-                        </Button>
                         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
                             <h2 className="text-3xl md:text-4xl font-bold">Configure Challenge</h2>
                             <p className="text-muted-foreground mt-2 text-lg">Set your preferences and get started.</p>
