@@ -75,11 +75,6 @@ function GameClientContent() {
     const currentPhase = state.phase;
     const previousPhase = prevGameState.current.phase;
     const currentFeedback = state.feedback;
-
-    // Play flash sound when entering memorize phase
-    if (currentPhase === 'memorize' && previousPhase !== 'memorize') {
-      playSound('flash');
-    }
     
     // Play flash sound when entering solve phase
     if (currentPhase === 'solve' && previousPhase !== 'solve') {
@@ -150,7 +145,6 @@ function GameClientContent() {
   }, [state.phase, state.history, state.score, state.coins, state.totalQuestions, state.category, router, resetGame]);
 
   const handleOptionClick = (option: string) => {
-    playSound('click');
     submitAnswer(option);
   };
 
