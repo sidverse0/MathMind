@@ -1,11 +1,12 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { BrainCircuit, ArrowRight, Zap, Trophy, BarChart, Instagram, Youtube, Wand2 } from 'lucide-react';
+import { BrainCircuit, ArrowRight, Zap, Trophy, BarChart, Instagram, Youtube, Wand2, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 const featureCards = [
     {
@@ -63,6 +64,38 @@ export default function LandingPage() {
             </h1>
           </Link>
           <div className="flex items-center space-x-2">
+            <Popover>
+                <PopoverTrigger asChild>
+                    <Button variant="outline">
+                        <MessageCircle className="mr-2 h-4 w-4" />
+                        Contact Us
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-2">
+                    <div className="flex gap-2">
+                        <Button asChild variant="outline" size="icon" className="rounded-full">
+                            <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                                <Instagram />
+                            </a>
+                        </Button>
+                        <Button asChild variant="outline" size="icon" className="rounded-full">
+                            <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+                                <TelegramIcon />
+                            </a>
+                        </Button>
+                        <Button asChild variant="outline" size="icon" className="rounded-full">
+                            <a href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                                <WhatsAppIcon />
+                            </a>
+                        </Button>
+                        <Button asChild variant="outline" size="icon" className="rounded-full">
+                            <a href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                                <Youtube />
+                            </a>
+                        </Button>
+                    </div>
+                </PopoverContent>
+            </Popover>
             <ThemeToggle />
           </div>
         </div>
