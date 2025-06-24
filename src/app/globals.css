@@ -87,15 +87,3 @@
     -moz-osx-font-smoothing: grayscale;
   }
 }
-
-@layer utilities {
-  .scroller {
-    animation: scroll 40s linear infinite;
-  }
-
-  @keyframes scroll {
-    to {
-      transform: translate(calc(-50% - 0.5rem));
-    }
-  }
-}

@@ -1,37 +1,11 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { BrainCircuit, ArrowRight, Zap, Trophy, BarChart, Wand2, MessageCircle } from 'lucide-react';
+import { ArrowRight, Wand2, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Instagram, Youtube } from 'lucide-react';
-
-
-const featureCards = [
-    {
-        icon: <Zap className="h-8 w-8 text-primary" />,
-        title: "Adaptive Challenges",
-        description: "Our AI adjusts the difficulty based on your performance, keeping you engaged and always learning."
-    },
-    {
-        icon: <Trophy className="h-8 w-8 text-primary" />,
-        title: "Compete & Conquer",
-        description: "Climb the leaderboards, earn achievements, and see how you stack up against other MathMagicians."
-    },
-    {
-        icon: <BarChart className="h-8 w-8 text-primary" />,
-        title: "Track Your Progress",
-        description: "Detailed stats and beautiful charts help you visualize your improvement over time."
-    },
-    {
-        icon: <BrainCircuit className="h-8 w-8 text-primary" />,
-        title: "Diverse Categories",
-        description: "From basic arithmetic to advanced algebra, there's always a new challenge waiting for you."
-    }
-];
 
 const TelegramIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -43,15 +17,6 @@ const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
         <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
     </svg>
-);
-
-const Scroller = ({ children }: { children: React.ReactNode }) => (
-    <div className="scroller w-max">
-        <div className="flex gap-4 animate-scroll group-hover:pause">
-            {children}
-            {children}
-        </div>
-    </div>
 );
 
 export default function LandingPage() {
@@ -155,26 +120,6 @@ export default function LandingPage() {
                         </Button>
                     </Link>
                 </motion.div>
-            </div>
-        </section>
-        
-        <section className="py-12 md:py-16 bg-secondary/30 w-full overflow-hidden">
-            <div className="relative group">
-                <Scroller>
-                    {featureCards.map((feature, index) => (
-                        <Card key={index} className="w-[350px] flex-shrink-0 bg-card hover:border-primary/50 shadow-md hover:shadow-xl transition-all duration-300">
-                            <CardHeader className="flex flex-row items-center gap-4 p-6">
-                                <div className="p-3 bg-primary/10 rounded-full ring-4 ring-primary/5">
-                                    {feature.icon}
-                                </div>
-                                <CardTitle className="text-xl">{feature.title}</CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-6 pt-0">
-                                <p className="text-muted-foreground">{feature.description}</p>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </Scroller>
             </div>
         </section>
       </main>
