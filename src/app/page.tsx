@@ -5,23 +5,22 @@ import { BrainCircuit, ArrowRight, Zap, Trophy, BarChart, Instagram, Youtube } f
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import Image from 'next/image';
 
 const featureCards = [
     {
         icon: <Zap className="h-8 w-8 text-primary" />,
         title: "Adaptive Challenges",
-        description: "Our AI adjusts the difficulty based on your performance, keeping you engaged and learning."
+        description: "Our AI adjusts the difficulty based on your performance, keeping you engaged and always learning."
     },
     {
         icon: <Trophy className="h-8 w-8 text-primary" />,
         title: "Compete & Conquer",
-        description: "Climb the leaderboards and see how you stack up against other MathMinds."
+        description: "Climb the leaderboards, earn achievements, and see how you stack up against other MathMinds."
     },
     {
         icon: <BarChart className="h-8 w-8 text-primary" />,
         title: "Track Your Progress",
-        description: "Detailed stats and charts help you visualize your improvement over time."
+        description: "Detailed stats and beautiful charts help you visualize your improvement over time."
     }
 ];
 
@@ -43,18 +42,15 @@ export default function LandingPage() {
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container h-16 flex items-center">
-          <div className="mr-4 flex items-center">
+          <div className="mr-auto flex items-center">
             <BrainCircuit className="h-6 w-6 mr-2 text-primary" />
             <h1 className="text-xl font-bold tracking-tight font-headline">
               MathMind
             </h1>
           </div>
-          <div className="flex flex-1 items-center justify-end space-x-2">
+          <div className="flex items-center space-x-2">
             <Link href="/app">
               <Button variant="ghost">Sign In</Button>
-            </Link>
-             <Link href="/app">
-                <Button>Get Started</Button>
             </Link>
             <ThemeToggle />
           </div>
@@ -87,45 +83,59 @@ export default function LandingPage() {
                 >
                     <Link href="/app">
                         <Button size="lg" className="text-lg animate-pulse shadow-lg shadow-primary/30">
-                            Get Started for Free <ArrowRight className="ml-2" />
+                            Start Your Journey <ArrowRight className="ml-2" />
                         </Button>
                     </Link>
                 </motion.div>
             </div>
         </section>
         
-        <section className="container py-16">
-            <div className="grid md:grid-cols-2 gap-10 items-center">
-                <motion.div
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.7, delay: 0.3 }}
-                >
-                    <div className="relative h-[400px] w-full rounded-xl overflow-hidden shadow-2xl">
-                        <Image src="https://placehold.co/600x400.png" alt="Math Game" layout="fill" objectFit="cover" data-ai-hint="abstract brain"/>
-                    </div>
-                </motion.div>
-                <div className="grid gap-6">
-                    {featureCards.map((feature, index) => (
-                         <motion.div
-                            key={feature.title}
-                            initial={{ opacity: 0, x: 50 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
-                        >
-                            <Card className="bg-secondary/30 border-0 overflow-hidden">
-                                <CardHeader className="flex flex-row items-center gap-4 p-4">
-                                    <motion.div whileHover={{ scale: 1.2, rotate: 15 }} transition={{ type: "spring", stiffness: 300 }}>
-                                        {feature.icon}
-                                    </motion.div>
-                                    <div>
-                                        <CardTitle>{feature.title}</CardTitle>
-                                        <p className="text-muted-foreground text-sm mt-1">{feature.description}</p>
-                                    </div>
-                                </CardHeader>
-                            </Card>
-                        </motion.div>
-                    ))}
+        <section className="py-20 md:py-24 bg-secondary/30">
+            <div className="container">
+                <div className="max-w-3xl mx-auto text-center mb-16">
+                <h3 className="text-4xl md:text-5xl font-bold tracking-tight">Why MathMind?</h3>
+                <p className="mt-4 text-lg text-muted-foreground">
+                    We turn brain training into an exciting adventure. Here’s what makes us different.
+                </p>
+                </div>
+                <div className="grid md:grid-cols-3 gap-8">
+                {featureCards.map((feature, index) => (
+                    <motion.div
+                        key={feature.title}
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+                        whileHover={{ y: -5 }}
+                    >
+                    <Card className="h-full text-center bg-card hover:border-primary/50 shadow-md hover:shadow-xl transition-all duration-300">
+                        <CardHeader className="items-center p-6">
+                            <div className="p-4 bg-primary/10 rounded-full mb-4 ring-4 ring-primary/5">
+                                {feature.icon}
+                            </div>
+                            <CardTitle>{feature.title}</CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-6 pt-0">
+                            <p className="text-muted-foreground">{feature.description}</p>
+                        </CardContent>
+                    </Card>
+                    </motion.div>
+                ))}
+                </div>
+            </div>
+        </section>
+
+        <section className="py-20 md:py-32">
+            <div className="container text-center">
+                <h3 className="text-4xl md:text-5xl font-bold tracking-tight">Ready to Become a MathMind?</h3>
+                <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
+                    Join thousands of users sharpening their skills. It's free to get started!
+                </p>
+                <div className="mt-8">
+                    <Link href="/app">
+                        <Button size="lg" className="text-lg shadow-lg shadow-primary/30">
+                            Let's Go! <ArrowRight className="ml-2" />
+                        </Button>
+                    </Link>
                 </div>
             </div>
         </section>
