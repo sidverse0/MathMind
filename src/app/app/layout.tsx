@@ -21,14 +21,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <div className="flex items-center space-x-2">
             <ThemeToggle />
             <UserNav />
-            <Link href="/app/menu" passHref>
-              <Button variant="ghost" size="icon" asChild>
-                <a>
-                  <MoreVertical />
-                  <span className="sr-only">Menu</span>
-                </a>
-              </Button>
-            </Link>
+            <Button variant="ghost" size="icon" asChild>
+              <Link href="/app/menu">
+                <MoreVertical />
+                <span className="sr-only">Menu</span>
+              </Link>
+            </Button>
           </div>
         </div>
       </header>
