@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useGame } from '@/hooks/use-game';
@@ -5,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
-import { Plus, Minus, X, Divide, BrainCircuit, Trophy, Timer, CheckCircle, XCircle, Gamepad2, Sparkles, Sigma, Percent, FunctionSquare, ArrowRight } from 'lucide-react';
+import { Plus, Minus, X, Divide, BrainCircuit, Trophy, Timer, CheckCircle, XCircle, Gamepad2, Sparkles, Sigma, Percent, FunctionSquare, ArrowRight, Coins } from 'lucide-react';
 import type { MathCategory } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { FormEvent, useRef, useEffect } from 'react';
