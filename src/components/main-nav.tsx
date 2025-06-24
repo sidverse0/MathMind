@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, BrainCircuit, TrendingUp, Trophy, Store, User } from 'lucide-react';
+import { LayoutDashboard, BrainCircuit, TrendingUp, Trophy, Store } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 
@@ -12,7 +12,6 @@ const navItems = [
   { href: '/app/progress', label: 'Progress', icon: <TrendingUp className="h-6 w-6" /> },
   { href: '/app/leaderboard', label: 'Leaderboard', icon: <Trophy className="h-6 w-6" /> },
   { href: '/app/shop', label: 'Shop', icon: <Store className="h-6 w-6" /> },
-  { href: '/app/profile', label: 'Profile', icon: <User className="h-6 w-6" /> },
 ];
 
 export function MainNav() {
