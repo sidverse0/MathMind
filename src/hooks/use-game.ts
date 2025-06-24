@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useReducer, useCallback, useEffect } from 'react';
@@ -28,7 +29,8 @@ type GameAction =
   | { type: 'START_SOLVE' }
   | { type: 'SUBMIT_ANSWER'; payload: { answer: string; time: number } }
   | { type: 'TICK'; payload: number }
-  | { type: 'RESET' };
+  | { type: 'RESET' }
+  | { type: 'END_GAME' };
 
 function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
@@ -104,13 +106,18 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       const newTime = state.remainingTime - action.payload;
       if (newTime <= 0) {
         if (state.phase === 'memorize') return { ...gameReducer(state, { type: 'START_SOLVE' }) };
-        if (state.phase === 'solve') return { ...state, phase: 'result', feedback: 'timeup', remainingTime: 2000 };
+        if (state.phase === 'solve') {
+             const newHistory: PerformanceRecord[] = [...state.history, { correct: false, time: state.solveDuration, difficulty: state.difficulty }];
+             return { ...state, phase: 'result', feedback: 'timeup', history: newHistory, remainingTime: 2000 };
+        }
         if (state.phase === 'result') return { ...gameReducer(state, { type: 'NEXT_QUESTION' }) };
       }
       return { ...state, remainingTime: newTime };
     }
     case 'RESET':
       return { ...initialState };
+    case 'END_GAME':
+        return { ...state, phase: 'summary' };
     default:
       return state;
   }
@@ -527,6 +534,10 @@ export const useGame = () => {
     dispatch({ type: 'RESET' });
   }, []);
 
+  const endGame = useCallback(() => {
+    dispatch({ type: 'END_GAME' });
+  }, []);
+
   const submitAnswer = useCallback((answer: string) => {
     const timeTaken = Date.now() - state.startTime;
     dispatch({ type: 'SUBMIT_ANSWER', payload: { answer, time: timeTaken } });
@@ -542,5 +553,5 @@ export const useGame = () => {
     return () => clearInterval(timer);
   }, [state.phase, state.remainingTime]);
 
-  return { state, selectCategory, startConfiguredGame, submitAnswer, resetGame };
+  return { state, selectCategory, startConfiguredGame, submitAnswer, resetGame, endGame };
 };

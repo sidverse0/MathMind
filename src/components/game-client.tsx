@@ -56,7 +56,7 @@ const categoryIcons: Record<MathCategory, React.ReactNode> = {
 
 
 export function GameClient() {
-  const { state, selectCategory, startConfiguredGame, submitAnswer, resetGame } = useGame();
+  const { state, selectCategory, startConfiguredGame, submitAnswer, resetGame, endGame } = useGame();
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -70,6 +70,38 @@ export function GameClient() {
       router.replace('/app/challenge', { scroll: false });
     }
   }, [searchParams, state.phase, selectCategory, router]);
+
+  useEffect(() => {
+    if (state.phase === 'summary') {
+      if (state.history.length === 0) {
+        router.push('/app/challenge/categories');
+        resetGame();
+        return;
+      }
+
+      const correct = state.history.filter(h => h.correct).length;
+      const incorrect = state.history.filter(h => !h.correct).length;
+      const totalAnswered = state.history.length;
+      const skipped = state.totalQuestions - totalAnswered;
+      const accuracy = totalAnswered > 0 ? Math.round((correct / totalAnswered) * 100) : 0;
+      const avgTimeMs = totalAnswered > 0 ? state.history.reduce((acc, h) => acc + h.time, 0) / totalAnswered : 0;
+      const avgTime = Math.round((avgTimeMs / 1000) * 10) / 10;
+
+      const params = new URLSearchParams({
+        score: String(state.score),
+        coins: String(state.coins),
+        correct: String(correct),
+        incorrect: String(incorrect),
+        skipped: String(skipped),
+        accuracy: String(accuracy),
+        avgTime: String(avgTime),
+        totalQuestions: String(state.totalQuestions)
+      });
+      
+      router.push(`/app/challenge/summary?${params.toString()}`);
+      resetGame();
+    }
+  }, [state.phase, state.history, state.score, state.coins, state.totalQuestions, router, resetGame]);
 
   const handleOptionClick = (option: string) => {
     submitAnswer(option);
@@ -298,31 +330,6 @@ export function GameClient() {
                     <Progress value={(state.remainingTime / 2000) * 100} className="mt-3 w-1/2 max-w-xs h-3" />
                 </div>
                 )}
-                 {state.phase === 'summary' && (
-                    <div className={cn(phaseWrapperClass, "gap-4")}>
-                        <motion.div initial={{scale:0, opacity: 0}} animate={{scale:1, opacity: 1, transition: {delay: 0.2, type: 'spring'}}} >
-                          <Trophy className="w-24 h-24 text-yellow-400" />
-                        </motion.div>
-                        <h2 className="text-4xl md:text-5xl font-bold">Challenge Complete!</h2>
-                        <p className="text-muted-foreground text-xl">Here's how you did:</p>
-                        
-                        <div className="grid grid-cols-2 gap-4 mt-4 text-left p-6 rounded-lg bg-secondary/50 w-full max-w-md">
-                            <p className="font-medium text-muted-foreground">Final Score:</p>
-                            <p className="text-2xl font-bold text-right">{state.score}</p>
-
-                            <p className="font-medium text-muted-foreground">Coins Earned:</p>
-                            <p className="text-2xl font-bold text-right flex items-center justify-end gap-2">{state.coins} <Coins className="w-6 h-6 text-yellow-500"/></p>
-
-                            <p className="font-medium text-muted-foreground">Correct Answers:</p>
-                            <p className="text-2xl font-bold text-right">{state.history.filter(h => h.correct).length} / {state.totalQuestions}</p>
-                        </div>
-                        
-                        <div className="flex gap-4 mt-6">
-                            <Button size="lg" onClick={resetGame}>Play Again</Button>
-                            <Button size="lg" variant="outline" onClick={resetGame}>Choose New Category</Button>
-                        </div>
-                    </div>
-                )}
             </motion.div>
         </AnimatePresence>
       </div>
@@ -349,7 +356,7 @@ export function GameClient() {
             </div>
 
             {state.phase !== 'config' && state.phase !== 'pre-config' && state.phase !== 'summary' && (
-                <Button variant="ghost" size="icon" onClick={resetGame} className="text-muted-foreground hover:text-destructive shrink-0">
+                <Button variant="ghost" size="icon" onClick={endGame} className="text-muted-foreground hover:text-destructive shrink-0">
                     <LogOut className="h-5 w-5" />
                     <span className="sr-only">End Challenge</span>
                 </Button>
