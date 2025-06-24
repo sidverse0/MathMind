@@ -118,7 +118,7 @@ export function GameClient() {
     };
 
     return (
-      <div className="relative w-full min-h-[480px] flex items-center justify-center overflow-hidden p-4 md:p-6 rounded-b-lg" style={{ perspective: '1000px' }}>
+      <div className="relative w-full min-h-[450px] flex items-center justify-center overflow-hidden p-4 rounded-b-lg" style={{ perspective: '1000px' }}>
         <AnimatePresence mode="wait">
             <motion.div
                 key={state.phase}
@@ -126,14 +126,14 @@ export function GameClient() {
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className="w-full max-w-lg mx-auto"
+                className="w-full max-w-md mx-auto"
             >
                 {state.phase === 'config' && (
                 <div className="w-full text-center">
-                    <h2 className="text-3xl md:text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-400 to-teal-400">Choose a Challenge</h2>
-                    <p className="text-muted-foreground mb-8 text-base md:text-lg">Select a quick start option or browse all categories.</p>
+                    <h2 className="text-2xl md:text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-400 to-teal-400">Choose a Challenge</h2>
+                    <p className="text-muted-foreground mb-6 text-base">Select a quick start option or browse all categories.</p>
                     <motion.div 
-                        className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
+                        className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6"
                         variants={numberContainerVariants}
                         initial="hidden"
                         animate="visible"
@@ -142,7 +142,7 @@ export function GameClient() {
                             <motion.div key={cat} variants={itemVariants}>
                                 <Button
                                     variant={'outline'}
-                                    className="h-28 text-base flex-col gap-2 transition-all duration-300 transform hover:scale-105 hover:bg-primary/10 hover:border-primary w-full shadow-sm hover:shadow-lg border-2"
+                                    className="h-24 text-sm flex-col gap-2 transition-all duration-300 transform hover:scale-105 hover:bg-primary/10 hover:border-primary w-full shadow-sm hover:shadow-lg border-2"
                                     onClick={() => { setCategory(cat); startGame(); }}
                                 >
                                     <div className="text-primary">{categoryIcons[cat]}</div>
@@ -152,18 +152,18 @@ export function GameClient() {
                         ))}
                     </motion.div>
                     <Link href="/app/challenge/categories" passHref>
-                        <Button size="lg" className="w-full text-lg md:text-xl py-7 shadow-lg shadow-primary/20 hover:shadow-xl transition-all">
-                            Browse All Categories <ArrowRight className="ml-2 h-6 w-6" />
+                        <Button size="lg" className="w-full text-base md:text-lg py-5 shadow-lg shadow-primary/20 hover:shadow-xl transition-all">
+                            Browse All Categories <ArrowRight className="ml-2 h-5 w-5" />
                         </Button>
                     </Link>
                 </div>
                 )}
                 {state.phase === 'memorize' && (
                 <div className="text-center">
-                    <p className="text-sm font-semibold tracking-wider uppercase text-primary mb-2">Phase 1 of 2</p>
-                    <h2 className="text-2xl md:text-3xl font-semibold mb-6">Memorize the numbers</h2>
+                    <p className="text-xs font-semibold tracking-wider uppercase text-primary mb-2">Phase 1 of 2</p>
+                    <h2 className="text-xl md:text-2xl font-semibold mb-4">Memorize the numbers</h2>
                     <motion.div 
-                        className="my-12 flex justify-center items-center gap-2 sm:gap-4"
+                        className="my-8 flex justify-center items-center gap-2 sm:gap-3"
                         variants={numberContainerVariants}
                         initial="hidden"
                         animate="visible"
@@ -172,47 +172,47 @@ export function GameClient() {
                            <motion.div 
                                 key={i} 
                                 variants={numberCardVariants}
-                                className="bg-card/80 shadow-lg rounded-xl p-4 w-20 h-28 sm:w-28 sm:h-36 flex items-center justify-center border"
+                                className="bg-card/80 shadow-lg rounded-xl p-2 w-16 h-24 sm:w-20 sm:h-28 flex items-center justify-center border"
                             >
-                                <span className="text-4xl md:text-5xl font-bold tracking-wider">{num}</span>
+                                <span className="text-3xl md:text-4xl font-bold tracking-wider">{num}</span>
                             </motion.div>
                         ))}
                     </motion.div>
-                    <Progress value={(state.remainingTime / state.memorizeDuration) * 100} className="h-4 rounded-full" />
+                    <Progress value={(state.remainingTime / state.memorizeDuration) * 100} className="h-3 rounded-full" />
                 </div>
                 )}
                 {state.phase === 'solve' && (
                 <div className="text-center">
-                    <p className="text-sm font-semibold tracking-wider uppercase text-primary mb-2">Phase 2 of 2</p>
-                    <h2 className="text-2xl md:text-3xl font-semibold mb-6">Solve the equation</h2>
-                    <div className="text-4xl md:text-6xl font-bold my-12 p-6 bg-background/50 rounded-lg shadow-inner border">
+                    <p className="text-xs font-semibold tracking-wider uppercase text-primary mb-2">Phase 2 of 2</p>
+                    <h2 className="text-xl md:text-2xl font-semibold mb-4">Solve the equation</h2>
+                    <div className="text-3xl md:text-5xl font-bold my-8 p-4 bg-background/50 rounded-lg shadow-inner border">
                         {state.currentChallenge?.question}
                     </div>
                     <form onSubmit={handleAnswerSubmit} className="flex gap-2">
-                        <Input ref={inputRef} type="text" placeholder="Your answer" className="text-center text-xl md:text-2xl h-16 flex-1 shadow-sm" autoFocus />
-                        <Button type="submit" size="lg" className="h-16 px-8 text-lg shadow-md hover:shadow-lg transition-shadow">Submit</Button>
+                        <Input ref={inputRef} type="text" placeholder="Your answer" className="text-center text-lg md:text-xl h-12 flex-1 shadow-sm" autoFocus />
+                        <Button type="submit" size="lg" className="h-12 px-6 text-base shadow-md hover:shadow-lg transition-shadow">Submit</Button>
                     </form>
-                    <Progress value={(state.remainingTime / state.solveDuration) * 100} className="mt-6 h-4 rounded-full" />
+                    <Progress value={(state.remainingTime / state.solveDuration) * 100} className="mt-4 h-3 rounded-full" />
                 </div>
                 )}
                 {state.phase === 'result' && (
                 <div className="text-center flex flex-col items-center justify-center">
                     {state.feedback === 'correct' && (
                         <motion.div initial={{scale:0}} animate={{scale:1, rotate: [0, 10, -10, 0]}} transition={{type: 'spring', stiffness: 260, damping: 20}}>
-                            <CheckCircle className="w-28 h-28 text-green-500 mb-4" />
+                            <CheckCircle className="w-20 h-20 text-green-500 mb-3" />
                         </motion.div>
                     )}
                     {state.feedback === 'incorrect' && (
                         <motion.div initial={{scale:0}} animate={{scale:1, x: [0, -10, 10, -10, 10, 0]}} transition={{type: 'spring', stiffness: 400, damping: 10}}>
-                            <XCircle className="w-28 h-28 text-destructive mb-4" />
+                            <XCircle className="w-20 h-20 text-destructive mb-3" />
                         </motion.div>
                     )}
                     {state.feedback === 'timeup' && (
                         <motion.div initial={{scale:0}} animate={{scale:1}} transition={{type: 'spring', stiffness: 260, damping: 20}}>
-                            <Timer className="w-28 h-28 text-yellow-500 mb-4" />
+                            <Timer className="w-20 h-20 text-yellow-500 mb-3" />
                         </motion.div>
                     )}
-                    <h2 className="text-4xl md:text-5xl font-bold capitalize mb-2">
+                    <h2 className="text-3xl md:text-4xl font-bold capitalize mb-2">
                         {state.feedback === 'timeup' ? "Time's Up!" : (state.feedback === 'correct' ? "Correct!" : "Incorrect")}
                     </h2>
                      {state.feedback === 'correct' && (
@@ -220,17 +220,17 @@ export function GameClient() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{delay: 0.2}}
-                            className="text-xl md:text-2xl mt-2 font-semibold text-green-500 flex items-center gap-4"
+                            className="text-lg md:text-xl mt-1 font-semibold text-green-500 flex items-center gap-3"
                         >
                             <span>+ {state.difficulty * 10} Score</span>
-                            <span>+ {state.difficulty} <Coins className="inline w-6 h-6 -mt-1"/></span>
+                            <span>+ {state.difficulty} <Coins className="inline w-5 h-5 -mt-1"/></span>
                         </motion.p>
                      )}
                      {state.feedback === 'incorrect' && (
-                        <p className="text-xl md:text-2xl mt-2 text-muted-foreground">The correct answer was: <span className="text-foreground font-bold">{state.currentChallenge?.answer}</span></p>
+                        <p className="text-lg md:text-xl mt-1 text-muted-foreground">Answer: <span className="text-foreground font-bold">{state.currentChallenge?.answer}</span></p>
                     )}
-                    <p className="text-base text-muted-foreground mt-6">Next round starting soon...</p>
-                    <Progress value={(state.remainingTime / 2000) * 100} className="mt-4 w-1/2 h-3" />
+                    <p className="text-sm text-muted-foreground mt-4">Next round starting soon...</p>
+                    <Progress value={(state.remainingTime / 2000) * 100} className="mt-3 w-1/2 h-2.5" />
                 </div>
                 )}
             </motion.div>
@@ -240,24 +240,24 @@ export function GameClient() {
   };
 
   return (
-    <Card className="w-full shadow-2xl bg-card/60 backdrop-blur-xl border-2">
+    <Card className="w-full max-w-md mx-auto shadow-2xl bg-card/60 backdrop-blur-xl border-2">
         <CardContent className="p-0">
-            <div className="p-4 border-b bg-background/50 flex flex-col sm:flex-row items-center justify-between gap-y-3 gap-x-4">
-                <h2 className="text-xl font-bold text-center sm:text-left tracking-tight">
+            <div className="p-3 border-b bg-background/50 flex flex-col sm:flex-row items-center justify-between gap-y-2 gap-x-4">
+                <h2 className="text-lg font-bold text-center sm:text-left tracking-tight">
                     {state.phase !== 'config' ? (
                         <>Challenge: <span className="text-primary capitalize">{state.category.replace(/-/g, ' ')}</span></>
                     ) : 'MathMind Challenge'}
                 </h2>
-                <div className="flex items-center flex-wrap justify-center gap-2 text-sm font-medium">
-                    <div className="flex items-center gap-2 bg-secondary py-1 px-3 rounded-full"><Trophy className="w-5 h-5 text-orange-400" /> Score: <span className="font-bold text-base tabular-nums">{state.score}</span></div>
-                    <div className="flex items-center gap-2 bg-secondary py-1 px-3 rounded-full"><Coins className="w-5 h-5 text-yellow-400" /> Coins: <span className="font-bold text-base tabular-nums">{state.coins}</span></div>
-                    <div className="flex items-center gap-2 bg-secondary py-1 px-3 rounded-full"><BrainCircuit className="w-5 h-5 text-primary" /> Difficulty: <span className="font-bold text-base tabular-nums">{state.difficulty}</span></div>
+                <div className="flex items-center flex-wrap justify-center gap-2 text-xs font-medium">
+                    <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><Trophy className="w-4 h-4 text-orange-400" /> Score: <span className="font-bold text-sm tabular-nums">{state.score}</span></div>
+                    <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><Coins className="w-4 h-4 text-yellow-400" /> Coins: <span className="font-bold text-sm tabular-nums">{state.coins}</span></div>
+                    <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><BrainCircuit className="w-4 h-4 text-primary" /> Diff: <span className="font-bold text-sm tabular-nums">{state.difficulty}</span></div>
                 </div>
             </div>
             {renderPhase()}
             {state.phase !== 'config' && (
-                <div className="p-4 border-t bg-background/50">
-                    <Button variant="outline" onClick={resetGame} className="w-full text-base py-6 shadow-sm hover:shadow-lg transition-all hover:bg-destructive/10 hover:border-destructive/50 hover:text-destructive">
+                <div className="p-3 border-t bg-background/50">
+                    <Button variant="outline" onClick={resetGame} className="w-full text-base h-11 shadow-sm hover:shadow-lg transition-all hover:bg-destructive/10 hover:border-destructive/50 hover:text-destructive">
                         <LogOut className="mr-2 h-5 w-5" /> End Challenge
                     </Button>
                 </div>
@@ -266,3 +266,5 @@ export function GameClient() {
     </Card>
   );
 }
+
+    
