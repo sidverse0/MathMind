@@ -1,11 +1,11 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useGame } from '@/hooks/use-game';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Plus, Minus, X, Divide, BrainCircuit, Trophy, Timer, CheckCircle, XCircle, Sparkles, Sigma, Percent, FunctionSquare, ArrowRight, Coins, LogOut, BarChart } from 'lucide-react';
+import { Plus, Minus, X, Divide, Trophy, Timer, CheckCircle, XCircle, Sparkles, Sigma, Percent, FunctionSquare, ArrowRight, Coins, LogOut, BarChart, LayoutGrid } from 'lucide-react';
 import type { MathCategory, DifficultyLevel } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -54,8 +54,7 @@ const categoryIcons: Record<MathCategory, React.ReactNode> = {
   'logic-puzzles': <Sigma className="h-8 w-8" />,
 };
 
-
-export function GameClient() {
+function GameClientContent() {
   const { state, selectCategory, startConfiguredGame, submitAnswer, resetGame, endGame } = useGame();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -169,7 +168,8 @@ export function GameClient() {
                     </motion.div>
                     <Link href="/app/challenge/categories" passHref>
                         <Button size="lg" className="w-full max-w-2xl text-lg py-6 shadow-xl shadow-primary/20 hover:shadow-primary/30 transition-all">
-                            Browse All Categories <ArrowRight className="ml-2 h-5 w-5" />
+                            <LayoutGrid className="mr-2 h-5 w-5" />
+                            Browse All Categories
                         </Button>
                     </Link>
                 </div>
@@ -184,7 +184,7 @@ export function GameClient() {
                         
                         <motion.div className="w-full grid md:grid-cols-2 gap-8" initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: 0.1 }}}}>
                            <motion.div variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }}>
-                             <Card className="p-6 text-left">
+                             <Card className="p-6 text-left shadow-lg">
                                  <CardHeader className="p-0 mb-4">
                                      <CardTitle>Difficulty</CardTitle>
                                      <CardDescription>How tough should the questions be?</CardDescription>
@@ -207,7 +207,7 @@ export function GameClient() {
                            </motion.div>
                            
                            <motion.div variants={{ hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0 } }}>
-                             <Card className="p-6 text-left">
+                             <Card className="p-6 text-left shadow-lg">
                                  <CardHeader className="p-0 mb-4">
                                      <CardTitle>Number of Questions</CardTitle>
                                      <CardDescription>How many questions to solve?</CardDescription>
@@ -237,7 +237,7 @@ export function GameClient() {
                     <p className="text-sm font-semibold tracking-wider uppercase text-primary mb-3">Memorize</p>
                     <h2 className="text-2xl md:text-4xl font-bold mb-6">Memorize the numbers</h2>
                     <motion.div 
-                        className="my-8 flex justify-center items-center gap-4 sm:gap-6"
+                        className="my-8 flex justify-center items-center gap-2 sm:gap-4"
                         variants={itemContainerVariants}
                         initial="hidden"
                         animate="visible"
@@ -249,9 +249,9 @@ export function GameClient() {
                                     hidden: { rotateY: 90, opacity: 0, scale: 0.9 },
                                     visible: { rotateY: 0, opacity: 1, scale: 1, transition: { type: 'spring', stiffness: 100, damping: 15 } }
                                 }}
-                                className="bg-card shadow-2xl rounded-2xl p-2 w-24 h-32 sm:w-28 sm:h-40 flex items-center justify-center border-2 border-primary/20"
+                                className="bg-card shadow-2xl rounded-2xl p-2 w-20 h-28 sm:w-24 sm:h-32 flex items-center justify-center border-2 border-primary/20"
                             >
-                                <span className="text-5xl md:text-6xl font-bold tracking-wider">{num}</span>
+                                <span className="text-4xl md:text-5xl font-bold tracking-wider">{num}</span>
                             </motion.div>
                         ))}
                     </motion.div>
@@ -267,7 +267,7 @@ export function GameClient() {
                         initial={{ opacity: 0, y: -20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
-                        className="text-5xl md:text-7xl font-bold my-8 md:my-10 p-6 bg-gradient-to-br from-primary/10 to-background rounded-2xl text-primary tracking-wider shadow-inner"
+                        className="text-4xl md:text-6xl font-bold my-6 md:my-8 p-6 bg-gradient-to-br from-primary/10 to-background rounded-2xl text-primary tracking-wider shadow-inner"
                     >
                         {state.currentChallenge?.question}
                     </motion.div>
@@ -281,7 +281,7 @@ export function GameClient() {
                             <motion.div key={i} variants={itemVariants} whileHover={{scale: 1.05, y: -5}} whileTap={{scale: 0.98}}>
                                 <Button
                                     variant="outline"
-                                    className="w-full h-28 md:h-32 text-3xl md:text-4xl font-bold shadow-lg hover:shadow-2xl bg-card hover:bg-primary/10 hover:border-primary/80 transition-all duration-200 border-2 rounded-2xl"
+                                    className="w-full h-24 md:h-28 text-2xl md:text-3xl font-bold shadow-lg hover:shadow-2xl bg-card hover:bg-primary/10 hover:border-primary/80 transition-all duration-200 border-2 rounded-2xl"
                                     onClick={() => handleOptionClick(String(option))}
                                 >
                                     {String(option)}
@@ -350,7 +350,6 @@ export function GameClient() {
                         <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><BarChart className="w-3 h-3 text-blue-400" />Question: <span className="font-bold tabular-nums">{state.currentQuestionIndex}/{state.totalQuestions}</span></div>
                         <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><Trophy className="w-3 h-3 text-orange-400" /> <span className="font-bold tabular-nums">{state.score}</span></div>
                         <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><Coins className="w-3 h-3 text-yellow-400" /> <span className="font-bold tabular-nums">{state.coins}</span></div>
-                        <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><BrainCircuit className="w-3 h-3 text-primary" /> <span className="font-bold tabular-nums">{state.difficulty}</span></div>
                     </div>
                 )}
             </div>
@@ -365,4 +364,13 @@ export function GameClient() {
         {renderPhase()}
     </div>
   );
+}
+
+
+export function GameClient() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <GameClientContent />
+        </Suspense>
+    )
 }
