@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useReducer, useCallback, useEffect } from 'react';
-import type { GameState, MathCategory, Challenge, PerformanceRecord } from '@/lib/types';
+import type { GameState, MathCategory, Challenge, PerformanceRecord, OperatorSymbol } from '@/lib/types';
 import { adjustDifficulty } from '@/ai/flows/adaptive-difficulty';
 import { useToast } from '@/hooks/use-toast';
 
@@ -91,7 +91,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 function generateChallenge(category: MathCategory, difficulty: number): Challenge {
   let currentCategory = category;
   if (category === 'mixed') {
-    const categories: MathCategory[] = ['addition', 'subtraction', 'multiplication', 'division'];
+    const categories: MathCategory[] = ['addition', 'subtraction', 'multiplication', 'division', 'algebra', 'percentages', 'exponents'];
     currentCategory = categories[Math.floor(Math.random() * categories.length)];
   }
 
@@ -100,7 +100,7 @@ function generateChallenge(category: MathCategory, difficulty: number): Challeng
   let numbers = Array.from({ length: numOperands }, () => Math.floor(Math.random() * maxNumber) + 1);
   let answer = 0;
   let question = '';
-  let operatorSymbol: '+' | '-' | '×' | '÷' = '+';
+  let operatorSymbol: OperatorSymbol = '+';
 
   switch (currentCategory) {
     case 'addition':
@@ -129,6 +129,41 @@ function generateChallenge(category: MathCategory, difficulty: number): Challeng
         answer = result;
         question = `${dividend} ÷ ${divisor}`;
         break;
+    case 'algebra': {
+        operatorSymbol = '?';
+        const num1 = Math.floor(Math.random() * (difficulty * 10)) + 1;
+        const num2 = Math.floor(Math.random() * (difficulty * 5)) + 1;
+        const res = num1 + num2;
+        numbers = [num1, res];
+        answer = num2;
+        question = `${num1} + x = ${res}`;
+        break;
+    }
+    case 'percentages': {
+        operatorSymbol = '%';
+        const pValues = [10, 20, 25, 50, 75];
+        const p = pValues[Math.floor(Math.random() * pValues.length)];
+        let base;
+        if (p === 10) base = (Math.floor(Math.random() * difficulty) + 1) * 10;
+        else if (p === 20) base = (Math.floor(Math.random() * difficulty) + 1) * 5;
+        else if (p === 25) base = (Math.floor(Math.random() * difficulty) + 1) * 4;
+        else if (p === 50) base = (Math.floor(Math.random() * difficulty) + 1) * 2;
+        else base = (Math.floor(Math.random() * difficulty) + 1) * 4; // for 75%
+        
+        numbers = [p, base];
+        answer = (p / 100) * base;
+        question = `${p}% of ${base}`;
+        break;
+    }
+    case 'exponents': {
+        operatorSymbol = '^';
+        const base = Math.floor(difficulty / 2) + 2;
+        const exponent = Math.floor(difficulty / 4) + 2;
+        numbers = [base, exponent];
+        answer = Math.pow(base, exponent);
+        question = `${base} ^ ${exponent}`;
+        break;
+    }
   }
 
   return { numbers, operatorSymbol, question: `${question} = ?`, answer };

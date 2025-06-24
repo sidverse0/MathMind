@@ -1,8 +1,10 @@
-export type MathCategory = 'addition' | 'subtraction' | 'multiplication' | 'division' | 'mixed';
+export type MathCategory = 'addition' | 'subtraction' | 'multiplication' | 'division' | 'mixed' | 'algebra' | 'percentages' | 'exponents';
+
+export type OperatorSymbol = '+' | '-' | '×' | '÷' | '?' | '%' | '^';
 
 export interface Challenge {
   numbers: number[];
-  operatorSymbol: '+' | '-' | '×' | '÷';
+  operatorSymbol: OperatorSymbol;
   question: string;
   answer: number;
 }

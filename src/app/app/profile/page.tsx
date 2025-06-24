@@ -1,10 +1,14 @@
 'use client';
 
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Trophy, Coins, Star, BarChart, Clock, Target } from "lucide-react";
+import { Trophy, Coins, Star, BarChart, Clock, Target, Edit } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const statItems = [
     { label: "Total Score", value: "14,500", icon: <Trophy className="h-8 w-8 text-orange-400"/> },
@@ -16,6 +20,13 @@ const statItems = [
 ];
 
 export default function ProfilePage() {
+  const [name, setName] = useState("Your Name");
+  const [tempName, setTempName] = useState(name);
+
+  const handleSaveChanges = () => {
+    setName(tempName);
+  };
+
   return (
     <div className="flex flex-col gap-8">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
@@ -34,7 +45,7 @@ export default function ProfilePage() {
                     </motion.div>
                 </div>
                 <CardHeader className="pt-20 text-center">
-                    <CardTitle className="text-4xl">Your Name</CardTitle>
+                    <CardTitle className="text-4xl">{name}</CardTitle>
                     <CardDescription className="text-lg">Mathlete since yesterday</CardDescription>
                 </CardHeader>
                 <CardContent className="p-6">
@@ -59,7 +70,37 @@ export default function ProfilePage() {
                         ))}
                     </div>
                     <div className="mt-8 text-center">
-                        <Button>Edit Profile</Button>
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button onClick={() => setTempName(name)}>
+                                    <Edit className="mr-2 h-4 w-4" /> Edit Profile
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-[425px]">
+                                <DialogHeader>
+                                    <DialogTitle>Edit profile</DialogTitle>
+                                    <DialogDescription>
+                                        Make changes to your profile here. Click save when you're done.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <div className="grid gap-4 py-4">
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="name" className="text-right">
+                                            Name
+                                        </Label>
+                                        <Input id="name" value={tempName} onChange={(e) => setTempName(e.target.value)} className="col-span-3" />
+                                    </div>
+                                </div>
+                                <DialogFooter>
+                                    <DialogClose asChild>
+                                        <Button type="button" variant="secondary">Cancel</Button>
+                                    </DialogClose>
+                                    <DialogClose asChild>
+                                        <Button type="submit" onClick={handleSaveChanges}>Save changes</Button>
+                                    </DialogClose>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
                     </div>
                 </CardContent>
             </Card>

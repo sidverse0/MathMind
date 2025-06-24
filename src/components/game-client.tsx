@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
-import { Plus, Minus, X, Divide, BrainCircuit, Trophy, Timer, CheckCircle, XCircle, Gamepad2, Sparkles, Coins } from 'lucide-react';
+import { Plus, Minus, X, Divide, BrainCircuit, Trophy, Timer, CheckCircle, XCircle, Gamepad2, Sparkles, Coins, Sigma, Percent, FunctionSquare } from 'lucide-react';
 import type { MathCategory } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { FormEvent, useRef, useEffect } from 'react';
@@ -17,6 +17,9 @@ const categoryIcons: Record<MathCategory, React.ReactNode> = {
   multiplication: <X className="h-10 w-10" />,
   division: <Divide className="h-10 w-10" />,
   mixed: <Sparkles className="h-10 w-10" />,
+  algebra: <Sigma className="h-10 w-10" />,
+  percentages: <Percent className="h-10 w-10" />,
+  exponents: <FunctionSquare className="h-10 w-10" />,
 };
 
 export function GameClient() {
@@ -59,14 +62,14 @@ export function GameClient() {
                 {state.phase === 'config' && (
                 <div className="w-full text-center">
                     <h2 className="text-3xl font-bold mb-2">Choose a Category</h2>
-                    <p className="text-muted-foreground mb-8">Select the type of challenge you want to face.</p>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+                    <p className="text-muted-foreground mb-8">Test your skills with classic arithmetic or our new challenges!</p>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
                     {(Object.keys(categoryIcons) as MathCategory[]).map((cat) => (
                         <Button
                         key={cat}
                         variant={state.category === cat ? 'default' : 'outline'}
                         size="lg"
-                        className={cn("h-32 text-lg flex-col gap-2 transition-all duration-300 transform hover:scale-105", state.category === cat ? 'scale-105 border-primary border-4 shadow-lg shadow-primary/20' : 'hover:border-primary/50')}
+                        className={cn("h-28 text-lg flex-col gap-2 transition-all duration-300 transform hover:scale-105", state.category === cat ? 'scale-105 border-primary border-4 shadow-lg shadow-primary/20' : 'hover:border-primary/50')}
                         onClick={() => setCategory(cat)}
                         >
                         {categoryIcons[cat]}
