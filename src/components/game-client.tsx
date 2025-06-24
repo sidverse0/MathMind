@@ -67,39 +67,38 @@ function GameClientContent() {
 
 
   // Sound effect logic
-  const prevPhaseRef = useRef<GameState['phase']>();
-  const prevFeedbackRef = useRef<GameState['feedback']>();
+  const prevGameState = useRef<GameState>(state);
 
   useEffect(() => {
     const currentPhase = state.phase;
-    const prevPhase = prevPhaseRef.current;
-    if (currentPhase !== prevPhase) {
-      if (currentPhase === 'memorize') {
-        playSound('flash');
+    const previousPhase = prevGameState.current.phase;
+    const currentFeedback = state.feedback;
+
+    // Play flash sound when entering memorize phase
+    if (currentPhase === 'memorize' && previousPhase !== 'memorize') {
+      playSound('flash');
+    }
+
+    // Play result sound when entering result phase
+    if (currentPhase === 'result' && previousPhase !== 'result') {
+      if (currentFeedback) {
+        switch (currentFeedback) {
+          case 'correct':
+            playSound('correct');
+            break;
+          case 'incorrect':
+            playSound('incorrect');
+            break;
+          case 'timeup':
+            playSound('timeup');
+            break;
+        }
       }
     }
-    prevPhaseRef.current = currentPhase;
-  }, [state.phase]);
 
-  useEffect(() => {
-    const currentFeedback = state.feedback;
-    const prevFeedback = prevFeedbackRef.current;
-    
-    if (state.phase === 'result' && currentFeedback && currentFeedback !== prevFeedback) {
-        switch(currentFeedback) {
-            case 'correct':
-                playSound('correct');
-                break;
-            case 'incorrect':
-                playSound('incorrect');
-                break;
-            case 'timeup':
-                playSound('timeup');
-                break;
-        }
-    }
-    prevFeedbackRef.current = currentFeedback;
-  }, [state.phase, state.feedback]);
+    // Update previous state ref for next render
+    prevGameState.current = state;
+  }, [state]);
   
 
   useEffect(() => {
