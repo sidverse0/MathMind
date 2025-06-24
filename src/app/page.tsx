@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { BrainCircuit, ArrowRight, Zap, Trophy, BarChart, Instagram, Youtube } from 'lucide-react';
+import { BrainCircuit, ArrowRight, Zap, Trophy, BarChart, Instagram, Youtube, Wand2 } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,7 +16,7 @@ const featureCards = [
     {
         icon: <Trophy className="h-8 w-8 text-primary" />,
         title: "Compete & Conquer",
-        description: "Climb the leaderboards, earn achievements, and see how you stack up against other MathMinds."
+        description: "Climb the leaderboards, earn achievements, and see how you stack up against other MathMagicians."
     },
     {
         icon: <BarChart className="h-8 w-8 text-primary" />,
@@ -57,9 +57,9 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container h-16 flex items-center px-4 sm:px-6 lg:px-8">
           <Link href="/" className="mr-auto flex items-center gap-2">
-            <BrainCircuit className="h-6 w-6 text-primary" />
+            <Wand2 className="h-6 w-6 text-primary" />
             <h1 className="text-xl font-bold tracking-tight font-headline">
-              MathMind
+              MathMagix
             </h1>
           </Link>
           <div className="flex items-center space-x-2">
@@ -80,7 +80,7 @@ export default function LandingPage() {
                             animate={{ rotate: [0, 5, -5, 5, 0] }}
                             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                         >
-                           <BrainCircuit className="h-16 w-16 md:h-20 md:w-20 text-primary" />
+                           <Wand2 className="h-16 w-16 md:h-20 md:w-20 text-primary" />
                         </motion.div>
                     </div>
                 </motion.div>
@@ -91,7 +91,7 @@ export default function LandingPage() {
                     transition={{ duration: 0.5, delay: 0.2 }}
                 >
                     <h2 className="text-4xl md:text-6xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-500 to-teal-500">
-                        Train With Your Brain
+                        Turning Math into Magic!
                     </h2>
                 </motion.div>
 
@@ -101,7 +101,7 @@ export default function LandingPage() {
                     transition={{ duration: 0.5, delay: 0.3 }}
                     className="max-w-2xl text-base md:text-lg text-muted-foreground"
                 >
-                    Engage in fun, adaptive math challenges designed to sharpen your memory and calculation skills. Rise through the ranks and become a MathMind!
+                    Engage in fun, adaptive math challenges designed to sharpen your memory and calculation skills. Rise through the ranks and become a MathMagician!
                 </motion.p>
                 <motion.div
                     initial={{ scale: 0.9, opacity: 0 }}
@@ -139,7 +139,7 @@ export default function LandingPage() {
 
         <section className="py-20 md:py-32">
             <div className="container text-center px-4">
-                <h3 className="text-3xl md:text-4xl font-bold tracking-tight">Ready to Become a MathMind?</h3>
+                <h3 className="text-3xl md:text-4xl font-bold tracking-tight">Ready to Become a MathMagician?</h3>
                 <p className="mt-4 max-w-2xl mx-auto text-base md:text-lg text-muted-foreground">
                     Join thousands of users sharpening their skills. It's free to get started!
                 </p>
@@ -155,7 +155,7 @@ export default function LandingPage() {
       </main>
       <footer className="border-t bg-background">
             <div className="container py-6 flex flex-col sm:flex-row justify-between items-center gap-4 px-4 sm:px-6 lg:px-8">
-                <p className="text-sm text-muted-foreground text-center sm:text-left">© {new Date().getFullYear()} MathMind. Built by Sid.</p>
+                <p className="text-sm text-muted-foreground text-center sm:text-left">© {new Date().getFullYear()} MathMagix. Built by Sid.</p>
                 <div className="flex items-center gap-4">
                     <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-muted-foreground hover:text-primary transition-colors">
                         <Instagram />

@@ -456,7 +456,7 @@ function GameClientContent() {
                 <h2 className="text-lg font-bold tracking-tight">
                     {state.category ? (
                         <>Challenge: <span className="text-primary capitalize">{state.category.replace(/-/g, ' ')}</span></>
-                    ) : 'MathMind Challenge'}
+                    ) : 'MathMagix Challenge'}
                 </h2>
                 {state.phase !== 'config' && state.phase !== 'pre-config' && state.phase !== 'summary' && (
                     <div className="flex items-center flex-wrap justify-center gap-2 text-xs font-medium">

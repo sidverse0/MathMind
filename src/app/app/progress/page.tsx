@@ -65,7 +65,7 @@ export default function ProgressPage() {
     <div className="flex flex-col gap-8">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Your Progress</h1>
-            <p className="text-muted-foreground mt-2 text-base">Track your journey to becoming a MathMind.</p>
+            <p className="text-muted-foreground mt-2 text-base">Track your journey to becoming a MathMagician.</p>
         </motion.div>
 
         <motion.div 
