@@ -113,10 +113,10 @@ function GameClientContent() {
       }
   };
 
-  const powerUpConfig: { type: PowerUpType, icon: React.ReactNode, name: string }[] = [
-    { type: 'extraTime', icon: <Zap />, name: 'Extra Time' },
-    { type: 'mistakeShield', icon: <Shield />, name: 'Mistake Shield' },
-    { type: 'numberReveal', icon: <Eye />, name: 'Number Reveal' },
+  const powerUpConfig: { type: PowerUpType; icon: React.ReactNode; name: string; colorClass: string }[] = [
+    { type: 'extraTime', icon: <Zap />, name: 'Extra Time', colorClass: 'bg-chart-4/20 text-chart-4 hover:bg-chart-4/30' },
+    { type: 'mistakeShield', icon: <Shield />, name: 'Mistake Shield', colorClass: 'bg-primary/10 text-primary hover:bg-primary/20' },
+    { type: 'numberReveal', icon: <Eye />, name: 'Number Reveal', colorClass: 'bg-chart-2/20 text-chart-2 hover:bg-chart-2/30' },
   ];
 
   // Sound effect logic
@@ -438,9 +438,12 @@ function GameClientContent() {
                             <Tooltip key={p.type}>
                                 <TooltipTrigger asChild>
                                     <Button
-                                      variant="outline"
                                       size="icon"
-                                      className="h-14 w-14 rounded-full shadow-lg relative"
+                                      className={cn(
+                                        "h-14 w-14 rounded-full shadow-lg relative transition-all [&>svg]:h-6 [&>svg]:w-6",
+                                        p.colorClass,
+                                        state.isShieldActive && p.type === 'mistakeShield' ? 'ring-2 ring-offset-2 ring-offset-background ring-primary' : '',
+                                      )}
                                       onClick={() => handleUsePowerUp(p.type)}
                                       disabled={inventory[p.type] === 0 || (p.type === 'mistakeShield' && state.isShieldActive)}
                                     >
