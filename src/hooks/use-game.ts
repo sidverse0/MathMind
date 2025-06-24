@@ -24,7 +24,7 @@ type GameAction =
   | { type: 'SET_CATEGORY'; payload: MathCategory }
   | { type: 'START_GAME' }
   | { type: 'START_SOLVE' }
-  | { type: 'SUBMIT_ANSWER'; payload: { answer: number; time: number } }
+  | { type: 'SUBMIT_ANSWER'; payload: { answer: string; time: number } }
   | { type: 'TICK'; payload: number }
   | { type: 'SET_DIFFICULTY'; payload: number }
   | { type: 'RESET' };
@@ -39,9 +39,9 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         ...initialState,
         category: state.category,
         difficulty: state.difficulty,
-        history: state.history, // Persist history across games
-        score: state.score,     // Persist score
-        coins: state.coins,     // Persist coins
+        history: state.history,
+        score: state.score,
+        coins: state.coins,
         phase: 'memorize',
         currentChallenge: challenge,
         remainingTime: state.memorizeDuration,
@@ -56,7 +56,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       };
     case 'SUBMIT_ANSWER': {
       if (!state.currentChallenge) return state;
-      const isCorrect = state.currentChallenge.answer === action.payload.answer;
+      const isCorrect = String(state.currentChallenge.answer).toLowerCase() === action.payload.answer.toLowerCase();
       const scoreGained = isCorrect ? state.difficulty * 10 : 0;
       const coinsGained = isCorrect ? state.difficulty : 0;
       const newHistory: PerformanceRecord[] = [...state.history, { correct: isCorrect, time: action.payload.time, difficulty: state.difficulty }];
@@ -67,7 +67,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         coins: state.coins + coinsGained,
         feedback: isCorrect ? 'correct' : 'incorrect',
         history: newHistory,
-        remainingTime: 2000, // Show result for 2s
+        remainingTime: 2000,
       };
     }
     case 'TICK': {
@@ -82,11 +82,21 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     case 'SET_DIFFICULTY':
       return { ...state, difficulty: action.payload };
     case 'RESET':
-      return { ...initialState, history: state.history };
+      return { ...initialState, history: state.history, score: state.score, coins: state.coins };
     default:
       return state;
   }
 }
+
+const allCategories: MathCategory[] = [
+    'addition', 'subtraction', 'multiplication', 'division', 'mixed', 
+    'algebra', 'percentages', 'exponents', 'fractions', 'decimals', 'ratios', 
+    'square-roots', 'order-of-operations', 'area-of-squares', 'area-of-rectangles', 
+    'area-of-triangles', 'circumference', 'pythagorean-theorem', 'linear-equations', 
+    'quadratic-equations', 'prime-numbers', 'factors', 'multiples', 'roman-numerals',
+    'mean', 'median', 'mode', 'range', 'simple-probability', 'simple-interest', 
+    'discounts', 'unit-conversion', 'time-calculation', 'logic-puzzles'
+];
 
 function generateChallenge(category: MathCategory, difficulty: number): Challenge {
   let currentCategory = category;
@@ -96,11 +106,15 @@ function generateChallenge(category: MathCategory, difficulty: number): Challeng
   }
 
   const numOperands = Math.floor(difficulty / 3) + 2;
-  const maxNumber = difficulty * 5 + 5;
+  let maxNumber = difficulty * 5 + 5;
   let numbers = Array.from({ length: numOperands }, () => Math.floor(Math.random() * maxNumber) + 1);
-  let answer = 0;
+  let answer: string | number = 0;
   let question = '';
   let operatorSymbol: OperatorSymbol = '+';
+
+  const d = difficulty; // alias for difficulty
+  const rand = (max: number, min = 1) => Math.floor(Math.random() * (max - min + 1)) + min;
+  const toFixed = (num: number) => parseFloat(num.toFixed(2));
 
   switch (currentCategory) {
     case 'addition':
@@ -111,19 +125,20 @@ function generateChallenge(category: MathCategory, difficulty: number): Challeng
     case 'subtraction':
       operatorSymbol = '-';
       numbers.sort((a,b) => b-a);
+      numbers[0] = numbers[0] + numbers.slice(1).reduce((a,b) => a+b, 0); // ensure positive result
       answer = numbers[0] - numbers.slice(1).reduce((a, b) => a + b, 0);
       question = numbers.join(' - ');
       break;
     case 'multiplication':
       operatorSymbol = '×';
-      numbers = numbers.map(n => Math.floor(n/5) > 1 ? Math.floor(n/5) : 2); // smaller numbers for multiplication
+      numbers = numbers.map(n => Math.floor(n/(d+1)) > 1 ? Math.floor(n/(d+1)) : rand(d+1, 2));
       answer = numbers.reduce((a, b) => a * b, 1);
       question = numbers.join(' × ');
       break;
     case 'division':
         operatorSymbol = '÷';
-        const divisor = Math.floor(Math.random() * 5) + difficulty;
-        const result = Math.floor(Math.random() * 5) + difficulty;
+        const divisor = rand(5) + d;
+        const result = rand(5) + d;
         const dividend = divisor * result;
         numbers = [dividend, divisor];
         answer = result;
@@ -131,8 +146,8 @@ function generateChallenge(category: MathCategory, difficulty: number): Challeng
         break;
     case 'algebra': {
         operatorSymbol = '?';
-        const num1 = Math.floor(Math.random() * (difficulty * 10)) + 1;
-        const num2 = Math.floor(Math.random() * (difficulty * 5)) + 1;
+        const num1 = rand(d * 10);
+        const num2 = rand(d * 5);
         const res = num1 + num2;
         numbers = [num1, res];
         answer = num2;
@@ -142,14 +157,8 @@ function generateChallenge(category: MathCategory, difficulty: number): Challeng
     case 'percentages': {
         operatorSymbol = '%';
         const pValues = [10, 20, 25, 50, 75];
-        const p = pValues[Math.floor(Math.random() * pValues.length)];
-        let base;
-        if (p === 10) base = (Math.floor(Math.random() * difficulty) + 1) * 10;
-        else if (p === 20) base = (Math.floor(Math.random() * difficulty) + 1) * 5;
-        else if (p === 25) base = (Math.floor(Math.random() * difficulty) + 1) * 4;
-        else if (p === 50) base = (Math.floor(Math.random() * difficulty) + 1) * 2;
-        else base = (Math.floor(Math.random() * difficulty) + 1) * 4; // for 75%
-        
+        const p = pValues[rand(pValues.length-1, 0)];
+        const base = rand(d) * (100 / p);
         numbers = [p, base];
         answer = (p / 100) * base;
         question = `${p}% of ${base}`;
@@ -157,11 +166,275 @@ function generateChallenge(category: MathCategory, difficulty: number): Challeng
     }
     case 'exponents': {
         operatorSymbol = '^';
-        const base = Math.floor(difficulty / 2) + 2;
-        const exponent = Math.floor(difficulty / 4) + 2;
+        const base = rand(Math.floor(d / 2) + 2, 2);
+        const exponent = rand(Math.floor(d / 3) + 2, 2);
         numbers = [base, exponent];
         answer = Math.pow(base, exponent);
         question = `${base} ^ ${exponent}`;
+        break;
+    }
+    case 'fractions': {
+      operatorSymbol = 'ƒ';
+      const den1 = rand(d + 2, 2);
+      const den2 = rand(d + 2, 2);
+      const num1 = rand(den1 - 1);
+      const num2 = rand(den2 - 1);
+      numbers = [num1, den1, num2, den2];
+      answer = toFixed(num1 / den1 + num2 / den2);
+      question = `${num1}/${den1} + ${num2}/${den2}`;
+      break;
+    }
+    case 'decimals': {
+      operatorSymbol = '.';
+      const dec1 = rand(d * 10) / 10;
+      const dec2 = rand(d * 10) / 10;
+      numbers = [dec1, dec2];
+      answer = toFixed(dec1 + dec2);
+      question = `${dec1} + ${dec2}`;
+      break;
+    }
+    case 'ratios': {
+      operatorSymbol = ':';
+      const r1 = rand(d + 1);
+      const mult = rand(d + 1, 2);
+      const r2 = r1 * mult;
+      const r3 = rand(d + 1);
+      const r4 = r3 * mult;
+      numbers = [r1, r2, r3];
+      answer = r4;
+      question = `${r1}:${r2} = ${r3}:x`;
+      break;
+    }
+    case 'square-roots': {
+      operatorSymbol = '√';
+      const base = rand(d + 3);
+      const num = base * base;
+      numbers = [num];
+      answer = base;
+      question = `√${num}`;
+      break;
+    }
+    case 'order-of-operations': {
+      operatorSymbol = 'PEMDAS';
+      const n1 = rand(d + 2);
+      const n2 = rand(d + 2);
+      const n3 = rand(d + 2, 2);
+      numbers = [n1, n2, n3];
+      answer = n1 + n2 * n3;
+      question = `${n1} + ${n2} × ${n3}`;
+      break;
+    }
+    case 'area-of-squares': {
+      operatorSymbol = '■';
+      const side = rand(d + 5);
+      numbers = [side];
+      answer = side * side;
+      question = `Area of square with side ${side}`;
+      break;
+    }
+    case 'area-of-rectangles': {
+      operatorSymbol = '▭';
+      const w = rand(d + 5);
+      const h = rand(d + 5);
+      numbers = [w, h];
+      answer = w * h;
+      question = `Area of ${w}x${h} rectangle`;
+      break;
+    }
+    case 'area-of-triangles': {
+      operatorSymbol = '△';
+      const b = rand(d + 5) * 2;
+      const h = rand(d + 5);
+      numbers = [b, h];
+      answer = (b * h) / 2;
+      question = `Area of triangle with base ${b} and height ${h}`;
+      break;
+    }
+    case 'circumference': {
+      operatorSymbol = '○';
+      const radius = rand(d + 2);
+      numbers = [radius];
+      answer = toFixed(2 * Math.PI * radius);
+      question = `Circumference of circle with radius ${radius} (π≈3.14)`;
+      break;
+    }
+    case 'pythagorean-theorem': {
+      operatorSymbol = 'a²+b²=c²';
+      const a = rand(d + 2);
+      const b = rand(d + 2, a + 1);
+      numbers = [a, b];
+      answer = toFixed(Math.sqrt(a * a + b * b));
+      question = `Hypotenuse for sides ${a} and ${b}`;
+      break;
+    }
+    case 'linear-equations': {
+      operatorSymbol = 'x=';
+      const a = rand(d, 2);
+      const x = rand(d + 1);
+      const b = rand(d * 5);
+      const c = a * x + b;
+      numbers = [a, b, c];
+      answer = x;
+      question = `${a}x + ${b} = ${c}`;
+      break;
+    }
+    case 'quadratic-equations': {
+        operatorSymbol = 'x₁‚x₂';
+        const r1 = rand(d, -d);
+        const r2 = rand(d, -d);
+        numbers = [r1,r2];
+        const b = -(r1+r2);
+        const c = r1*r2;
+        const bSign = b >= 0 ? '+' : '-';
+        const cSign = c >= 0 ? '+' : '-';
+        question = `x² ${bSign} ${Math.abs(b)}x ${cSign} ${Math.abs(c)} = 0`;
+        answer = `${Math.min(r1,r2)},${Math.max(r1,r2)}`;
+        break;
+    }
+    case 'prime-numbers': {
+      operatorSymbol = 'P?';
+      const num = rand(d * 10);
+      numbers = [num];
+      let isPrime = true;
+      if (num <= 1) isPrime = false;
+      for (let i = 2; i * i <= num; i++) {
+        if (num % i === 0) {
+          isPrime = false;
+          break;
+        }
+      }
+      answer = isPrime ? '1' : '0';
+      question = `Is ${num} a prime number? (1 for yes, 0 for no)`;
+      break;
+    }
+    case 'factors': {
+      operatorSymbol = 'ƒ(n)';
+      const n1 = rand(d + 2, 2);
+      const n2 = rand(d + 2, 2);
+      const num = n1 * n2;
+      numbers = [num];
+      answer = n1; // any factor is fine
+      question = `Give one factor of ${num} (other than 1 and ${num})`;
+      break;
+    }
+    case 'multiples': {
+      operatorSymbol = 'M';
+      const n1 = rand(d + 5, 2);
+      const n2 = rand(5, 2);
+      numbers = [n1, n2];
+      answer = n1 * n2;
+      question = `What is the ${n2}th multiple of ${n1}?`;
+      break;
+    }
+    case 'roman-numerals': {
+        operatorSymbol = 'I';
+        const num = rand(d*5 + 5);
+        numbers = [num];
+        const romanMap: {[key: string]: number} = {M:1000, CM:900, D:500, CD:400, C:100, XC:90, L:50, XL:40, X:10, IX:9, V:5, IV:4, I:1};
+        let result = '';
+        let n = num;
+        for (const key in romanMap) {
+            while (n >= romanMap[key]) {
+                result += key;
+                n -= romanMap[key];
+            }
+        }
+        answer = result;
+        question = `Convert ${num} to Roman numerals`;
+        break;
+    }
+    case 'mean': {
+      operatorSymbol = 'avg';
+      numbers = Array.from({length: d+2}, () => rand(d*5));
+      const sum = numbers.reduce((a,b) => a+b, 0);
+      answer = toFixed(sum / numbers.length);
+      question = `Mean of ${numbers.join(', ')}`;
+      break;
+    }
+    case 'median': {
+      operatorSymbol = 'med';
+      numbers = Array.from({length: d%2 === 0 ? d+3 : d+2}, () => rand(d*5));
+      numbers.sort((a,b)=>a-b);
+      const mid = Math.floor(numbers.length / 2);
+      answer = numbers.length % 2 !== 0 ? numbers[mid] : (numbers[mid-1] + numbers[mid]) / 2;
+      question = `Median of these numbers`;
+      break;
+    }
+    case 'mode': {
+        operatorSymbol = 'mode';
+        const modeNum = rand(d * 5);
+        numbers = Array.from({length: d+2}, () => rand(d*5));
+        numbers.splice(rand(numbers.length-1,0), 0, modeNum);
+        numbers.splice(rand(numbers.length-1,0), 0, modeNum);
+        answer = modeNum;
+        question = `Find the mode in these numbers`;
+        break;
+    }
+    case 'range': {
+      operatorSymbol = 'R';
+      numbers = Array.from({length: d+2}, () => rand(d*5));
+      const min = Math.min(...numbers);
+      const max = Math.max(...numbers);
+      answer = max - min;
+      question = `Range of these numbers`;
+      break;
+    }
+    case 'simple-probability': {
+        operatorSymbol = 'P(A)';
+        const total = rand(d*2, 5);
+        const favorable = rand(total-1);
+        numbers = [favorable, total];
+        answer = toFixed(favorable/total);
+        question = `Probability: ${favorable} out of ${total}`;
+        break;
+    }
+    case 'simple-interest': {
+        operatorSymbol = '$';
+        const principal = rand(d*50, 50);
+        const rate = rand(10, 2);
+        const time = rand(5, 1);
+        numbers = [principal, rate, time];
+        answer = principal * (rate/100) * time;
+        question = `Simple interest on $${principal} at ${rate}% for ${time} year(s)`;
+        break;
+    }
+    case 'discounts': {
+        operatorSymbol = '$';
+        const price = rand(d*20, 10);
+        const discount = rand(5,2)*10;
+        numbers = [price, discount];
+        answer = toFixed(price * (1 - discount/100));
+        question = `${discount}% off of $${price}`;
+        break;
+    }
+    case 'unit-conversion': {
+        operatorSymbol = '⇔';
+        const val = rand(d*5);
+        numbers = [val];
+        answer = val * 1000;
+        question = `Convert ${val} kilometers to meters`;
+        break;
+    }
+    case 'time-calculation': {
+        operatorSymbol = '⏳';
+        const hours = rand(12);
+        const minutes = rand(59);
+        const addMinutes = rand(120, 15);
+        numbers = [hours, minutes, addMinutes];
+        const newTotalMinutes = (hours * 60 + minutes + addMinutes) % (24 * 60);
+        const newHours = Math.floor(newTotalMinutes / 60);
+        const newMinutes = newTotalMinutes % 60;
+        answer = `${newHours}:${String(newMinutes).padStart(2, '0')}`;
+        question = `What time is it ${addMinutes} minutes after ${hours}:${String(minutes).padStart(2, '0')}? (HH:MM)`;
+        break;
+    }
+    case 'logic-puzzles': {
+        operatorSymbol = '∴';
+        const start = rand(d*2);
+        const step = rand(d, 2);
+        numbers = [start, start + step, start + 2*step];
+        answer = start + 3*step;
+        question = `What's the next number in the sequence: ${numbers.join(', ')}, ...`;
         break;
     }
   }
@@ -187,7 +460,7 @@ export const useGame = () => {
 
   const submitAnswer = useCallback((answer: string) => {
     const timeTaken = Date.now() - state.startTime;
-    dispatch({ type: 'SUBMIT_ANSWER', payload: { answer: parseInt(answer, 10), time: timeTaken } });
+    dispatch({ type: 'SUBMIT_ANSWER', payload: { answer, time: timeTaken } });
   }, [state.startTime]);
 
   useEffect(() => {

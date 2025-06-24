@@ -5,11 +5,15 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
-import { Plus, Minus, X, Divide, BrainCircuit, Trophy, Timer, CheckCircle, XCircle, Gamepad2, Sparkles, Coins, Sigma, Percent, FunctionSquare } from 'lucide-react';
+import { Plus, Minus, X, Divide, BrainCircuit, Trophy, Timer, CheckCircle, XCircle, Gamepad2, Sparkles, Sigma, Percent, FunctionSquare, ArrowRight } from 'lucide-react';
 import type { MathCategory } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { FormEvent, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useSearchParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
+
+const quickStartCategories: MathCategory[] = ['addition', 'subtraction', 'multiplication', 'mixed'];
 
 const categoryIcons: Record<MathCategory, React.ReactNode> = {
   addition: <Plus className="h-10 w-10" />,
@@ -20,11 +24,50 @@ const categoryIcons: Record<MathCategory, React.ReactNode> = {
   algebra: <Sigma className="h-10 w-10" />,
   percentages: <Percent className="h-10 w-10" />,
   exponents: <FunctionSquare className="h-10 w-10" />,
+  fractions: <Sigma className="h-10 w-10" />,
+  decimals: <Sigma className="h-10 w-10" />,
+  ratios: <Sigma className="h-10 w-10" />,
+  'square-roots': <Sigma className="h-10 w-10" />,
+  'order-of-operations': <Sigma className="h-10 w-10" />,
+  'area-of-squares': <Sigma className="h-10 w-10" />,
+  'area-of-rectangles': <Sigma className="h-10 w-10" />,
+  'area-of-triangles': <Sigma className="h-10 w-10" />,
+  circumference: <Sigma className="h-10 w-10" />,
+  'pythagorean-theorem': <Sigma className="h-10 w-10" />,
+  'linear-equations': <Sigma className="h-10 w-10" />,
+  'quadratic-equations': <Sigma className="h-10 w-10" />,
+  'prime-numbers': <Sigma className="h-10 w-10" />,
+  'factors': <Sigma className="h-10 w-10" />,
+  'multiples': <Sigma className="h-10 w-10" />,
+  'roman-numerals': <Sigma className="h-10 w-10" />,
+  'mean': <Sigma className="h-10 w-10" />,
+  'median': <Sigma className="h-10 w-10" />,
+  'mode': <Sigma className="h-10 w-10" />,
+  'range': <Sigma className="h-10 w-10" />,
+  'simple-probability': <Sigma className="h-10 w-10" />,
+  'simple-interest': <Sigma className="h-10 w-10" />,
+  'discounts': <Sigma className="h-10 w-10" />,
+  'unit-conversion': <Sigma className="h-10 w-10" />,
+  'time-calculation': <Sigma className="h-10 w-10" />,
+  'logic-puzzles': <Sigma className="h-10 w-10" />,
 };
+
 
 export function GameClient() {
   const { state, setCategory, startGame, submitAnswer, resetGame } = useGame();
   const inputRef = useRef<HTMLInputElement>(null);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  useEffect(() => {
+    const categoryFromUrl = searchParams.get('category') as MathCategory | null;
+    if (categoryFromUrl && state.phase === 'config') {
+      setCategory(categoryFromUrl);
+      startGame();
+      router.replace('/app/challenge', { scroll: false });
+    }
+  }, [searchParams, state.phase, setCategory, startGame, router]);
+
 
   useEffect(() => {
     if (state.phase === 'solve' && inputRef.current) {
@@ -57,29 +100,31 @@ export function GameClient() {
                 animate="visible"
                 exit="exit"
                 transition={{ duration: 0.35, type: 'spring' }}
-                className="w-full max-w-md mx-auto"
+                className="w-full max-w-lg mx-auto"
             >
                 {state.phase === 'config' && (
                 <div className="w-full text-center">
-                    <h2 className="text-3xl font-bold mb-2">Choose a Category</h2>
-                    <p className="text-muted-foreground mb-8">Test your skills with classic arithmetic or our new challenges!</p>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
-                    {(Object.keys(categoryIcons) as MathCategory[]).map((cat) => (
+                    <h2 className="text-3xl font-bold mb-2">Choose a Challenge</h2>
+                    <p className="text-muted-foreground mb-8">Select a quick start option or browse all categories.</p>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                    {quickStartCategories.map((cat) => (
                         <Button
                         key={cat}
-                        variant={state.category === cat ? 'default' : 'outline'}
+                        variant={'outline'}
                         size="lg"
-                        className={cn("h-28 text-lg flex-col gap-2 transition-all duration-300 transform hover:scale-105", state.category === cat ? 'scale-105 border-primary border-4 shadow-lg shadow-primary/20' : 'hover:border-primary/50')}
-                        onClick={() => setCategory(cat)}
+                        className="h-24 text-lg flex-col gap-2 transition-all duration-300 transform hover:scale-105 hover:border-primary/50"
+                        onClick={() => { setCategory(cat); startGame(); }}
                         >
                         {categoryIcons[cat]}
                         <span className="capitalize">{cat}</span>
                         </Button>
                     ))}
                     </div>
-                    <Button size="lg" onClick={startGame} className="w-full text-xl py-8 shadow-lg shadow-primary/20">
-                        <Gamepad2 className="mr-2 h-6 w-6" /> Start Challenge
-                    </Button>
+                    <Link href="/app/challenge/categories" passHref>
+                        <Button size="lg" className="w-full text-xl py-8 shadow-lg shadow-primary/20">
+                            Browse All Categories <ArrowRight className="ml-2 h-6 w-6" />
+                        </Button>
+                    </Link>
                 </div>
                 )}
                 {state.phase === 'memorize' && (
@@ -102,7 +147,7 @@ export function GameClient() {
                         {state.currentChallenge?.question}
                     </div>
                     <form onSubmit={handleAnswerSubmit} className="flex gap-2">
-                        <Input ref={inputRef} type="number" placeholder="Your answer" className="text-center text-2xl h-16 flex-1" autoFocus />
+                        <Input ref={inputRef} type="text" placeholder="Your answer" className="text-center text-2xl h-16 flex-1" autoFocus />
                         <Button type="submit" size="lg" className="h-16 px-8 text-lg">Submit</Button>
                     </form>
                     <Progress value={(state.remainingTime / state.solveDuration) * 100} className="mt-4 h-3" />
@@ -143,7 +188,7 @@ export function GameClient() {
             {renderPhase()}
             {state.phase !== 'config' && (
                 <div className="p-4 border-t">
-                    <Button variant="outline" onClick={resetGame} className="w-full">End Challenge & Return to Dashboard</Button>
+                    <Button variant="outline" onClick={resetGame} className="w-full">End Challenge & Return to Menu</Button>
                 </div>
             )}
         </CardContent>
