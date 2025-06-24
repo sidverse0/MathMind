@@ -9,13 +9,15 @@ export type SoundEffect =
   | 'summary'
   | 'flash';
 
+const defaultToneUrl = 'https://files.catbox.moe/p7zmwi.wav';
+
 const soundUrls: Record<SoundEffect, string> = {
-  click: 'https://files.catbox.moe/c16b32.mp3',
-  correct: 'https://files.catbox.moe/h60k3t.mp3',
-  incorrect: 'https://files.catbox.moe/r4z5xi.mp3',
-  timeup: 'https://files.catbox.moe/ag319k.mp3',
-  summary: 'https://files.catbox.moe/e5b32n.mp3',
-  flash: 'https://files.catbox.moe/s73r7t.mp3',
+  click: defaultToneUrl,
+  correct: defaultToneUrl,
+  incorrect: defaultToneUrl,
+  timeup: defaultToneUrl,
+  summary: defaultToneUrl,
+  flash: defaultToneUrl,
 };
 
 // Use a simple cache to avoid re-creating Audio objects
