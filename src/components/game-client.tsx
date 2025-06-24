@@ -118,7 +118,7 @@ export function GameClient() {
     };
 
     return (
-      <div className="relative w-full min-h-[450px] flex items-center justify-center overflow-hidden p-4 rounded-b-lg" style={{ perspective: '1000px' }}>
+      <div className="relative w-full min-h-[400px] flex items-center justify-center overflow-hidden p-4 rounded-b-lg" style={{ perspective: '1000px' }}>
         <AnimatePresence mode="wait">
             <motion.div
                 key={state.phase}
@@ -185,7 +185,7 @@ export function GameClient() {
                 <div className="text-center">
                     <p className="text-xs font-semibold tracking-wider uppercase text-primary mb-2">Phase 2 of 2</p>
                     <h2 className="text-xl md:text-2xl font-semibold mb-4">Solve the equation</h2>
-                    <div className="text-3xl md:text-5xl font-bold my-8 p-4 bg-background/50 rounded-lg shadow-inner border">
+                    <div className="text-3xl md:text-5xl font-bold my-6 p-4 bg-background/50 rounded-lg shadow-inner border">
                         {state.currentChallenge?.question}
                     </div>
                     <form onSubmit={handleAnswerSubmit} className="flex gap-2">
@@ -242,29 +242,31 @@ export function GameClient() {
   return (
     <Card className="w-full max-w-md mx-auto shadow-2xl bg-card/60 backdrop-blur-xl border-2">
         <CardContent className="p-0">
-            <div className="p-3 border-b bg-background/50 flex flex-col sm:flex-row items-center justify-between gap-y-2 gap-x-4">
-                <h2 className="text-lg font-bold text-center sm:text-left tracking-tight">
-                    {state.phase !== 'config' ? (
-                        <>Challenge: <span className="text-primary capitalize">{state.category.replace(/-/g, ' ')}</span></>
-                    ) : 'MathMind Challenge'}
-                </h2>
-                <div className="flex items-center flex-wrap justify-center gap-2 text-xs font-medium">
-                    <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><Trophy className="w-4 h-4 text-orange-400" /> Score: <span className="font-bold text-sm tabular-nums">{state.score}</span></div>
-                    <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><Coins className="w-4 h-4 text-yellow-400" /> Coins: <span className="font-bold text-sm tabular-nums">{state.coins}</span></div>
-                    <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><BrainCircuit className="w-4 h-4 text-primary" /> Diff: <span className="font-bold text-sm tabular-nums">{state.difficulty}</span></div>
+            <div className="p-3 border-b bg-background/50 flex items-center justify-between gap-x-4">
+                <div className="flex items-center flex-wrap gap-x-4 gap-y-2">
+                    <h2 className="text-lg font-bold tracking-tight">
+                        {state.phase !== 'config' ? (
+                            <>Challenge: <span className="text-primary capitalize">{state.category.replace(/-/g, ' ')}</span></>
+                        ) : 'MathMind Challenge'}
+                    </h2>
+                    {state.phase !== 'config' && (
+                        <div className="flex items-center flex-wrap justify-center gap-2 text-xs font-medium">
+                            <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><Trophy className="w-4 h-4 text-orange-400" /> Score: <span className="font-bold text-sm tabular-nums">{state.score}</span></div>
+                            <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><Coins className="w-4 h-4 text-yellow-400" /> Coins: <span className="font-bold text-sm tabular-nums">{state.coins}</span></div>
+                            <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><BrainCircuit className="w-4 h-4 text-primary" /> Diff: <span className="font-bold text-sm tabular-nums">{state.difficulty}</span></div>
+                        </div>
+                    )}
                 </div>
+
+                {state.phase !== 'config' && (
+                    <Button variant="ghost" size="icon" onClick={resetGame} className="text-muted-foreground hover:text-destructive shrink-0">
+                        <LogOut className="h-5 w-5" />
+                        <span className="sr-only">End Challenge</span>
+                    </Button>
+                )}
             </div>
             {renderPhase()}
-            {state.phase !== 'config' && (
-                <div className="p-3 border-t bg-background/50">
-                    <Button variant="outline" onClick={resetGame} className="w-full text-base h-11 shadow-sm hover:shadow-lg transition-all hover:bg-destructive/10 hover:border-destructive/50 hover:text-destructive">
-                        <LogOut className="mr-2 h-5 w-5" /> End Challenge
-                    </Button>
-                </div>
-            )}
         </CardContent>
     </Card>
   );
 }
-
-    
