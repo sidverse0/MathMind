@@ -41,18 +41,16 @@ export function MainNav() {
     >
       {navItems.map((item) => (
         <motion.div key={item.href} variants={itemVariants} whileHover={{scale: 1.03}} whileTap={{scale: 0.98}}>
-          <Link href={item.href} passHref>
             <Button
               variant={pathname === item.href ? 'default' : 'outline'}
               className="w-full h-20 justify-start text-lg p-6 shadow-sm"
               asChild
             >
-              <a>
+              <Link href={item.href}>
                 {item.icon}
                 <span className="ml-4">{item.label}</span>
-              </a>
+              </Link>
             </Button>
-          </Link>
         </motion.div>
       ))}
     </motion.div>
