@@ -78,6 +78,11 @@ function GameClientContent() {
     if (currentPhase === 'memorize' && previousPhase !== 'memorize') {
       playSound('flash');
     }
+    
+    // Play flash sound when entering solve phase
+    if (currentPhase === 'solve' && previousPhase !== 'solve') {
+      playSound('flash');
+    }
 
     // Play result sound when entering result phase
     if (currentPhase === 'result' && previousPhase !== 'result') {
@@ -467,3 +472,5 @@ export function GameClient() {
         </Suspense>
     )
 }
+
+    
