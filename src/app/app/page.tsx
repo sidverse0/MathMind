@@ -20,15 +20,22 @@ const topPlayers = [
   { rank: 2, name: "Maria", avatar: "https://files.catbox.moe/uvi8l9.png" },
 ];
 
-const userRank = { rank: 3, name: "You", avatar: "https://files.catbox.moe/uvi8l9.png" };
+const userRank = { rank: 3, name: "You" };
 
 export default function DashboardPage() {
     const [userName, setUserName] = useState("Mathlete");
+    const [userAvatar, setUserAvatar] = useState("https://files.catbox.moe/uvi8l9.png");
 
     useEffect(() => {
         const storedName = localStorage.getItem('mathMindUserName');
         if (storedName) {
             setUserName(storedName);
+        }
+        const storedGender = localStorage.getItem('mathMindUserGender');
+        if (storedGender === 'female') {
+            setUserAvatar('https://files.catbox.moe/rv4git.jpg');
+        } else {
+            setUserAvatar('https://files.catbox.moe/uvi8l9.png');
         }
     }, []);
 
@@ -182,7 +189,7 @@ export default function DashboardPage() {
                     <div className="flex items-center gap-3">
                       <span className="font-bold w-6 text-center">{userRank.rank}</span>
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src={userRank.avatar} alt={userRank.name} />
+                        <AvatarImage src={userAvatar} alt={userRank.name} />
                         <AvatarFallback>{userRank.name.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <span className="font-medium text-primary">{userRank.name}</span>

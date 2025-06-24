@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -18,6 +19,17 @@ const leaderboardData = [
 ];
 
 export default function LeaderboardPage() {
+  const [dynamicLeaderboard, setDynamicLeaderboard] = useState(leaderboardData);
+
+  useEffect(() => {
+    const storedGender = localStorage.getItem('mathMindUserGender');
+    const userAvatar = storedGender === 'female' ? 'https://files.catbox.moe/rv4git.jpg' : 'https://files.catbox.moe/uvi8l9.png';
+    
+    setDynamicLeaderboard(leaderboardData.map(player => 
+        player.name === "You" ? { ...player, avatar: userAvatar } : player
+    ));
+  }, []);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -64,7 +76,7 @@ export default function LeaderboardPage() {
               </TableRow>
             </TableHeader>
             <motion.tbody variants={containerVariants} initial="hidden" animate="visible">
-              {leaderboardData.map((player) => (
+              {dynamicLeaderboard.map((player) => (
                 <motion.tr 
                     key={player.rank} 
                     variants={itemVariants} 

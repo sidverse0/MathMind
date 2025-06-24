@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 const statItems = [
     { label: "Total Score", value: "14,500", icon: <Trophy className="h-6 w-6 text-orange-400"/> },
@@ -22,6 +23,8 @@ const statItems = [
 export default function ProfilePage() {
   const [name, setName] = useState("Your Name");
   const [tempName, setTempName] = useState(name);
+  const [gender, setGender] = useState("male");
+  const [tempGender, setTempGender] = useState(gender);
 
   useEffect(() => {
     const storedName = localStorage.getItem('mathMindUserName');
@@ -29,12 +32,21 @@ export default function ProfilePage() {
       setName(storedName);
       setTempName(storedName);
     }
+    const storedGender = localStorage.getItem('mathMindUserGender');
+    if (storedGender) {
+        setGender(storedGender);
+        setTempGender(storedGender);
+    }
   }, []);
 
   const handleSaveChanges = () => {
     setName(tempName);
     localStorage.setItem('mathMindUserName', tempName);
+    setGender(tempGender);
+    localStorage.setItem('mathMindUserGender', tempGender);
   };
+  
+  const avatarUrl = gender === 'female' ? 'https://files.catbox.moe/rv4git.jpg' : 'https://files.catbox.moe/uvi8l9.png';
 
   return (
     <div className="flex flex-col gap-8">
@@ -48,7 +60,7 @@ export default function ProfilePage() {
                         className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2"
                     >
                         <Avatar className="h-28 w-28 md:h-32 md:w-32 border-8 border-background shadow-xl">
-                            <AvatarImage src="https://files.catbox.moe/uvi8l9.png" alt="User Avatar" />
+                            <AvatarImage src={avatarUrl} alt="User Avatar" />
                             <AvatarFallback className="text-4xl">YOU</AvatarFallback>
                         </Avatar>
                     </motion.div>
@@ -58,7 +70,7 @@ export default function ProfilePage() {
                         <CardTitle className="text-3xl md:text-4xl">{name}</CardTitle>
                         <Dialog>
                             <DialogTrigger asChild>
-                                <Button variant="ghost" size="icon" onClick={() => setTempName(name)}>
+                                <Button variant="ghost" size="icon" onClick={() => { setTempName(name); setTempGender(gender); }}>
                                     <Edit className="h-5 w-5 text-muted-foreground" />
                                     <span className="sr-only">Edit name</span>
                                 </Button>
@@ -76,6 +88,26 @@ export default function ProfilePage() {
                                             Name
                                         </Label>
                                         <Input id="name" value={tempName} onChange={(e) => setTempName(e.target.value)} className="col-span-3" />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="gender" className="text-right">
+                                            Gender
+                                        </Label>
+                                        <RadioGroup
+                                            id="gender"
+                                            value={tempGender}
+                                            onValueChange={setTempGender}
+                                            className="col-span-3 flex items-center gap-4"
+                                        >
+                                            <div className="flex items-center space-x-2">
+                                                <RadioGroupItem value="male" id="male" />
+                                                <Label htmlFor="male" className="font-normal cursor-pointer">Male</Label>
+                                            </div>
+                                            <div className="flex items-center space-x-2">
+                                                <RadioGroupItem value="female" id="female" />
+                                                <Label htmlFor="female" className="font-normal cursor-pointer">Female</Label>
+                                            </div>
+                                        </RadioGroup>
                                     </div>
                                 </div>
                                 <DialogFooter>
