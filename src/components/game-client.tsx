@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useReducer, useCallback, useEffect, Suspense, useRef } from 'react';
@@ -84,42 +85,29 @@ function GameClientContent() {
   const [numQuestions, setNumQuestions] = useState(10);
   const [isCustomQuestions, setIsCustomQuestions] = useState(false);
 
-  const optionColorClasses = ['bg-chart-1', 'bg-chart-2', 'bg-chart-3', 'bg-chart-4'];
-
-
   // Sound effect logic
   const prevGameState = useRef<GameState>(state);
 
   useEffect(() => {
     const currentPhase = state.phase;
     const previousPhase = prevGameState.current.phase;
-    const currentFeedback = state.feedback;
     
-    // Play flash sound when entering solve phase
     if (currentPhase === 'solve' && previousPhase !== 'solve') {
       playSound('flash');
     }
 
-    // Play result sound when entering result phase
     if (currentPhase === 'result' && previousPhase !== 'result') {
-      if (currentFeedback) {
-        switch (currentFeedback) {
-          case 'correct':
+        if(state.feedback === 'correct') {
             playSound('correct');
-            break;
-          case 'incorrect':
+        } else if (state.feedback === 'incorrect') {
             playSound('incorrect');
-            break;
-          case 'timeup':
+        } else if (state.feedback === 'timeup') {
             playSound('timeup');
-            break;
         }
-      }
     }
 
-    // Update previous state ref for next render
     prevGameState.current = state;
-  }, [state]);
+  }, [state.phase, state.feedback]);
   
 
   useEffect(() => {
@@ -205,7 +193,7 @@ function GameClientContent() {
         visible: { opacity: 1, y: 0 }
     };
     
-    const phaseWrapperClass = "w-full flex-grow flex flex-col items-center justify-center text-center p-4";
+    const phaseWrapperClass = "w-full flex-grow flex flex-col items-center justify-center text-center p-4 sm:p-6 md:p-8";
 
     return (
       <div className="relative w-full flex-grow flex items-center justify-center overflow-hidden">
@@ -269,15 +257,15 @@ function GameClientContent() {
                                      <CardDescription>How tough should the questions be?</CardDescription>
                                  </CardHeader>
                                  <RadioGroup value={difficulty} onValueChange={(val) => setDifficulty(val as DifficultyLevel)} className="gap-4">
-                                     <div className="flex items-center space-x-3">
+                                     <div className="flex items-center space-x-3 cursor-pointer">
                                          <RadioGroupItem value="easy" id="easy" />
                                          <Label htmlFor="easy" className="text-base font-medium cursor-pointer">Easy</Label>
                                      </div>
-                                     <div className="flex items-center space-x-3">
+                                     <div className="flex items-center space-x-3 cursor-pointer">
                                          <RadioGroupItem value="medium" id="medium" />
                                          <Label htmlFor="medium" className="text-base font-medium cursor-pointer">Medium</Label>
                                      </div>
-                                     <div className="flex items-center space-x-3">
+                                     <div className="flex items-center space-x-3 cursor-pointer">
                                          <RadioGroupItem value="hard" id="hard" />
                                          <Label htmlFor="hard" className="text-base font-medium cursor-pointer">Hard</Label>
                                      </div>
@@ -297,12 +285,12 @@ function GameClientContent() {
                                         className="gap-4"
                                     >
                                         {[10, 20, 30, 50].map(num => (
-                                            <div key={num} className="flex items-center space-x-3">
+                                            <div key={num} className="flex items-center space-x-3 cursor-pointer">
                                                 <RadioGroupItem value={String(num)} id={`q-${num}`} />
                                                 <Label htmlFor={`q-${num}`} className="text-base font-medium cursor-pointer">{num} Questions</Label>
                                             </div>
                                         ))}
-                                        <div className="flex items-center space-x-3">
+                                        <div className="flex items-center space-x-3 cursor-pointer">
                                             <RadioGroupItem value="custom" id="q-custom" />
                                             <Label htmlFor="q-custom" className="text-base font-medium cursor-pointer">Custom</Label>
                                         </div>
@@ -371,38 +359,50 @@ function GameClientContent() {
                 )}
                 {state.phase === 'solve' && (
                 <div className={phaseWrapperClass}>
-                    <p className="text-sm font-semibold tracking-wider uppercase text-primary mb-3">Solve</p>
-                    <h2 className="text-2xl md:text-3xl font-bold">What is the answer?</h2>
                     <motion.div 
                         key={state.currentChallenge?.question}
                         initial={{ opacity: 0, y: -20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
-                        className="text-3xl md:text-5xl font-bold my-8 p-8 bg-card shadow-2xl rounded-3xl text-center tracking-wide"
+                        className="w-full max-w-2xl text-center bg-card border rounded-3xl p-8 mb-8 shadow-xl"
                     >
-                        {state.currentChallenge?.question}
+                        <p className="text-lg text-muted-foreground mb-4">What is the answer?</p>
+                        <p className="text-4xl md:text-6xl font-bold tracking-tight text-foreground">
+                            {state.currentChallenge?.question}
+                        </p>
                     </motion.div>
-                     <motion.div 
-                        className="grid grid-cols-2 gap-4 md:gap-6 w-full max-w-3xl"
+                    
+                    <motion.div 
+                        className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-xl"
                         variants={itemContainerVariants}
                         initial="hidden"
                         animate="visible"
                     >
                         {state.currentChallenge?.options.map((option, i) => (
-                            <motion.div key={i} variants={itemVariants} whileHover={{scale: 1.05, y: -5}} whileTap={{scale: 0.98}}>
+                            <motion.div key={i} variants={itemVariants} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.99 }}>
                                 <button
                                     className={cn(
-                                        "w-full h-24 md:h-28 text-xl md:text-2xl font-bold shadow-lg hover:shadow-2xl transition-all duration-200 rounded-2xl text-primary-foreground flex items-center justify-center focus:outline-none focus:ring-4 focus:ring-primary/50",
-                                        optionColorClasses[i % optionColorClasses.length]
+                                        "w-full h-full text-left p-6 text-xl md:text-2xl font-semibold shadow-md hover:shadow-lg transition-all duration-200 rounded-xl flex items-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary",
+                                        "bg-secondary hover:bg-secondary/80 border-l-4",
+                                        ['border-chart-1', 'border-chart-2', 'border-chart-3', 'border-chart-4'][i % 4]
                                     )}
                                     onClick={() => handleOptionClick(String(option))}
                                 >
+                                    <span className={cn(
+                                        "flex items-center justify-center h-8 w-8 rounded-lg mr-4 font-bold text-sm",
+                                        ['bg-chart-1/20 text-chart-1', 'bg-chart-2/20 text-chart-2', 'bg-chart-3/20 text-chart-3', 'bg-chart-4/20 text-chart-4'][i % 4]
+                                    )}>
+                                        {String.fromCharCode(65 + i)}
+                                    </span>
                                     {String(option)}
                                 </button>
                             </motion.div>
                         ))}
                     </motion.div>
-                    <Progress value={(state.remainingTime / state.solveDuration) * 100} className="mt-8 h-4 rounded-full max-w-md mx-auto" />
+                    
+                    <div className="w-full max-w-md mt-8">
+                      <Progress value={(state.remainingTime / state.solveDuration) * 100} className="h-2" />
+                    </div>
                 </div>
                 )}
                 {state.phase === 'result' && (
@@ -487,5 +487,3 @@ export function GameClient() {
         </Suspense>
     )
 }
-
-    
