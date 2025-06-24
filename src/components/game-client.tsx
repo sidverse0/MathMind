@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
-import { Plus, Minus, X, Divide, BrainCircuit, Trophy, Timer, CheckCircle, XCircle, Sparkles, Sigma, Percent, FunctionSquare, ArrowRight, Coins } from 'lucide-react';
+import { Plus, Minus, X, Divide, BrainCircuit, Trophy, Timer, CheckCircle, XCircle, Sparkles, Sigma, Percent, FunctionSquare, ArrowRight, Coins, LogOut } from 'lucide-react';
 import type { MathCategory } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { FormEvent, useRef, useEffect } from 'react';
@@ -257,7 +257,9 @@ export function GameClient() {
             {renderPhase()}
             {state.phase !== 'config' && (
                 <div className="p-4 border-t bg-background/50">
-                    <Button variant="outline" onClick={resetGame} className="w-full">End Challenge & Return to Menu</Button>
+                    <Button variant="outline" onClick={resetGame} className="w-full text-base py-6 shadow-sm hover:shadow-lg transition-all hover:bg-destructive/10 hover:border-destructive/50 hover:text-destructive">
+                        <LogOut className="mr-2 h-5 w-5" /> End Challenge
+                    </Button>
                 </div>
             )}
         </CardContent>

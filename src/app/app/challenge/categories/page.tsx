@@ -74,10 +74,10 @@ export default function CategoriesPage() {
                 </div>
             </div>
             <Link href="/app/challenge">
-                <Button variant="outline" className="hidden sm:flex">
-                    <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                <Button variant="outline" className="hidden sm:flex shadow-sm hover:shadow-md transition-all">
+                    <ArrowLeft className="mr-2 h-4 w-4" /> Back to Selection
                 </Button>
-                <Button variant="outline" size="icon" className="sm:hidden">
+                <Button variant="outline" size="icon" className="sm:hidden shadow-sm">
                     <ArrowLeft className="h-4 w-4" />
                     <span className="sr-only">Back</span>
                 </Button>
