@@ -1,5 +1,7 @@
 export type DifficultyLevel = 'easy' | 'medium' | 'hard';
 
+export type PowerUpType = 'extraTime' | 'mistakeShield' | 'numberReveal';
+
 export type MathCategory = 
   // Existing
   | 'addition' | 'subtraction' | 'multiplication' | 'division' | 'mixed' 
@@ -51,7 +53,7 @@ export interface PerformanceRecord {
 }
 
 export interface GameState {
-  phase: 'config' | 'pre-config' | 'memorize' | 'solve' | 'result' | 'summary';
+  phase: 'config' | 'pre-config' | 'memorize' | 'solve' | 'result' | 'summary' | 're-memorize';
   category: MathCategory | null;
   difficultyLevel: DifficultyLevel;
   difficulty: number; // 1-10
@@ -62,8 +64,9 @@ export interface GameState {
   currentChallenge: Challenge | null;
   startTime: number;
   history: PerformanceRecord[];
-  feedback: '' | 'correct' | 'incorrect' | 'timeup';
+  feedback: '' | 'correct' | 'incorrect' | 'timeup' | 'shielded';
   remainingTime: number;
   memorizeDuration: number;
   solveDuration: number;
+  isShieldActive: boolean;
 }

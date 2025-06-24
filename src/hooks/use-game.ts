@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useReducer, useCallback, useEffect } from 'react';
-import type { GameState, MathCategory, Challenge, PerformanceRecord, OperatorSymbol, DifficultyLevel } from '@/lib/types';
+import type { GameState, MathCategory, Challenge, PerformanceRecord, OperatorSymbol, DifficultyLevel, PowerUpType } from '@/lib/types';
 
 const initialState: GameState = {
   phase: 'config',
@@ -19,6 +19,7 @@ const initialState: GameState = {
   remainingTime: 0,
   memorizeDuration: 3000,
   solveDuration: 10000,
+  isShieldActive: false,
 };
 
 type GameAction =
@@ -30,7 +31,8 @@ type GameAction =
   | { type: 'TICK'; payload: number }
   | { type: 'RESET' }
   | { type: 'END_GAME' }
-  | { type: 'BACK_TO_CONFIG' };
+  | { type: 'BACK_TO_CONFIG' }
+  | { type: 'USE_POWERUP'; payload: PowerUpType };
 
 function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
@@ -98,6 +100,18 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     case 'SUBMIT_ANSWER': {
       if (!state.currentChallenge) return state;
       const isCorrect = String(state.currentChallenge.answer).toLowerCase() === action.payload.answer.toLowerCase();
+      
+      if (!isCorrect && state.isShieldActive) {
+          return {
+              ...state,
+              phase: 'result',
+              feedback: 'shielded',
+              isShieldActive: false, // consume the shield
+              history: [...state.history, { correct: false, time: action.payload.time, difficulty: state.difficulty }],
+              remainingTime: 2000,
+          }
+      }
+
       const scoreGained = isCorrect ? state.difficulty * 10 : 0;
       const coinsGained = isCorrect ? state.difficulty : 0;
       const newHistory: PerformanceRecord[] = [...state.history, { correct: isCorrect, time: action.payload.time, difficulty: state.difficulty }];
@@ -115,6 +129,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       const newTime = state.remainingTime - action.payload;
       if (newTime <= 0) {
         if (state.phase === 'memorize') return { ...gameReducer(state, { type: 'START_SOLVE' }) };
+        if (state.phase === 're-memorize') return { ...gameReducer(state, { type: 'START_SOLVE' }) };
         if (state.phase === 'solve') {
              const newHistory: PerformanceRecord[] = [...state.history, { correct: false, time: state.solveDuration, difficulty: state.difficulty }];
              return { ...state, phase: 'result', feedback: 'timeup', history: newHistory, remainingTime: 2000 };
@@ -122,6 +137,18 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         if (state.phase === 'result') return { ...gameReducer(state, { type: 'NEXT_QUESTION' }) };
       }
       return { ...state, remainingTime: newTime };
+    }
+    case 'USE_POWERUP': {
+        switch (action.payload) {
+            case 'extraTime':
+                return { ...state, remainingTime: state.remainingTime + 5000 };
+            case 'mistakeShield':
+                return { ...state, isShieldActive: true };
+            case 'numberReveal':
+                return { ...state, phase: 're-memorize', remainingTime: 1500 };
+            default:
+                return state;
+        }
     }
     case 'RESET':
       return { ...initialState };
@@ -768,6 +795,10 @@ export const useGame = () => {
     dispatch({ type: 'SUBMIT_ANSWER', payload: { answer, time: timeTaken } });
   }, [state.startTime]);
 
+  const usePowerUp = useCallback((powerUp: PowerUpType) => {
+      dispatch({ type: 'USE_POWERUP', payload: powerUp });
+  }, []);
+
   useEffect(() => {
     if (state.phase === 'config' || state.phase === 'pre-config' || state.phase === 'summary' || state.remainingTime <= 0) return;
 
@@ -778,5 +809,5 @@ export const useGame = () => {
     return () => clearInterval(timer);
   }, [state.phase, state.remainingTime]);
 
-  return { state, selectCategory, startConfiguredGame, submitAnswer, resetGame, endGame, backToConfig };
+  return { state, selectCategory, startConfiguredGame, submitAnswer, resetGame, endGame, backToConfig, usePowerUp };
 };

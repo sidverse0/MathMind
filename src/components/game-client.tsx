@@ -6,8 +6,8 @@ import { useGame } from '@/hooks/use-game';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Slider } from "@/components/ui/slider";
-import { Plus, Minus, X, Divide, Trophy, Timer, CheckCircle, XCircle, Sparkles, Sigma, Percent, FunctionSquare, ArrowRight, Coins, LogOut, BarChart, LayoutGrid, ArrowLeft, Waves, TrendingUp, Box, Cylinder, MoveHorizontal, ArrowRightLeft, Landmark, Receipt, Combine, Square, RectangleHorizontal, Triangle, Circle, SquareRadical, Braces, Milestone, Anchor, Key, BetweenHorizontalStart, Pilcrow, UnfoldVertical, PercentCircle, Banknote, UtilityPole, Puzzle } from 'lucide-react';
-import type { MathCategory, DifficultyLevel, GameState } from '@/lib/types';
+import { Plus, Minus, X, Divide, Trophy, Timer, CheckCircle, XCircle, Sparkles, Sigma, Percent, FunctionSquare, ArrowRight, Coins, LogOut, BarChart, LayoutGrid, ArrowLeft, Waves, TrendingUp, Box, Cylinder, MoveHorizontal, ArrowRightLeft, Landmark, Receipt, Combine, Square, RectangleHorizontal, Triangle, Circle, SquareRadical, Braces, Milestone, Anchor, Key, BetweenHorizontalStart, Pilcrow, UnfoldVertical, PercentCircle, Banknote, UtilityPole, Puzzle, Zap, Shield, Eye } from 'lucide-react';
+import type { MathCategory, DifficultyLevel, GameState, PowerUpType } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -16,8 +16,13 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { playSound } from '@/lib/audio';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useToast } from '@/hooks/use-toast';
+
 
 const quickStartCategories: MathCategory[] = ['addition', 'subtraction', 'multiplication', 'mixed'];
+
+const INVENTORY_KEY = 'mathmagix_inventory';
 
 const IntersectIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -76,14 +81,43 @@ const categoryIcons: Record<MathCategory, React.ReactNode> = {
   'compound-interest': <Landmark className="h-8 w-8" />, 'sales-tax': <Receipt className="h-8 w-8" />,
 };
 
+const getInitialInventory = (): Record<PowerUpType, number> => ({
+    extraTime: 0,
+    mistakeShield: 0,
+    numberReveal: 0
+});
+
 function GameClientContent() {
-  const { state, selectCategory, startConfiguredGame, submitAnswer, resetGame, endGame, backToConfig } = useGame();
+  const { state, selectCategory, startConfiguredGame, submitAnswer, resetGame, endGame, backToConfig, usePowerUp } = useGame();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { toast } = useToast();
 
   const [difficulty, setDifficulty] = useState<DifficultyLevel>('easy');
   const [numQuestions, setNumQuestions] = useState(10);
   const [isCustomQuestions, setIsCustomQuestions] = useState(false);
+  const [inventory, setInventory] = useState<Record<PowerUpType, number>>(getInitialInventory());
+
+  useEffect(() => {
+    const storedInventory = localStorage.getItem(INVENTORY_KEY);
+    setInventory(storedInventory ? JSON.parse(storedInventory) : getInitialInventory());
+  }, []);
+
+  const handleUsePowerUp = (powerUp: PowerUpType) => {
+      if (inventory[powerUp] > 0) {
+          usePowerUp(powerUp);
+          const newInventory = { ...inventory, [powerUp]: inventory[powerUp] - 1 };
+          setInventory(newInventory);
+          localStorage.setItem(INVENTORY_KEY, JSON.stringify(newInventory));
+          toast({ title: `${powerUp.replace(/([A-Z])/g, ' $1').trim()} used!` });
+      }
+  };
+
+  const powerUpConfig: { type: PowerUpType, icon: React.ReactNode, name: string }[] = [
+    { type: 'extraTime', icon: <Zap />, name: 'Extra Time' },
+    { type: 'mistakeShield', icon: <Shield />, name: 'Mistake Shield' },
+    { type: 'numberReveal', icon: <Eye />, name: 'Number Reveal' },
+  ];
 
   // Sound effect logic
   const prevGameState = useRef<GameState>(state);
@@ -101,7 +135,7 @@ function GameClientContent() {
             playSound('correct');
         } else if (state.feedback === 'incorrect') {
             playSound('incorrect');
-        } else if (state.feedback === 'timeup') {
+        } else if (state.feedback === 'timeup' || state.feedback === 'shielded') {
             playSound('timeup');
         }
     }
@@ -144,12 +178,13 @@ function GameClientContent() {
         avgTime: String(avgTime),
         totalQuestions: String(state.totalQuestions),
         category: state.category || 'mixed',
+        difficulty: String(state.difficulty),
       });
       
       router.push(`/app/challenge/summary?${params.toString()}`);
       resetGame();
     }
-  }, [state.phase, state.history, state.score, state.coins, state.totalQuestions, state.category, router, resetGame]);
+  }, [state.phase, state.history, state.score, state.coins, state.totalQuestions, state.category, state.difficulty, router, resetGame]);
 
   const handleOptionClick = (option: string) => {
     submitAnswer(option);
@@ -331,7 +366,7 @@ function GameClientContent() {
                     </div>
                 )}
 
-                {state.phase === 'memorize' && (
+                {(state.phase === 'memorize' || state.phase === 're-memorize') && (
                 <div className={phaseWrapperClass}>
                     <p className="text-sm font-semibold tracking-wider uppercase text-primary mb-3">Memorize</p>
                     <h2 className="text-2xl md:text-4xl font-bold mb-6">Memorize the numbers</h2>
@@ -354,7 +389,7 @@ function GameClientContent() {
                             </motion.div>
                         ))}
                     </motion.div>
-                    <Progress value={(state.remainingTime / state.memorizeDuration) * 100} className="h-4 rounded-full max-w-md mx-auto" />
+                    <Progress value={(state.remainingTime / (state.phase === 'memorize' ? state.memorizeDuration : 1500)) * 100} className="h-4 rounded-full max-w-md mx-auto" />
                 </div>
                 )}
                 {state.phase === 'solve' && (
@@ -396,6 +431,30 @@ function GameClientContent() {
                     <div className="w-full max-w-md mt-8">
                       <Progress value={(state.remainingTime / state.solveDuration) * 100} className="h-2" />
                     </div>
+
+                    <div className="mt-8 flex justify-center items-center gap-4">
+                      <TooltipProvider>
+                          {powerUpConfig.map(p => (
+                            <Tooltip key={p.type}>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                      variant="outline"
+                                      size="icon"
+                                      className="h-14 w-14 rounded-full shadow-lg relative"
+                                      onClick={() => handleUsePowerUp(p.type)}
+                                      disabled={inventory[p.type] === 0 || (p.type === 'mistakeShield' && state.isShieldActive)}
+                                    >
+                                      {p.icon}
+                                      {inventory[p.type] > 0 && <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">{inventory[p.type]}</span>}
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>{p.name}</p>
+                                </TooltipContent>
+                            </Tooltip>
+                          ))}
+                      </TooltipProvider>
+                    </div>
                 </div>
                 )}
                 {state.phase === 'result' && (
@@ -415,8 +474,13 @@ function GameClientContent() {
                             <Timer className="w-24 h-24 md:w-32 md:h-32 text-yellow-500" />
                         </motion.div>
                     )}
+                    {state.feedback === 'shielded' && (
+                         <motion.div initial={{scale:0}} animate={{scale:1}} transition={{type: 'spring', stiffness: 260, damping: 20}}>
+                            <Shield className="w-24 h-24 md:w-32 md:h-32 text-blue-500" />
+                        </motion.div>
+                    )}
                     <h2 className="text-4xl md:text-5xl font-bold capitalize">
-                        {state.feedback === 'timeup' ? "Time's Up!" : (state.feedback === 'correct' ? "Correct!" : "Incorrect")}
+                        {state.feedback === 'timeup' ? "Time's Up!" : (state.feedback === 'correct' ? "Correct!" : (state.feedback === 'shielded' ? "Shielded!" : "Incorrect"))}
                     </h2>
                      {state.feedback === 'correct' && (
                          <motion.p 
@@ -429,8 +493,11 @@ function GameClientContent() {
                             <span>+ {state.difficulty} <Coins className="inline w-6 h-6 -mt-1"/></span>
                         </motion.p>
                      )}
-                     {state.feedback === 'incorrect' && (
-                        <p className="text-xl md:text-2xl mt-1 text-muted-foreground">Answer: <span className="text-foreground font-bold">{state.currentChallenge?.answer}</span></p>
+                     {(state.feedback === 'incorrect' || state.feedback === 'shielded') && (
+                        <p className="text-xl md:text-2xl mt-1 text-muted-foreground">
+                            {state.feedback === 'shielded' && 'Your answer was wrong, but your shield protected you! '}
+                            The correct answer was: <span className="text-foreground font-bold">{state.currentChallenge?.answer}</span>
+                        </p>
                     )}
                     <p className="text-base text-muted-foreground mt-4">Next round starting soon...</p>
                     <Progress value={(state.remainingTime / 2000) * 100} className="mt-3 w-1/2 max-w-xs h-3" />
@@ -456,6 +523,7 @@ function GameClientContent() {
                         <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><BarChart className="w-3 h-3 text-blue-400" />Question: <span className="font-bold tabular-nums">{state.currentQuestionIndex}/{state.totalQuestions}</span></div>
                         <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><Trophy className="w-3 h-3 text-orange-400" /> <span className="font-bold tabular-nums">{state.score}</span></div>
                         <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><Coins className="w-3 h-3 text-yellow-400" /> <span className="font-bold tabular-nums">{state.coins}</span></div>
+                        {state.isShieldActive && <div className="flex items-center gap-1.5 bg-blue-500/20 text-blue-600 dark:text-blue-400 py-1 px-2.5 rounded-full"><Shield className="w-3 h-3" /> Shield Active</div>}
                     </div>
                 )}
             </div>

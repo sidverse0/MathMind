@@ -13,22 +13,37 @@ import Link from 'next/link';
 import { playSound } from '@/lib/audio';
 
 const COLORS = ['hsl(var(--chart-1))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))'];
+const COINS_KEY = 'mathmagix_coins';
+const DIFFICULTY_KEY = 'mathmagix_difficulty';
 
 function SummaryContent() {
     const searchParams = useSearchParams();
 
     const score = Number(searchParams.get('score') || 0);
-    const coins = Number(searchParams.get('coins') || 0);
+    const coinsEarned = Number(searchParams.get('coins') || 0);
     const correct = Number(searchParams.get('correct') || 0);
     const incorrect = Number(searchParams.get('incorrect') || 0);
     const skipped = Number(searchParams.get('skipped') || 0);
     const accuracy = Number(searchParams.get('accuracy') || 0);
     const avgTime = Number(searchParams.get('avgTime') || 0);
     const category = searchParams.get('category');
+    const finalDifficulty = Number(searchParams.get('difficulty') || 5);
 
     useEffect(() => {
         playSound('summary');
-    }, []);
+
+        // Update total coins in localStorage
+        if (coinsEarned > 0) {
+            const currentCoins = Number(localStorage.getItem(COINS_KEY) || '500');
+            localStorage.setItem(COINS_KEY, String(currentCoins + coinsEarned));
+        }
+
+        // Update difficulty in localStorage
+        localStorage.setItem(DIFFICULTY_KEY, String(finalDifficulty));
+
+        // Dispatch storage event to notify other tabs/components
+        window.dispatchEvent(new Event('storage'));
+    }, [coinsEarned, finalDifficulty]);
 
     const pieData = [
         { name: 'Correct', value: correct },
@@ -136,7 +151,7 @@ function SummaryContent() {
                             <div className="flex flex-col items-center justify-center gap-2 p-6 rounded-xl bg-secondary/50 text-center h-full border hover:bg-secondary transition-colors">
                                 <Coins className="h-8 w-8 text-yellow-400" />
                                 <p className="text-sm font-medium text-muted-foreground">Coins Earned</p>
-                                <p className="font-bold text-3xl tracking-tight">{coins}</p>
+                                <p className="font-bold text-3xl tracking-tight">{coinsEarned}</p>
                             </div>
                         </CardContent>
                     </Card>

@@ -13,7 +13,6 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 const statItems = [
     { label: "Total Score", value: "14,500", icon: <Trophy className="h-6 w-6 text-orange-400"/> },
-    { label: "Coins", value: "573", icon: <Coins className="h-6 w-6 text-yellow-400"/> },
     { label: "Global Rank", value: "#3", icon: <Star className="h-6 w-6 text-indigo-400"/> },
     { label: "Top Skill", value: "Addition", icon: <BarChart className="h-6 w-6 text-blue-400"/> },
     { label: "Avg. Time", value: "4.2s", icon: <Clock className="h-6 w-6 text-red-400"/> },
@@ -25,6 +24,7 @@ export default function ProfilePage() {
   const [tempName, setTempName] = useState(name);
   const [gender, setGender] = useState("male");
   const [tempGender, setTempGender] = useState(gender);
+  const [coins, setCoins] = useState(0);
 
   useEffect(() => {
     const storedName = localStorage.getItem('mathMindUserName');
@@ -37,6 +37,15 @@ export default function ProfilePage() {
         setGender(storedGender);
         setTempGender(storedGender);
     }
+    const storedCoins = localStorage.getItem('mathmagix_coins');
+    setCoins(storedCoins ? parseInt(storedCoins, 10) : 500);
+
+    const handleStorageChange = () => {
+        const newCoins = localStorage.getItem('mathmagix_coins');
+        setCoins(newCoins ? parseInt(newCoins, 10) : 500);
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const handleSaveChanges = () => {
@@ -44,9 +53,17 @@ export default function ProfilePage() {
     localStorage.setItem('mathMindUserName', tempName);
     setGender(tempGender);
     localStorage.setItem('mathMindUserGender', tempGender);
+    // Trigger a storage event to update other components
+    window.dispatchEvent(new Event('storage'));
   };
   
   const avatarUrl = gender === 'female' ? 'https://files.catbox.moe/rv4git.jpg' : 'https://files.catbox.moe/uvi8l9.png';
+
+  const allStats = [
+    ...statItems.slice(0, 1),
+    { label: "Coins", value: coins.toLocaleString(), icon: <Coins className="h-6 w-6 text-yellow-400"/> },
+    ...statItems.slice(1)
+  ];
 
   return (
     <div className="flex flex-col gap-8">
@@ -125,7 +142,7 @@ export default function ProfilePage() {
                 </CardHeader>
                 <CardContent className="p-4 sm:p-6">
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                        {statItems.map((item, index) => (
+                        {allStats.map((item, index) => (
                             <motion.div 
                                 key={item.label}
                                 initial={{ opacity: 0, x: -20 }}
