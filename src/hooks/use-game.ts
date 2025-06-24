@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useReducer, useCallback, useEffect } from 'react';
@@ -149,7 +148,17 @@ function generateChallenge(category: MathCategory, difficulty: number): Challeng
 
   const d = difficulty; // alias for difficulty
   const rand = (max: number, min = 1) => Math.floor(Math.random() * (max - min + 1)) + min;
-  const toFixed = (num: number) => parseFloat(num.toFixed(2));
+  const toFixed = (num: number, places = 2) => parseFloat(num.toFixed(places));
+  
+  function factorial(n: number): number {
+    if (n < 0) return NaN;
+    if (n === 0 || n === 1) return 1;
+    let result = 1;
+    for (let i = 2; i <= n; i++) {
+        result *= i;
+    }
+    return result;
+  }
 
   switch (currentCategory) {
     case 'addition':
@@ -470,6 +479,208 @@ function generateChallenge(category: MathCategory, difficulty: number): Challeng
         numbers = [start, start + step, start + 2*step];
         answer = start + 3*step;
         question = `What's the next number in the sequence: ${numbers.join(', ')}, ...`;
+        break;
+    }
+    // Newly Added
+    case 'sine': {
+        operatorSymbol = 'sin';
+        const angles = [30, 45, 60, 90];
+        const angle = angles[rand(angles.length - 1, 0)];
+        numbers = [angle];
+        answer = toFixed(Math.sin(angle * Math.PI / 180));
+        question = `sin(${angle}°)`;
+        break;
+    }
+    case 'cosine': {
+        operatorSymbol = 'cos';
+        const angles = [30, 45, 60, 0];
+        const angle = angles[rand(angles.length - 1, 0)];
+        numbers = [angle];
+        answer = toFixed(Math.cos(angle * Math.PI / 180));
+        question = `cos(${angle}°)`;
+        break;
+    }
+    case 'tangent': {
+        operatorSymbol = 'tan';
+        const angles = [30, 45, 60, 0];
+        const angle = angles[rand(angles.length - 1, 0)];
+        numbers = [angle];
+        answer = toFixed(Math.tan(angle * Math.PI / 180));
+        question = `tan(${angle}°)`;
+        break;
+    }
+    case 'basic-derivatives': {
+        operatorSymbol = 'd/dx';
+        const a = rand(d, 2);
+        const n = rand(4, 2);
+        const x = rand(3, 1);
+        numbers = [a, n, x];
+        answer = a * n * Math.pow(x, n - 1);
+        question = `d/dx (${a}x^${n}) at x=${x}`;
+        break;
+    }
+    case 'basic-integrals': {
+        operatorSymbol = '∫';
+        const a = rand(d, 1);
+        const n = rand(3, 1);
+        const b_val = rand(3, 1);
+        numbers = [a, n, b_val];
+        answer = toFixed((a / (n + 1)) * Math.pow(b_val, n + 1));
+        question = `∫ from 0 to ${b_val} of ${a}x^${n} dx`;
+        break;
+    }
+    case 'logarithms': {
+        operatorSymbol = 'log';
+        const b_val = rand(4, 2);
+        const x_val = rand(Math.floor(d / 2) + 2, 2);
+        const a_val = Math.pow(b_val, x_val);
+        numbers = [b_val, a_val];
+        answer = x_val;
+        question = `log base ${b_val} of ${a_val}`;
+        break;
+    }
+    case 'polynomial-addition': {
+        operatorSymbol = 'P(x)+Q(x)';
+        const a = rand(d * 2);
+        const b_val = rand(d * 2);
+        const e = rand(d * 2);
+        const f = rand(d * 2);
+        numbers = [a, b_val, e, f];
+        answer = b_val + e;
+        question = `Coefficient of x in (${a}x + ${b_val}) + (${e}x + ${f})`;
+        break;
+    }
+    case 'polynomial-subtraction': {
+        operatorSymbol = 'P(x)-Q(x)';
+        const a = rand(d * 2);
+        const b_val = rand(d * 2);
+        const e = rand(d * 2);
+        const f = rand(d * 2);
+        numbers = [a, b_val, e, f];
+        answer = b_val - e;
+        question = `Coefficient of x in (${a}x + ${b_val}) - (${e}x + ${f})`;
+        break;
+    }
+    case 'inequalities': {
+        operatorSymbol = '<';
+        const a = rand(d, 2);
+        const x_ans = rand(d + 2);
+        const c_val = a * x_ans + rand(a - 1, 1);
+        numbers = [a, c_val];
+        answer = x_ans;
+        question = `Largest integer for x in ${a}x < ${c_val}`;
+        break;
+    }
+    case 'volume-cube': {
+        operatorSymbol = 'V³';
+        const side = rand(d + 2);
+        numbers = [side];
+        answer = Math.pow(side, 3);
+        question = `Volume of a cube with side length ${side}`;
+        break;
+    }
+    case 'volume-sphere': {
+        operatorSymbol = 'V⨁';
+        const radius = rand(d + 1);
+        numbers = [radius];
+        answer = toFixed((4 / 3) * Math.PI * Math.pow(radius, 3));
+        question = `Volume of a sphere with radius ${radius} (π≈3.14)`;
+        break;
+    }
+    case 'volume-cylinder': {
+        operatorSymbol = 'V▭';
+        const radius = rand(d + 1);
+        const height = rand(d + 5);
+        numbers = [radius, height];
+        answer = toFixed(Math.PI * Math.pow(radius, 2) * height);
+        question = `Volume of a cylinder with radius ${radius} and height ${height} (π≈3.14)`;
+        break;
+    }
+    case 'distance-formula': {
+        operatorSymbol = '↔';
+        const x1 = rand(d * 2);
+        const y1 = rand(d * 2);
+        const x2 = rand(d * 2);
+        const y2 = rand(d * 2);
+        numbers = [x1, y1, x2, y2];
+        answer = toFixed(Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)));
+        question = `Distance between (${x1},${y1}) and (${x2},${y2})`;
+        break;
+    }
+    case 'slope-formula': {
+        operatorSymbol = 'm';
+        const x1 = rand(d * 2);
+        const x2 = rand(d * 2, x1 + 1);
+        const y1 = rand(d * 2);
+        const y2 = rand(d * 2);
+        numbers = [x1, y1, x2, y2];
+        answer = toFixed((y2 - y1) / (x2 - x1));
+        question = `Slope of line between (${x1},${y1}) and (${x2},${y2})`;
+        break;
+    }
+    case 'factorial': {
+        operatorSymbol = '!';
+        const n = rand(d + 2, 2);
+        numbers = [n];
+        answer = factorial(n);
+        question = `${n}!`;
+        break;
+    }
+    case 'permutations': {
+        operatorSymbol = 'P(n,k)';
+        const n = rand(d + 2, 3);
+        const k = rand(n - 1, 2);
+        numbers = [n, k];
+        answer = factorial(n) / factorial(n - k);
+        question = `P(${n}, ${k})`;
+        break;
+    }
+    case 'combinations': {
+        operatorSymbol = 'C(n,k)';
+        const n = rand(d + 3, 4);
+        const k = rand(n - 1, 2);
+        numbers = [n, k];
+        answer = factorial(n) / (factorial(k) * factorial(n - k));
+        question = `C(${n}, ${k})`;
+        break;
+    }
+    case 'set-union': {
+        operatorSymbol = '∪';
+        const setA = new Set(Array.from({ length: rand(d + 2, 2) }, () => rand(d * 3)));
+        const setB = new Set(Array.from({ length: rand(d + 2, 2) }, () => rand(d * 3)));
+        numbers = [...setA, ...setB];
+        const union = new Set([...setA, ...setB]);
+        answer = union.size;
+        question = `|A ∪ B| for A={${[...setA].join(',')}} and B={${[...setB].join(',')}}`;
+        break;
+    }
+    case 'set-intersection': {
+        operatorSymbol = '∩';
+        const setA = new Set(Array.from({ length: rand(d + 2, 2) }, () => rand(d * 3)));
+        const setB = new Set(Array.from({ length: rand(d + 2, 2) }, () => rand(d * 3)));
+        numbers = [...setA, ...setB];
+        const intersection = new Set([...setA].filter(x => setB.has(x)));
+        answer = intersection.size;
+        question = `|A ∩ B| for A={${[...setA].join(',')}} and B={${[...setB].join(',')}}`;
+        break;
+    }
+    case 'compound-interest': {
+        operatorSymbol = 'CI';
+        const principal = rand(d * 50, 50);
+        const rate = rand(10, 2);
+        const time = rand(3, 1);
+        numbers = [principal, rate, time];
+        answer = toFixed(principal * Math.pow(1 + rate / 100, time) - principal);
+        question = `Compound interest on $${principal} at ${rate}% for ${time} year(s) compounded annually`;
+        break;
+    }
+    case 'sales-tax': {
+        operatorSymbol = 'tax';
+        const price = rand(d * 20, 10);
+        const taxRate = rand(10, 5);
+        numbers = [price, taxRate];
+        answer = toFixed(price * (1 + taxRate / 100));
+        question = `Total cost of a $${price} item with ${taxRate}% sales tax`;
         break;
     }
   }

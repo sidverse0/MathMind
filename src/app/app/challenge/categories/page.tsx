@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { LayoutDashboard, Plus, Minus, X, Divide, Sparkles, Sigma, Percent, FunctionSquare, SquareRadical, Braces, Square, RectangleHorizontal, Triangle, Circle, Combine, Milestone, Anchor, Key, BarChart, BetweenHorizontalStart, Pilcrow, UnfoldVertical, PercentCircle, Banknote, UtilityPole, Timer, Puzzle, LayoutGrid, ArrowLeft } from 'lucide-react';
+import { LayoutDashboard, Plus, Minus, X, Divide, Sparkles, Sigma, Percent, FunctionSquare, SquareRadical, Braces, Square, RectangleHorizontal, Triangle, Circle, Combine, Milestone, Anchor, Key, BarChart, BetweenHorizontalStart, Pilcrow, UnfoldVertical, PercentCircle, Banknote, UtilityPole, Timer, Puzzle, LayoutGrid, ArrowLeft, Waves, TrendingUp, Box, Cylinder, MoveHorizontal, ArrowRightLeft, Union, Intersect, Landmark, Receipt } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import type { MathCategory } from '@/lib/types';
@@ -10,12 +10,15 @@ import React from 'react';
 
 const categoryGroups: Record<string, MathCategory[]> = {
     'Arithmetic': ['addition', 'subtraction', 'multiplication', 'division', 'mixed'],
-    'Advanced Arithmetic': ['fractions', 'decimals', 'percentages', 'ratios', 'exponents', 'square-roots', 'order-of-operations'],
-    'Algebra': ['algebra', 'linear-equations', 'quadratic-equations'],
-    'Geometry': ['area-of-squares', 'area-of-rectangles', 'area-of-triangles', 'circumference', 'pythagorean-theorem'],
+    'Advanced Arithmetic': ['fractions', 'decimals', 'percentages', 'ratios', 'exponents', 'square-roots', 'order-of-operations', 'factorial'],
+    'Algebra': ['algebra', 'linear-equations', 'quadratic-equations', 'logarithms', 'polynomial-addition', 'polynomial-subtraction', 'inequalities'],
+    'Geometry': ['area-of-squares', 'area-of-rectangles', 'area-of-triangles', 'circumference', 'pythagorean-theorem', 'volume-cube', 'volume-sphere', 'volume-cylinder', 'distance-formula', 'slope-formula'],
+    'Trigonometry': ['sine', 'cosine', 'tangent'],
+    'Calculus': ['basic-derivatives', 'basic-integrals'],
+    'Discrete Math': ['permutations', 'combinations', 'set-union', 'set-intersection'],
     'Number Theory': ['prime-numbers', 'factors', 'multiples', 'roman-numerals'],
     'Statistics & Probability': ['mean', 'median', 'mode', 'range', 'simple-probability'],
-    'Practical Math': ['simple-interest', 'discounts', 'unit-conversion', 'time-calculation'],
+    'Practical Math': ['simple-interest', 'compound-interest', 'discounts', 'sales-tax', 'unit-conversion', 'time-calculation'],
     'Logic': ['logic-puzzles']
 };
 
@@ -29,6 +32,13 @@ const categoryIcons: Record<MathCategory, React.ReactNode> = {
   'roman-numerals': <Milestone />, mean: <BarChart />, median: <UnfoldVertical />, mode: <BarChart />,
   range: <UnfoldVertical />, 'simple-probability': <PercentCircle />, 'simple-interest': <Banknote />,
   discounts: <Banknote />, 'unit-conversion': <UtilityPole />, 'time-calculation': <Timer />, 'logic-puzzles': <Puzzle />,
+  // Newly Added
+  sine: <Waves />, cosine: <Sigma />, tangent: <Sigma />,
+  'basic-derivatives': <TrendingUp />, 'basic-integrals': <Sigma />,
+  logarithms: <Sigma />, 'polynomial-addition': <Plus />, 'polynomial-subtraction': <Minus />, inequalities: <Sigma />,
+  'volume-cube': <Box />, 'volume-sphere': <Circle />, 'volume-cylinder': <Cylinder />, 'distance-formula': <MoveHorizontal />, 'slope-formula': <TrendingUp />,
+  permutations: <ArrowRightLeft />, combinations: <Combine />, 'set-union': <Union />, 'set-intersection': <Intersect />, factorial: <Sigma />,
+  'compound-interest': <Landmark />, 'sales-tax': <Receipt />,
 };
 
 

@@ -11,7 +11,14 @@ export type MathCategory =
   | 'prime-numbers' | 'factors' | 'multiples' | 'roman-numerals'
   | 'mean' | 'median' | 'mode' | 'range' | 'simple-probability'
   | 'simple-interest' | 'discounts' | 'unit-conversion' | 'time-calculation'
-  | 'logic-puzzles';
+  | 'logic-puzzles'
+  // Newly Added
+  | 'sine' | 'cosine' | 'tangent'
+  | 'basic-derivatives' | 'basic-integrals'
+  | 'logarithms' | 'polynomial-addition' | 'polynomial-subtraction' | 'inequalities'
+  | 'volume-cube' | 'volume-sphere' | 'volume-cylinder' | 'distance-formula' | 'slope-formula'
+  | 'permutations' | 'combinations' | 'set-union' | 'set-intersection' | 'factorial'
+  | 'compound-interest' | 'sales-tax';
 
 export type OperatorSymbol = 
   // Existing
@@ -19,7 +26,15 @@ export type OperatorSymbol =
   // New
   | 'ƒ' | '.' | ':' | '√' | 'PEMDAS' | '■' | '▭' | '△' | '○' | 'a²+b²=c²'
   | 'x=' | 'x₁‚x₂' | 'P?' | 'ƒ(n)' | 'M' | 'I' | 'avg' | 'med' | 'mode' | 'R'
-  | 'P(A)' | '$' | '⇔' | '⏳' | '∴';
+  | 'P(A)' | '$' | '⇔' | '⏳' | '∴'
+  // Newly Added
+  | 'sin' | 'cos' | 'tan'
+  | 'd/dx' | '∫'
+  | 'log' | 'P(x)+Q(x)' | 'P(x)-Q(x)' | '<'
+  | 'V³' | 'V⨁' | 'V▭' | '↔' | 'm'
+  | 'P(n,k)' | 'C(n,k)' | '∪' | '∩' | '!'
+  | 'CI' | 'tax';
+
 
 export interface Challenge {
   numbers: number[];

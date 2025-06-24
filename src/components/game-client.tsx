@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useReducer, useCallback, useEffect, Suspense, useRef } from 'react';
@@ -6,7 +5,7 @@ import { useGame } from '@/hooks/use-game';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Slider } from "@/components/ui/slider";
-import { Plus, Minus, X, Divide, Trophy, Timer, CheckCircle, XCircle, Sparkles, Sigma, Percent, FunctionSquare, ArrowRight, Coins, LogOut, BarChart, LayoutGrid, ArrowLeft } from 'lucide-react';
+import { Plus, Minus, X, Divide, Trophy, Timer, CheckCircle, XCircle, Sparkles, Sigma, Percent, FunctionSquare, ArrowRight, Coins, LogOut, BarChart, LayoutGrid, ArrowLeft, Waves, TrendingUp, Box, Cylinder, MoveHorizontal, ArrowRightLeft, Union, Intersect, Landmark, Receipt, Combine, Square, RectangleHorizontal, Triangle, Circle, SquareRadical, Braces, Milestone, Anchor, Key, BetweenHorizontalStart, Pilcrow, UnfoldVertical, PercentCircle, Banknote, UtilityPole, Puzzle } from 'lucide-react';
 import type { MathCategory, DifficultyLevel, GameState } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -29,31 +28,38 @@ const categoryIcons: Record<MathCategory, React.ReactNode> = {
   percentages: <Percent className="h-8 w-8" />,
   exponents: <FunctionSquare className="h-8 w-8" />,
   fractions: <Sigma className="h-8 w-8" />,
-  decimals: <Sigma className="h-8 w-8" />,
-  ratios: <Sigma className="h-8 w-8" />,
-  'square-roots': <Sigma className="h-8 w-8" />,
-  'order-of-operations': <Sigma className="h-8 w-8" />,
-  'area-of-squares': <Sigma className="h-8 w-8" />,
-  'area-of-rectangles': <Sigma className="h-8 w-8" />,
-  'area-of-triangles': <Sigma className="h-8 w-8" />,
-  circumference: <Sigma className="h-8 w-8" />,
-  'pythagorean-theorem': <Sigma className="h-8 w-8" />,
-  'linear-equations': <Sigma className="h-8 w-8" />,
+  decimals: <Milestone className="h-8 w-8" />,
+  ratios: <BetweenHorizontalStart className="h-8 w-8" />,
+  'square-roots': <SquareRadical className="h-8 w-8" />,
+  'order-of-operations': <Braces className="h-8 w-8" />,
+  'area-of-squares': <Square className="h-8 w-8" />,
+  'area-of-rectangles': <RectangleHorizontal className="h-8 w-8" />,
+  'area-of-triangles': <Triangle className="h-8 w-8" />,
+  circumference: <Circle className="h-8 w-8" />,
+  'pythagorean-theorem': <Combine className="h-8 w-8" />,
+  'linear-equations': <Milestone className="h-8 w-8" />,
   'quadratic-equations': <Sigma className="h-8 w-8" />,
-  'prime-numbers': <Sigma className="h-8 w-8" />,
-  'factors': <Sigma className="h-8 w-8" />,
-  'multiples': <Sigma className="h-8 w-8" />,
-  'roman-numerals': <Sigma className="h-8 w-8" />,
-  'mean': <Sigma className="h-8 w-8" />,
-  'median': <Sigma className="h-8 w-8" />,
-  'mode': <Sigma className="h-8 w-8" />,
-  'range': <Sigma className="h-8 w-8" />,
-  'simple-probability': <Sigma className="h-8 w-8" />,
-  'simple-interest': <Sigma className="h-8 w-8" />,
-  'discounts': <Sigma className="h-8 w-8" />,
-  'unit-conversion': <Sigma className="h-8 w-8" />,
-  'time-calculation': <Sigma className="h-8 w-8" />,
-  'logic-puzzles': <Sigma className="h-8 w-8" />,
+  'prime-numbers': <Anchor className="h-8 w-8" />,
+  'factors': <Key className="h-8 w-8" />,
+  'multiples': <Pilcrow className="h-8 w-8" />,
+  'roman-numerals': <Milestone className="h-8 w-8" />,
+  mean: <BarChart className="h-8 w-8" />,
+  median: <UnfoldVertical className="h-8 w-8" />,
+  mode: <BarChart className="h-8 w-8" />,
+  range: <UnfoldVertical className="h-8 w-8" />,
+  'simple-probability': <PercentCircle className="h-8 w-8" />,
+  'simple-interest': <Banknote className="h-8 w-8" />,
+  discounts: <Banknote className="h-8 w-8" />,
+  'unit-conversion': <UtilityPole className="h-8 w-8" />,
+  'time-calculation': <Timer className="h-8 w-8" />,
+  'logic-puzzles': <Puzzle className="h-8 w-8" />,
+  // Newly Added
+  sine: <Waves className="h-8 w-8" />, cosine: <Sigma className="h-8 w-8" />, tangent: <Sigma className="h-8 w-8" />,
+  'basic-derivatives': <TrendingUp className="h-8 w-8" />, 'basic-integrals': <Sigma className="h-8 w-8" />,
+  logarithms: <Sigma className="h-8 w-8" />, 'polynomial-addition': <Plus className="h-8 w-8" />, 'polynomial-subtraction': <Minus className="h-8 w-8" />, inequalities: <Sigma className="h-8 w-8" />,
+  'volume-cube': <Box className="h-8 w-8" />, 'volume-sphere': <Circle className="h-8 w-8" />, 'volume-cylinder': <Cylinder className="h-8 w-8" />, 'distance-formula': <MoveHorizontal className="h-8 w-8" />, 'slope-formula': <TrendingUp className="h-8 w-8" />,
+  permutations: <ArrowRightLeft className="h-8 w-8" />, combinations: <Combine className="h-8 w-8" />, 'set-union': <Union className="h-8 w-8" />, 'set-intersection': <Intersect className="h-8 w-8" />, factorial: <Sigma className="h-8 w-8" />,
+  'compound-interest': <Landmark className="h-8 w-8" />, 'sales-tax': <Receipt className="h-8 w-8" />,
 };
 
 function GameClientContent() {
@@ -154,7 +160,6 @@ function GameClientContent() {
   };
   
   const handleSelectCategory = (category: MathCategory) => {
-    playSound('click');
     selectCategory(category);
   };
 
