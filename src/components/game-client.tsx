@@ -114,9 +114,9 @@ function GameClientContent() {
   };
 
   const powerUpConfig: { type: PowerUpType; icon: React.ReactNode; name: string; colorClass: string }[] = [
-    { type: 'extraTime', icon: <Zap />, name: 'Extra Time', colorClass: 'bg-chart-4/20 text-chart-4 hover:bg-chart-4/30' },
-    { type: 'mistakeShield', icon: <Shield />, name: 'Mistake Shield', colorClass: 'bg-primary/10 text-primary hover:bg-primary/20' },
-    { type: 'numberReveal', icon: <Eye />, name: 'Number Reveal', colorClass: 'bg-chart-2/20 text-chart-2 hover:bg-chart-2/30' },
+    { type: 'extraTime', icon: <Zap />, name: 'Extra Time', colorClass: 'border-chart-4 hover:bg-chart-4/10' },
+    { type: 'mistakeShield', icon: <Shield />, name: 'Mistake Shield', colorClass: 'border-primary hover:bg-primary/10' },
+    { type: 'numberReveal', icon: <Eye />, name: 'Number Reveal', colorClass: 'border-chart-2 hover:bg-chart-2/10' },
   ];
 
   // Sound effect logic
@@ -439,8 +439,9 @@ function GameClientContent() {
                                 <TooltipTrigger asChild>
                                     <Button
                                       size="icon"
+                                      variant="outline"
                                       className={cn(
-                                        "h-14 w-14 rounded-full shadow-lg relative transition-all [&>svg]:h-6 [&>svg]:w-6",
+                                        "h-16 w-16 rounded-full shadow-lg relative transition-all border-2 text-muted-foreground [&>svg]:h-8 [&>svg]:w-8",
                                         p.colorClass,
                                         state.isShieldActive && p.type === 'mistakeShield' ? 'ring-2 ring-offset-2 ring-offset-background ring-primary' : '',
                                       )}
