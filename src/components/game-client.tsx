@@ -4,11 +4,9 @@
 import { useGame } from '@/hooks/use-game';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { Plus, Minus, X, Divide, BrainCircuit, Trophy, Timer, CheckCircle, XCircle, Sparkles, Sigma, Percent, FunctionSquare, ArrowRight, Coins, LogOut } from 'lucide-react';
 import type { MathCategory } from '@/lib/types';
-import { cn } from '@/lib/utils';
 import { FormEvent, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -56,7 +54,6 @@ const categoryIcons: Record<MathCategory, React.ReactNode> = {
 
 export function GameClient() {
   const { state, setCategory, startGame, submitAnswer, resetGame } = useGame();
-  const inputRef = useRef<HTMLInputElement>(null);
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -69,19 +66,8 @@ export function GameClient() {
     }
   }, [searchParams, state.phase, setCategory, startGame, router]);
 
-
-  useEffect(() => {
-    if (state.phase === 'solve' && inputRef.current) {
-        inputRef.current.focus();
-    }
-  }, [state.phase]);
-
-  const handleAnswerSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    if (inputRef.current?.value) {
-      submitAnswer(inputRef.current.value);
-      if (inputRef.current) inputRef.current.value = '';
-    }
+  const handleOptionClick = (option: string) => {
+    submitAnswer(option);
   };
   
   const renderPhase = () => {
@@ -113,8 +99,8 @@ export function GameClient() {
     };
     
     const itemVariants = {
-        hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0 }
+        hidden: { opacity: 0, y: 20, scale: 0.95 },
+        visible: { opacity: 1, y: 0, scale: 1 }
     };
 
     return (
@@ -126,7 +112,7 @@ export function GameClient() {
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className="w-full max-w-md mx-auto"
+                className="w-full max-w-sm mx-auto"
             >
                 {state.phase === 'config' && (
                 <div className="w-full text-center">
@@ -184,15 +170,29 @@ export function GameClient() {
                 {state.phase === 'solve' && (
                 <div className="text-center">
                     <p className="text-xs font-semibold tracking-wider uppercase text-primary mb-2">Phase 2 of 2</p>
-                    <h2 className="text-xl md:text-2xl font-semibold mb-4">Solve the equation</h2>
-                    <div className="text-3xl md:text-5xl font-bold my-6 p-4 bg-background/50 rounded-lg shadow-inner border">
+                    <h2 className="text-xl md:text-2xl font-semibold mb-4">What's the answer?</h2>
+                    <div className="text-3xl md:text-5xl font-bold my-6 p-4 bg-background/50 rounded-lg shadow-inner border min-h-[80px] flex items-center justify-center">
                         {state.currentChallenge?.question}
                     </div>
-                    <form onSubmit={handleAnswerSubmit} className="flex gap-2">
-                        <Input ref={inputRef} type="text" placeholder="Your answer" className="text-center text-lg md:text-xl h-12 flex-1 shadow-sm" autoFocus />
-                        <Button type="submit" size="lg" className="h-12 px-6 text-base shadow-md hover:shadow-lg transition-shadow">Submit</Button>
-                    </form>
-                    <Progress value={(state.remainingTime / state.solveDuration) * 100} className="mt-4 h-3 rounded-full" />
+                     <motion.div 
+                        className="grid grid-cols-2 gap-3"
+                        variants={numberContainerVariants}
+                        initial="hidden"
+                        animate="visible"
+                    >
+                        {state.currentChallenge?.options.map((option, i) => (
+                            <motion.div key={i} variants={itemVariants} whileHover={{scale: 1.05}} whileTap={{scale: 0.95}}>
+                                <Button
+                                    variant="outline"
+                                    className="w-full h-20 text-xl md:text-2xl font-bold shadow-md hover:shadow-lg hover:bg-primary/10 hover:border-primary transition-all duration-200"
+                                    onClick={() => handleOptionClick(String(option))}
+                                >
+                                    {String(option)}
+                                </Button>
+                            </motion.div>
+                        ))}
+                    </motion.div>
+                    <Progress value={(state.remainingTime / state.solveDuration) * 100} className="mt-6 h-3 rounded-full" />
                 </div>
                 )}
                 {state.phase === 'result' && (
@@ -240,7 +240,7 @@ export function GameClient() {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto shadow-2xl bg-card/60 backdrop-blur-xl border-2">
+    <Card className="w-full max-w-sm mx-auto shadow-2xl bg-card/60 backdrop-blur-xl border-2">
         <CardContent className="p-0">
             <div className="p-3 border-b bg-background/50 flex items-center justify-between gap-x-4">
                 <div className="flex items-center flex-wrap gap-x-4 gap-y-2">
@@ -251,9 +251,9 @@ export function GameClient() {
                     </h2>
                     {state.phase !== 'config' && (
                         <div className="flex items-center flex-wrap justify-center gap-2 text-xs font-medium">
-                            <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><Trophy className="w-4 h-4 text-orange-400" /> Score: <span className="font-bold text-sm tabular-nums">{state.score}</span></div>
-                            <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><Coins className="w-4 h-4 text-yellow-400" /> Coins: <span className="font-bold text-sm tabular-nums">{state.coins}</span></div>
-                            <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><BrainCircuit className="w-4 h-4 text-primary" /> Diff: <span className="font-bold text-sm tabular-nums">{state.difficulty}</span></div>
+                            <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><Trophy className="w-3 h-3 text-orange-400" /> <span className="font-bold tabular-nums">{state.score}</span></div>
+                            <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><Coins className="w-3 h-3 text-yellow-400" /> <span className="font-bold tabular-nums">{state.coins}</span></div>
+                            <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><BrainCircuit className="w-3 h-3 text-primary" /> <span className="font-bold tabular-nums">{state.difficulty}</span></div>
                         </div>
                     )}
                 </div>

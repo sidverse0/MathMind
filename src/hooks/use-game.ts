@@ -88,16 +88,6 @@ function gameReducer(state: GameState, action: GameAction): GameState {
   }
 }
 
-const allCategories: MathCategory[] = [
-    'addition', 'subtraction', 'multiplication', 'division', 'mixed', 
-    'algebra', 'percentages', 'exponents', 'fractions', 'decimals', 'ratios', 
-    'square-roots', 'order-of-operations', 'area-of-squares', 'area-of-rectangles', 
-    'area-of-triangles', 'circumference', 'pythagorean-theorem', 'linear-equations', 
-    'quadratic-equations', 'prime-numbers', 'factors', 'multiples', 'roman-numerals',
-    'mean', 'median', 'mode', 'range', 'simple-probability', 'simple-interest', 
-    'discounts', 'unit-conversion', 'time-calculation', 'logic-puzzles'
-];
-
 function generateChallenge(category: MathCategory, difficulty: number): Challenge {
   let currentCategory = category;
   if (category === 'mixed') {
@@ -439,7 +429,59 @@ function generateChallenge(category: MathCategory, difficulty: number): Challeng
     }
   }
 
-  return { numbers, operatorSymbol, question: `${question} = ?`, answer };
+  // Generate options for multiple choice
+    const options: (string | number)[] = [answer];
+    if (currentCategory === 'prime-numbers') {
+        options.push(answer === '1' ? '0' : '1');
+    } else {
+        const answerNum = Number(answer);
+        if (!isNaN(answerNum)) { // Is a number
+            const distractors: Set<number | string> = new Set();
+            const isFloat = String(answer).includes('.');
+            
+            while(distractors.size < 3) {
+                const variation = Math.max(1, Math.ceil(Math.abs(answerNum * 0.2))) + difficulty + 2;
+                const offset = Math.floor(Math.random() * variation) + 1;
+                const plusOrMinus = Math.random() < 0.5 ? -1 : 1;
+                let distractor = answerNum + (offset * plusOrMinus);
+                
+                if (isFloat) {
+                    distractor = parseFloat(distractor.toFixed(2));
+                } else {
+                    distractor = Math.round(distractor);
+                }
+                
+                if (distractor !== answer) {
+                    distractors.add(distractor);
+                }
+            }
+            options.push(...distractors);
+        } else { // Is a string but not 'prime-numbers'
+            const baseString = String(answer).replace(/[^a-zA-Z0-9]/g, '').slice(0, 3);
+            options.push(baseString + 'x', baseString + 'y', baseString + 'z');
+        }
+    }
+
+    // Ensure uniqueness and correct length, then shuffle
+    let finalOptions = [...new Set(options)];
+    if(finalOptions.length > 1 && finalOptions.length < 4) {
+        while(finalOptions.length < 4) {
+            finalOptions.push(Number(finalOptions[0]) + finalOptions.length + difficulty * 2);
+        }
+    }
+    
+    finalOptions = finalOptions
+        .filter(opt => opt !== answer)
+        .slice(0, 3);
+    finalOptions.push(answer);
+    finalOptions = [...new Set(finalOptions)];
+     while (finalOptions.length < 4 && currentCategory !== 'prime-numbers') {
+        finalOptions.push(String(finalOptions[0]).length + finalOptions.length + difficulty * 3);
+        finalOptions = [...new Set(finalOptions)];
+    }
+
+
+  return { numbers, operatorSymbol, question: `${question} = ?`, answer, options: finalOptions.sort(() => Math.random() - 0.5).slice(0, 4) };
 }
 
 export const useGame = () => {

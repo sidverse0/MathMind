@@ -24,6 +24,7 @@ export interface Challenge {
   operatorSymbol: OperatorSymbol;
   question: string;
   answer: number | string; // Answer can be string for some categories e.g. Roman Numerals
+  options: (number | string)[];
 }
 
 export interface PerformanceRecord {
