@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { LayoutDashboard, Plus, Minus, X, Divide, Sparkles, Sigma, Percent, FunctionSquare, SquareRadical, Braces, Square, RectangleHorizontal, Triangle, Circle, Combine, Milestone, Anchor, Key, BarChart, BetweenHorizontalStart, Pilcrow, UnfoldVertical, PercentCircle, Banknote, UtilityPole, Timer, Puzzle, LayoutGrid, ArrowLeft, Waves, TrendingUp, Box, Cylinder, MoveHorizontal, ArrowRightLeft, Union, Landmark, Receipt } from 'lucide-react';
+import { LayoutDashboard, Plus, Minus, X, Divide, Sparkles, Sigma, Percent, FunctionSquare, SquareRadical, Braces, Square, RectangleHorizontal, Triangle, Circle, Combine, Milestone, Anchor, Key, BarChart, BetweenHorizontalStart, Pilcrow, UnfoldVertical, PercentCircle, Banknote, UtilityPole, Timer, Puzzle, LayoutGrid, ArrowLeft, Waves, TrendingUp, Box, Cylinder, MoveHorizontal, ArrowRightLeft, Landmark, Receipt } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import type { MathCategory } from '@/lib/types';
@@ -29,6 +29,12 @@ const IntersectIcon = (props: React.SVGProps<SVGSVGElement>) => (
     </svg>
 );
 
+const UnionIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M7 18a5 5 0 0 0 10 0V9a5 5 0 1 0-10 0Z"/>
+    </svg>
+);
+
 const categoryIcons: Record<MathCategory, React.ReactNode> = {
   addition: <Plus />, subtraction: <Minus />, multiplication: <X />, division: <Divide />, mixed: <Sparkles />,
   algebra: <Sigma />, percentages: <Percent />, exponents: <FunctionSquare />, fractions: <Sigma />, decimals: <Milestone />,
@@ -44,7 +50,7 @@ const categoryIcons: Record<MathCategory, React.ReactNode> = {
   'basic-derivatives': <TrendingUp />, 'basic-integrals': <Sigma />,
   logarithms: <Sigma />, 'polynomial-addition': <Plus />, 'polynomial-subtraction': <Minus />, inequalities: <Sigma />,
   'volume-cube': <Box />, 'volume-sphere': <Circle />, 'volume-cylinder': <Cylinder />, 'distance-formula': <MoveHorizontal />, 'slope-formula': <TrendingUp />,
-  permutations: <ArrowRightLeft />, combinations: <Combine />, 'set-union': <Union />, 'set-intersection': <IntersectIcon />, factorial: <Sigma />,
+  permutations: <ArrowRightLeft />, combinations: <Combine />, 'set-union': <UnionIcon />, 'set-intersection': <IntersectIcon />, factorial: <Sigma />,
   'compound-interest': <Landmark />, 'sales-tax': <Receipt />,
 };
 
