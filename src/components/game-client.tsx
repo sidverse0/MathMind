@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useEffect } from 'react';
 import { useGame } from '@/hooks/use-game';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
