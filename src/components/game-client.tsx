@@ -5,7 +5,7 @@ import { useGame } from '@/hooks/use-game';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Slider } from "@/components/ui/slider";
-import { Plus, Minus, X, Divide, Trophy, Timer, CheckCircle, XCircle, Sparkles, Sigma, Percent, FunctionSquare, ArrowRight, Coins, LogOut, BarChart, LayoutGrid, ArrowLeft, Waves, TrendingUp, Box, Cylinder, MoveHorizontal, ArrowRightLeft, Union, Intersect, Landmark, Receipt, Combine, Square, RectangleHorizontal, Triangle, Circle, SquareRadical, Braces, Milestone, Anchor, Key, BetweenHorizontalStart, Pilcrow, UnfoldVertical, PercentCircle, Banknote, UtilityPole, Puzzle } from 'lucide-react';
+import { Plus, Minus, X, Divide, Trophy, Timer, CheckCircle, XCircle, Sparkles, Sigma, Percent, FunctionSquare, ArrowRight, Coins, LogOut, BarChart, LayoutGrid, ArrowLeft, Waves, TrendingUp, Box, Cylinder, MoveHorizontal, ArrowRightLeft, Union, Landmark, Receipt, Combine, Square, RectangleHorizontal, Triangle, Circle, SquareRadical, Braces, Milestone, Anchor, Key, BetweenHorizontalStart, Pilcrow, UnfoldVertical, PercentCircle, Banknote, UtilityPole, Puzzle } from 'lucide-react';
 import type { MathCategory, DifficultyLevel, GameState } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -17,6 +17,13 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { playSound } from '@/lib/audio';
 
 const quickStartCategories: MathCategory[] = ['addition', 'subtraction', 'multiplication', 'mixed'];
+
+const IntersectIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M6 18h6c4.4 0 8-3.6 8-8v-2"/>
+        <path d="M18 6H6c-4.4 0-8 3.6-8 8v2"/>
+    </svg>
+);
 
 const categoryIcons: Record<MathCategory, React.ReactNode> = {
   addition: <Plus className="h-8 w-8" />,
@@ -58,7 +65,7 @@ const categoryIcons: Record<MathCategory, React.ReactNode> = {
   'basic-derivatives': <TrendingUp className="h-8 w-8" />, 'basic-integrals': <Sigma className="h-8 w-8" />,
   logarithms: <Sigma className="h-8 w-8" />, 'polynomial-addition': <Plus className="h-8 w-8" />, 'polynomial-subtraction': <Minus className="h-8 w-8" />, inequalities: <Sigma className="h-8 w-8" />,
   'volume-cube': <Box className="h-8 w-8" />, 'volume-sphere': <Circle className="h-8 w-8" />, 'volume-cylinder': <Cylinder className="h-8 w-8" />, 'distance-formula': <MoveHorizontal className="h-8 w-8" />, 'slope-formula': <TrendingUp className="h-8 w-8" />,
-  permutations: <ArrowRightLeft className="h-8 w-8" />, combinations: <Combine className="h-8 w-8" />, 'set-union': <Union className="h-8 w-8" />, 'set-intersection': <Intersect className="h-8 w-8" />, factorial: <Sigma className="h-8 w-8" />,
+  permutations: <ArrowRightLeft className="h-8 w-8" />, combinations: <Combine className="h-8 w-8" />, 'set-union': <Union className="h-8 w-8" />, 'set-intersection': <IntersectIcon className="h-8 w-8" />, factorial: <Sigma className="h-8 w-8" />,
   'compound-interest': <Landmark className="h-8 w-8" />, 'sales-tax': <Receipt className="h-8 w-8" />,
 };
 
@@ -155,11 +162,11 @@ function GameClientContent() {
   };
 
   const handleStartChallenge = () => {
-    playSound('click');
     startConfiguredGame({ difficultyLevel: difficulty, totalQuestions: numQuestions });
   };
   
   const handleSelectCategory = (category: MathCategory) => {
+    playSound('click');
     selectCategory(category);
   };
 
