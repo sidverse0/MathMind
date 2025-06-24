@@ -1,8 +1,7 @@
-
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Plus, Minus, X, Divide, Sparkles, Sigma, Percent, FunctionSquare, SquareRadical, Braces, Square, RectangleHorizontal, Triangle, Circle, Combine, Milestone, Anchor, Key, BarChart, BetweenHorizontalStart, Pilcrow, UnfoldVertical, PercentCircle, Banknote, UtilityPole, Timer, Puzzle } from 'lucide-react';
+import { ArrowLeft, Plus, Minus, X, Divide, Sparkles, Sigma, Percent, FunctionSquare, SquareRadical, Braces, Square, RectangleHorizontal, Triangle, Circle, Combine, Milestone, Anchor, Key, BarChart, BetweenHorizontalStart, Pilcrow, UnfoldVertical, PercentCircle, Banknote, UtilityPole, Timer, Puzzle, LayoutGrid } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import type { MathCategory } from '@/lib/types';
@@ -50,7 +49,11 @@ export default function CategoriesPage() {
 
     const itemVariants = {
         hidden: { y: 20, opacity: 0 },
-        visible: { y: 0, opacity: 1 }
+        visible: { 
+            y: 0, 
+            opacity: 1,
+            transition: { type: "spring", stiffness: 100 }
+        }
     };
 
   return (
@@ -59,14 +62,24 @@ export default function CategoriesPage() {
             className="flex items-center justify-between"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
         >
-            <div>
-                <h1 className="text-3xl md:text-4xl font-bold tracking-tight">All Categories</h1>
-                <p className="text-muted-foreground mt-1 text-base">Pick a challenge to test your skills.</p>
+            <div className="flex items-center gap-4">
+                <div className="p-3 bg-primary/10 text-primary rounded-xl shadow-sm">
+                    <LayoutGrid className="h-8 w-8" />
+                </div>
+                <div>
+                    <h1 className="text-3xl md:text-4xl font-bold tracking-tight">All Categories</h1>
+                    <p className="text-muted-foreground mt-1 text-base">Pick a challenge to test your skills.</p>
+                </div>
             </div>
             <Link href="/app/challenge">
-                <Button variant="outline">
+                <Button variant="outline" className="hidden sm:flex">
                     <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                </Button>
+                <Button variant="outline" size="icon" className="sm:hidden">
+                    <ArrowLeft className="h-4 w-4" />
+                    <span className="sr-only">Back</span>
                 </Button>
             </Link>
         </motion.div>
@@ -81,15 +94,20 @@ export default function CategoriesPage() {
                     animate="visible"
                 >
                     {categories.map((cat) => (
-                        <motion.div key={cat} variants={itemVariants}>
-                            <Button
-                                variant="outline"
-                                className="w-full h-28 text-base flex-col gap-2 justify-center transition-all duration-300 transform hover:scale-105 hover:bg-primary/10 hover:border-primary"
+                        <motion.div 
+                            key={cat} 
+                            variants={itemVariants}
+                            whileHover={{ y: -5 }}
+                            transition={{ type: "spring", stiffness: 300 }}
+                            className="h-full"
+                        >
+                            <button
+                                className="w-full h-28 text-base flex flex-col gap-2 items-center justify-center rounded-xl bg-card border shadow-sm transition-all duration-200 hover:shadow-lg hover:border-primary/50 group text-card-foreground"
                                 onClick={() => handleCategorySelect(cat)}
                             >
-                                <div className="h-8 w-8 text-primary">{categoryIcons[cat]}</div>
-                                <span className="capitalize text-center text-wrap px-1">{cat.replace(/-/g, ' ')}</span>
-                            </Button>
+                                <div className="h-8 w-8 text-primary transition-transform duration-200 group-hover:scale-110">{categoryIcons[cat]}</div>
+                                <span className="capitalize text-center text-wrap px-1 font-medium">{cat.replace(/-/g, ' ')}</span>
+                            </button>
                         </motion.div>
                     ))}
                 </motion.div>
