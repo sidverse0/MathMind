@@ -267,7 +267,7 @@ function GameClientContent() {
                         initial={{ opacity: 0, y: -20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
-                        className="text-4xl md:text-6xl font-bold my-6 md:my-8 p-6 bg-gradient-to-br from-primary/10 to-background rounded-2xl text-primary tracking-wider shadow-inner"
+                        className="text-3xl md:text-5xl font-bold my-4 md:my-6 p-4 bg-gradient-to-br from-primary/10 to-background rounded-2xl text-primary tracking-wider shadow-inner"
                     >
                         {state.currentChallenge?.question}
                     </motion.div>
