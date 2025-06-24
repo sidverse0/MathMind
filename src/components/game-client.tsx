@@ -366,34 +366,27 @@ function GameClientContent() {
                         transition={{ duration: 0.5, ease: "easeOut" }}
                         className="w-full max-w-2xl text-center bg-card border rounded-3xl p-8 mb-8 shadow-xl"
                     >
-                        <p className="text-lg text-muted-foreground mb-4">What is the answer?</p>
                         <p className="text-4xl md:text-6xl font-bold tracking-tight text-foreground">
                             {state.currentChallenge?.question}
                         </p>
                     </motion.div>
                     
                     <motion.div 
-                        className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-xl"
+                        className="grid grid-cols-2 gap-4 md:gap-6 w-full max-w-2xl"
                         variants={itemContainerVariants}
                         initial="hidden"
                         animate="visible"
                     >
                         {state.currentChallenge?.options.map((option, i) => (
-                            <motion.div key={i} variants={itemVariants} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.99 }}>
+                            <motion.div key={i} variants={itemVariants} whileHover={{ y: -5 }} whileTap={{ scale: 0.97 }}>
                                 <button
                                     className={cn(
-                                        "w-full h-full text-left p-6 text-xl md:text-2xl font-semibold shadow-md hover:shadow-lg transition-all duration-200 rounded-xl flex items-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary",
-                                        "bg-secondary hover:bg-secondary/80 border-l-4",
-                                        ['border-chart-1', 'border-chart-2', 'border-chart-3', 'border-chart-4'][i % 4]
+                                        "w-full h-24 md:h-28 text-xl md:text-2xl font-bold shadow-lg hover:shadow-xl transition-all duration-200 rounded-2xl flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary text-center",
+                                        "bg-card border-2",
+                                        ['border-chart-1/50 hover:bg-chart-1/10 hover:text-chart-1', 'border-chart-2/50 hover:bg-chart-2/10 hover:text-chart-2', 'border-chart-3/50 hover:bg-chart-3/10 hover:text-chart-3', 'border-chart-4/50 hover:bg-chart-4/10 hover:text-chart-4'][i % 4]
                                     )}
                                     onClick={() => handleOptionClick(String(option))}
                                 >
-                                    <span className={cn(
-                                        "flex items-center justify-center h-8 w-8 rounded-lg mr-4 font-bold text-sm",
-                                        ['bg-chart-1/20 text-chart-1', 'bg-chart-2/20 text-chart-2', 'bg-chart-3/20 text-chart-3', 'bg-chart-4/20 text-chart-4'][i % 4]
-                                    )}>
-                                        {String.fromCharCode(65 + i)}
-                                    </span>
                                     {String(option)}
                                 </button>
                             </motion.div>
