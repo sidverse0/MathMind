@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Plus, Minus, X, Divide, Sparkles, Sigma, Percent, FunctionSquare, SquareRadical, Braces, Square, RectangleHorizontal, Triangle, Circle, Combine, Milestone, Anchor, Key, BarChart, BetweenHorizontalStart, Pilcrow, UnfoldVertical, PercentCircle, Banknote, UtilityPole, Timer, Puzzle, LayoutGrid } from 'lucide-react';
+import { LayoutDashboard, Plus, Minus, X, Divide, Sparkles, Sigma, Percent, FunctionSquare, SquareRadical, Braces, Square, RectangleHorizontal, Triangle, Circle, Combine, Milestone, Anchor, Key, BarChart, BetweenHorizontalStart, Pilcrow, UnfoldVertical, PercentCircle, Banknote, UtilityPole, Timer, Puzzle, LayoutGrid } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import type { MathCategory } from '@/lib/types';
@@ -59,17 +59,11 @@ export default function CategoriesPage() {
   return (
     <div className="flex flex-col gap-8">
         <motion.div 
-            className="relative flex items-center justify-center py-4"
+            className="flex items-center justify-between py-4"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
         >
-            <Link href="/app" className="absolute left-0">
-                <Button variant="outline" size="icon" className="shadow-sm">
-                    <ArrowLeft className="h-4 w-4" />
-                    <span className="sr-only">Back to Dashboard</span>
-                </Button>
-            </Link>
             <div className="flex items-center gap-4">
                 <div className="p-3 bg-primary/10 text-primary rounded-xl shadow-sm">
                     <LayoutGrid className="h-8 w-8" />
@@ -79,6 +73,12 @@ export default function CategoriesPage() {
                     <p className="text-muted-foreground mt-1 text-base">Pick a challenge to test your skills.</p>
                 </div>
             </div>
+             <Link href="/app">
+                <Button variant="outline" className="shadow-sm">
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                    Dashboard
+                </Button>
+            </Link>
         </motion.div>
 
         {Object.entries(categoryGroups).map(([groupName, categories]) => (

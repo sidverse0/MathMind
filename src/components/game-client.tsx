@@ -5,7 +5,7 @@ import { useState, useReducer, useCallback, useEffect, Suspense, useRef } from '
 import { useGame } from '@/hooks/use-game';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Plus, Minus, X, Divide, Trophy, Timer, CheckCircle, XCircle, Sparkles, Sigma, Percent, FunctionSquare, ArrowRight, Coins, LogOut, BarChart, LayoutGrid } from 'lucide-react';
+import { Plus, Minus, X, Divide, Trophy, Timer, CheckCircle, XCircle, Sparkles, Sigma, Percent, FunctionSquare, ArrowRight, Coins, LogOut, BarChart, LayoutGrid, ArrowLeft } from 'lucide-react';
 import type { MathCategory, DifficultyLevel, GameState } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -109,7 +109,7 @@ function GameClientContent() {
 
   useEffect(() => {
     if (state.phase === 'summary') {
-      if (state.history.length === 0) {
+      if (state.history.length === 0 && state.currentQuestionIndex === 0) {
         router.push('/app/challenge/categories');
         resetGame();
         return;
@@ -221,7 +221,11 @@ function GameClientContent() {
                 )}
 
                 {state.phase === 'pre-config' && (
-                    <div className={cn(phaseWrapperClass, "gap-8 max-w-2xl mx-auto")}>
+                    <div className={cn(phaseWrapperClass, "gap-8 max-w-2xl mx-auto relative")}>
+                        <Button variant="ghost" size="icon" className="absolute top-4 right-4 text-muted-foreground" onClick={resetGame}>
+                            <ArrowLeft className="h-6 w-6" />
+                            <span className="sr-only">Back</span>
+                        </Button>
                         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
                             <h2 className="text-3xl md:text-4xl font-bold">Configure Challenge</h2>
                             <p className="text-muted-foreground mt-2 text-lg">Set your preferences and get started.</p>
