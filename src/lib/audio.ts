@@ -13,7 +13,7 @@ const defaultToneUrl = 'https://files.catbox.moe/p7zmwi.wav';
 
 const soundUrls: Record<SoundEffect, string> = {
   click: defaultToneUrl,
-  correct: defaultToneUrl,
+  correct: 'https://files.catbox.moe/vlslib.wav',
   incorrect: defaultToneUrl,
   timeup: defaultToneUrl,
   summary: defaultToneUrl,
