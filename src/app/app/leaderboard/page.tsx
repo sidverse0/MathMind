@@ -33,21 +33,32 @@ export default function LeaderboardPage() {
     visible: { y: 0, opacity: 1 }
   };
 
+  const getRankColor = (rank: number) => {
+    if (rank === 1) return "border-yellow-400 shadow-yellow-400/50";
+    if (rank === 2) return "border-slate-400 shadow-slate-400/50";
+    if (rank === 3) return "border-orange-600 shadow-orange-600/50";
+    return "border-transparent";
+  };
+
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex items-center gap-4">
+      <motion.div 
+        className="flex items-center gap-4"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
         <Trophy className="h-10 w-10 text-yellow-500" />
         <div>
             <h1 className="text-4xl font-bold tracking-tight">Leaderboard</h1>
             <p className="text-muted-foreground mt-1">See how you stack up against other players.</p>
         </div>
-      </div>
-      <Card>
+      </motion.div>
+      <Card className="shadow-lg">
         <CardContent className="p-0">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[100px]">Rank</TableHead>
+                <TableHead className="w-[100px] text-center">Rank</TableHead>
                 <TableHead>Player</TableHead>
                 <TableHead className="text-right">Score</TableHead>
               </TableRow>
@@ -63,22 +74,24 @@ export default function LeaderboardPage() {
                         player.name === "You" ? "bg-primary/10 hover:bg-primary/20" : ""
                     )}
                 >
-                  <TableCell className="font-medium text-lg text-center">
-                    {player.rank === 1 && <Trophy className="w-6 h-6 inline-block text-yellow-500 mr-2" />}
-                    {player.rank === 2 && <Trophy className="w-6 h-6 inline-block text-slate-400 mr-2" />}
-                    {player.rank === 3 && <Trophy className="w-6 h-6 inline-block text-orange-700 mr-2" />}
-                    {player.rank}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                        <Avatar>
-                            <AvatarImage src={`https://avatar.vercel.sh/${player.name}.png?size=40`} />
-                            <AvatarFallback>{player.avatar}</AvatarFallback>
-                        </Avatar>
-                        <span className="font-medium">{player.name}</span>
+                  <TableCell className="font-bold text-lg text-center">
+                    <div className="flex items-center justify-center gap-2">
+                        {player.rank === 1 && <Trophy className="w-6 h-6 inline-block text-yellow-400" />}
+                        {player.rank === 2 && <Trophy className="w-6 h-6 inline-block text-slate-400" />}
+                        {player.rank === 3 && <Trophy className="w-6 h-6 inline-block text-orange-600" />}
+                        {player.rank}
                     </div>
                   </TableCell>
-                  <TableCell className="text-right font-bold text-lg">{player.score.toLocaleString()}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-4">
+                        <Avatar className={cn("h-12 w-12 border-4 shadow-md", getRankColor(player.rank))}>
+                            <AvatarImage src={`https://avatar.vercel.sh/${player.name}.png?size=48`} />
+                            <AvatarFallback>{player.avatar}</AvatarFallback>
+                        </Avatar>
+                        <span className="font-medium text-base">{player.name}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right font-bold text-xl">{player.score.toLocaleString()}</TableCell>
                 </motion.tr>
               ))}
             </motion.tbody>

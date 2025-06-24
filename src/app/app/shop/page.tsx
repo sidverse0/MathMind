@@ -30,16 +30,21 @@ export default function ShopPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <div className="flex justify-between items-center">
+      <motion.div 
+        className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
+        initial={{opacity: 0, y: -20}}
+        animate={{opacity: 1, y: 0}}
+      >
         <div>
             <h1 className="text-4xl font-bold tracking-tight">Power-up Shop</h1>
             <p className="text-muted-foreground mt-1">Spend your coins on helpful power-ups.</p>
         </div>
-        <div className="flex items-center gap-2 p-3 rounded-lg bg-secondary/50 shadow-inner">
-            <Coins className="w-6 h-6 text-yellow-500" /> 
-            <span className="text-xl font-bold">573</span>
+        <div className="flex items-center gap-2 p-3 rounded-lg bg-background shadow-md border">
+            <Coins className="w-8 h-8 text-yellow-500" /> 
+            <span className="text-2xl font-bold">573</span>
+            <span className="text-muted-foreground">Coins</span>
         </div>
-      </div>
+      </motion.div>
       <motion.div 
         className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
         variants={containerVariants}
@@ -52,9 +57,9 @@ export default function ShopPage() {
                 variants={itemVariants}
                 whileHover={{ y: -5, transition: { duration: 0.2 } }}
             >
-                <Card className="h-full flex flex-col transition-all duration-300 hover:shadow-xl hover:border-primary/50">
-                    <CardHeader>
-                        <div className="relative h-40 w-full mb-4 rounded-md overflow-hidden group">
+                <Card className="h-full flex flex-col transition-all duration-300 hover:shadow-xl hover:border-primary/50 group overflow-hidden">
+                    <CardHeader className="p-0">
+                        <div className="relative h-48 w-full mb-4 overflow-hidden">
                           <Image 
                             src={item.image} 
                             alt={item.name} 
@@ -64,12 +69,14 @@ export default function ShopPage() {
                             className="transition-transform duration-300 group-hover:scale-105"
                           />
                         </div>
-                        <CardTitle className="flex items-center gap-2">{item.icon} {item.name}</CardTitle>
-                        <CardDescription>{item.description}</CardDescription>
+                        <div className="p-6">
+                            <CardTitle className="flex items-center gap-2 text-2xl">{item.icon} {item.name}</CardTitle>
+                            <CardDescription className="mt-2">{item.description}</CardDescription>
+                        </div>
                     </CardHeader>
-                    <CardFooter className="mt-auto">
-                        <Button className="w-full">
-                            Buy for <Coins className="w-4 h-4 mx-1.5" /> {item.price}
+                    <CardFooter className="mt-auto p-6 bg-secondary/50">
+                        <Button className="w-full text-lg shadow-md hover:shadow-lg transition-shadow">
+                            Buy for <Coins className="w-5 h-5 mx-2" /> {item.price}
                         </Button>
                     </CardFooter>
                 </Card>

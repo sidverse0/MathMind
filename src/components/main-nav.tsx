@@ -2,32 +2,59 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { SidebarMenu, SidebarMenuItem, SidebarMenuButton } from '@/components/ui/sidebar';
 import { LayoutDashboard, Gamepad2, Trophy, Store, User } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { motion } from 'framer-motion';
 
 const navItems = [
-  { href: '/app', label: 'Dashboard', icon: <LayoutDashboard /> },
-  { href: '/app/play', label: 'Play', icon: <Gamepad2 /> },
-  { href: '/app/leaderboard', label: 'Leaderboard', icon: <Trophy /> },
-  { href: '/app/shop', label: 'Shop', icon: <Store /> },
-  { href: '/app/profile', label: 'Profile', icon: <User /> },
+  { href: '/app', label: 'Dashboard', icon: <LayoutDashboard className="h-8 w-8" /> },
+  { href: '/app/play', label: 'Play', icon: <Gamepad2 className="h-8 w-8" /> },
+  { href: '/app/leaderboard', label: 'Leaderboard', icon: <Trophy className="h-8 w-8" /> },
+  { href: '/app/shop', label: 'Shop', icon: <Store className="h-8 w-8" /> },
+  { href: '/app/profile', label: 'Profile', icon: <User className="h-8 w-8" /> },
 ];
 
 export function MainNav() {
   const pathname = usePathname();
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.07
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1 }
+  };
+
   return (
-    <SidebarMenu>
+    <motion.div 
+      className="flex flex-col gap-4"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       {navItems.map((item) => (
-        <SidebarMenuItem key={item.href}>
-          <SidebarMenuButton asChild isActive={pathname === item.href} tooltip={item.label}>
-            <Link href={item.href}>
-              {item.icon}
-              <span>{item.label}</span>
-            </Link>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
+        <motion.div key={item.href} variants={itemVariants} whileHover={{scale: 1.03}} whileTap={{scale: 0.98}}>
+          <Link href={item.href} passHref>
+            <Button
+              variant={pathname === item.href ? 'default' : 'outline'}
+              className="w-full h-20 justify-start text-lg p-6 shadow-sm"
+              asChild
+            >
+              <a>
+                {item.icon}
+                <span className="ml-4">{item.label}</span>
+              </a>
+            </Button>
+          </Link>
+        </motion.div>
       ))}
-    </SidebarMenu>
+    </motion.div>
   );
 }

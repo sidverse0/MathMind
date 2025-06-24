@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { BrainCircuit, ArrowRight, Zap, Trophy, BarChart } from 'lucide-react';
+import { BrainCircuit, ArrowRight, Zap, Trophy, BarChart, Instagram, Youtube } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,11 +25,24 @@ const featureCards = [
     }
 ];
 
+const TelegramIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M22 2l-7 20-4-9-9-4Z"/><path d="M22 2L11 13"/>
+    </svg>
+);
+
+const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+    </svg>
+);
+
+
 export default function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container h-14 flex items-center">
+        <div className="container h-16 flex items-center">
           <div className="mr-4 flex items-center">
             <BrainCircuit className="h-6 w-6 mr-2 text-primary" />
             <h1 className="text-xl font-bold tracking-tight font-headline">
@@ -100,9 +113,11 @@ export default function LandingPage() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
                         >
-                            <Card className="bg-secondary/30 border-0">
-                                <CardHeader className="flex flex-row items-center gap-4">
-                                    {feature.icon}
+                            <Card className="bg-secondary/30 border-0 overflow-hidden">
+                                <CardHeader className="flex flex-row items-center gap-4 p-4">
+                                    <motion.div whileHover={{ scale: 1.2, rotate: 15 }} transition={{ type: "spring", stiffness: 300 }}>
+                                        {feature.icon}
+                                    </motion.div>
                                     <div>
                                         <CardTitle>{feature.title}</CardTitle>
                                         <p className="text-muted-foreground text-sm mt-1">{feature.description}</p>
@@ -115,6 +130,25 @@ export default function LandingPage() {
             </div>
         </section>
       </main>
+      <footer className="border-t bg-background">
+            <div className="container py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <p className="text-sm text-muted-foreground text-center sm:text-left">© {new Date().getFullYear()} MathMind. Build by Sid.</p>
+                <div className="flex items-center gap-4">
+                    <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-muted-foreground hover:text-primary transition-colors">
+                        <Instagram />
+                    </a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="text-muted-foreground hover:text-primary transition-colors">
+                        <TelegramIcon />
+                    </a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="text-muted-foreground hover:text-primary transition-colors">
+                        <WhatsAppIcon />
+                    </a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-muted-foreground hover:text-primary transition-colors">
+                        <Youtube />
+                    </a>
+                </div>
+            </div>
+      </footer>
     </div>
   );
 }
