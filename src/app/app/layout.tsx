@@ -1,3 +1,5 @@
+'use client';
+
 import { Sidebar, SidebarProvider, SidebarTrigger, SidebarInset, SidebarHeader, SidebarContent, SidebarFooter } from '@/components/ui/sidebar';
 import { MainNav } from '@/components/main-nav';
 import { UserNav } from '@/components/user-nav';
@@ -5,6 +7,7 @@ import { ThemeToggle } from '@/components/theme-toggle';
 import { Button } from '@/components/ui/button';
 import { BrainCircuit, LogOut } from 'lucide-react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -41,9 +44,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </div>
             </div>
           </header>
-          <main className="flex-1 p-4 md:p-8">
+          <motion.main
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.3 }}
+            className="flex-1 p-4 md:p-8"
+          >
             {children}
-          </main>
+          </motion.main>
         </SidebarInset>
       </div>
     </SidebarProvider>

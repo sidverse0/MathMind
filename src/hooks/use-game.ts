@@ -39,7 +39,9 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         ...initialState,
         category: state.category,
         difficulty: state.difficulty,
-        history: state.history,
+        history: state.history, // Persist history across games
+        score: state.score,     // Persist score
+        coins: state.coins,     // Persist coins
         phase: 'memorize',
         currentChallenge: challenge,
         remainingTime: state.memorizeDuration,
@@ -87,6 +89,12 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 }
 
 function generateChallenge(category: MathCategory, difficulty: number): Challenge {
+  let currentCategory = category;
+  if (category === 'mixed') {
+    const categories: MathCategory[] = ['addition', 'subtraction', 'multiplication', 'division'];
+    currentCategory = categories[Math.floor(Math.random() * categories.length)];
+  }
+
   const numOperands = Math.floor(difficulty / 3) + 2;
   const maxNumber = difficulty * 5 + 5;
   let numbers = Array.from({ length: numOperands }, () => Math.floor(Math.random() * maxNumber) + 1);
@@ -94,7 +102,7 @@ function generateChallenge(category: MathCategory, difficulty: number): Challeng
   let question = '';
   let operatorSymbol: '+' | '-' | '×' | '÷' = '+';
 
-  switch (category) {
+  switch (currentCategory) {
     case 'addition':
       operatorSymbol = '+';
       answer = numbers.reduce((a, b) => a + b, 0);
@@ -148,7 +156,7 @@ export const useGame = () => {
   }, [state.startTime]);
 
   useEffect(() => {
-    if (state.phase === 'config' || state.phase === 'solve' && state.remainingTime <= 0) return;
+    if (state.phase === 'config' || state.remainingTime <= 0) return;
 
     const timer = setInterval(() => {
       dispatch({ type: 'TICK', payload: 100 });

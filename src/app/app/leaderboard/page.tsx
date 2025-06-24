@@ -1,7 +1,11 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+'use client';
+
+import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Trophy } from "lucide-react";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 const leaderboardData = [
   { rank: 1, name: "Alex", score: 15420, avatar: "A" },
@@ -14,8 +18,23 @@ const leaderboardData = [
 ];
 
 export default function LeaderboardPage() {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1 }
+  };
+
   return (
-    <div className="flex flex-col gap-8 animate-fadeIn">
+    <div className="flex flex-col gap-8">
       <div className="flex items-center gap-4">
         <Trophy className="h-10 w-10 text-yellow-500" />
         <div>
@@ -33,23 +52,36 @@ export default function LeaderboardPage() {
                 <TableHead className="text-right">Score</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>
+            <motion.tbody variants={containerVariants} initial="hidden" animate="visible">
               {leaderboardData.map((player) => (
-                <TableRow key={player.rank} className={player.name === "You" ? "bg-primary/10" : ""}>
-                  <TableCell className="font-medium text-lg">{player.rank}</TableCell>
+                <motion.tr 
+                    as={TableRow} 
+                    key={player.rank} 
+                    variants={itemVariants} 
+                    className={cn(
+                        "transition-colors",
+                        player.name === "You" ? "bg-primary/10 hover:bg-primary/20" : ""
+                    )}
+                >
+                  <TableCell className="font-medium text-lg text-center">
+                    {player.rank === 1 && <Trophy className="w-6 h-6 inline-block text-yellow-500 mr-2" />}
+                    {player.rank === 2 && <Trophy className="w-6 h-6 inline-block text-slate-400 mr-2" />}
+                    {player.rank === 3 && <Trophy className="w-6 h-6 inline-block text-orange-700 mr-2" />}
+                    {player.rank}
+                  </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-3">
                         <Avatar>
-                            <AvatarImage src={`https://placehold.co/40x40.png`} data-ai-hint="profile picture" />
+                            <AvatarImage src={`https://avatar.vercel.sh/${player.name}.png?size=40`} />
                             <AvatarFallback>{player.avatar}</AvatarFallback>
                         </Avatar>
                         <span className="font-medium">{player.name}</span>
                     </div>
                   </TableCell>
                   <TableCell className="text-right font-bold text-lg">{player.score.toLocaleString()}</TableCell>
-                </TableRow>
+                </motion.tr>
               ))}
-            </TableBody>
+            </motion.tbody>
           </Table>
         </CardContent>
       </Card>

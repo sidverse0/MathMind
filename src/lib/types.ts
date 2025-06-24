@@ -1,4 +1,4 @@
-export type MathCategory = 'addition' | 'subtraction' | 'multiplication' | 'division';
+export type MathCategory = 'addition' | 'subtraction' | 'multiplication' | 'division' | 'mixed';
 
 export interface Challenge {
   numbers: number[];
