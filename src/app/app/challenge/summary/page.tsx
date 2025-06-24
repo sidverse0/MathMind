@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recha
 import { ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { playSound } from '@/lib/audio';
 
 const COLORS = ['hsl(var(--chart-1))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))'];
 
@@ -24,6 +25,10 @@ function SummaryContent() {
     const accuracy = Number(searchParams.get('accuracy') || 0);
     const avgTime = Number(searchParams.get('avgTime') || 0);
     const category = searchParams.get('category');
+
+    useEffect(() => {
+        playSound('summary');
+    }, []);
 
     const pieData = [
         { name: 'Correct', value: correct },

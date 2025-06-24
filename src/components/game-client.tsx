@@ -1,12 +1,12 @@
 
 'use client';
 
-import { useState, useReducer, useCallback, useEffect, Suspense } from 'react';
+import { useState, useReducer, useCallback, useEffect, Suspense, useRef } from 'react';
 import { useGame } from '@/hooks/use-game';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Plus, Minus, X, Divide, Trophy, Timer, CheckCircle, XCircle, Sparkles, Sigma, Percent, FunctionSquare, ArrowRight, Coins, LogOut, BarChart, LayoutGrid } from 'lucide-react';
-import type { MathCategory, DifficultyLevel } from '@/lib/types';
+import type { MathCategory, DifficultyLevel, GameState } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -14,6 +14,7 @@ import { cn } from '@/lib/utils';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { playSound } from '@/lib/audio';
 
 const quickStartCategories: MathCategory[] = ['addition', 'subtraction', 'multiplication', 'mixed'];
 
@@ -62,6 +63,42 @@ function GameClientContent() {
   const [difficulty, setDifficulty] = useState<DifficultyLevel>('easy');
   const [numQuestions, setNumQuestions] = useState(10);
 
+  // Sound effect logic
+  const prevPhaseRef = useRef<GameState['phase']>();
+  const prevFeedbackRef = useRef<GameState['feedback']>();
+
+  useEffect(() => {
+    const currentPhase = state.phase;
+    const prevPhase = prevPhaseRef.current;
+    if (currentPhase !== prevPhase) {
+      if (currentPhase === 'memorize') {
+        playSound('flash');
+      }
+    }
+    prevPhaseRef.current = currentPhase;
+  }, [state.phase]);
+
+  useEffect(() => {
+    const currentFeedback = state.feedback;
+    const prevFeedback = prevFeedbackRef.current;
+    
+    if (state.phase === 'result' && currentFeedback && currentFeedback !== prevFeedback) {
+        switch(currentFeedback) {
+            case 'correct':
+                playSound('correct');
+                break;
+            case 'incorrect':
+                playSound('incorrect');
+                break;
+            case 'timeup':
+                playSound('timeup');
+                break;
+        }
+    }
+    prevFeedbackRef.current = currentFeedback;
+  }, [state.phase, state.feedback]);
+  
+
   useEffect(() => {
     const categoryFromUrl = searchParams.get('category') as MathCategory | null;
     if (categoryFromUrl && state.phase === 'config') {
@@ -104,13 +141,20 @@ function GameClientContent() {
   }, [state.phase, state.history, state.score, state.coins, state.totalQuestions, state.category, router, resetGame]);
 
   const handleOptionClick = (option: string) => {
+    playSound('click');
     submitAnswer(option);
   };
 
   const handleStartChallenge = () => {
+    playSound('click');
     startConfiguredGame({ difficultyLevel: difficulty, totalQuestions: numQuestions });
   };
   
+  const handleSelectCategory = (category: MathCategory) => {
+    playSound('click');
+    selectCategory(category);
+  };
+
   const renderPhase = () => {
     const phaseVariants = {
         hidden: { opacity: 0, scale: 0.95, y: 30 },
@@ -159,7 +203,7 @@ function GameClientContent() {
                                 <Button
                                     variant={'outline'}
                                     className="h-28 text-base flex-col gap-2 transition-all duration-300 transform hover:-translate-y-2 hover:bg-primary/10 hover:border-primary w-full shadow-lg border-2"
-                                    onClick={() => selectCategory(cat)}
+                                    onClick={() => handleSelectCategory(cat)}
                                 >
                                     <div className="text-primary">{categoryIcons[cat]}</div>
                                     <span className="capitalize font-semibold">{cat}</span>
@@ -252,7 +296,7 @@ function GameClientContent() {
                                 }}
                                 className="bg-card shadow-2xl rounded-2xl p-2 w-20 h-28 sm:w-24 sm:h-32 flex items-center justify-center border-2 border-primary/20"
                             >
-                                <span className="text-4xl md:text-5xl font-bold tracking-wider">{num}</span>
+                                <span className="text-3xl md:text-4xl font-bold tracking-wider">{num}</span>
                             </motion.div>
                         ))}
                     </motion.div>
@@ -262,13 +306,13 @@ function GameClientContent() {
                 {state.phase === 'solve' && (
                 <div className={phaseWrapperClass}>
                     <p className="text-sm font-semibold tracking-wider uppercase text-primary mb-3">Solve</p>
-                    <h2 className="text-2xl md:text-4xl font-bold">What is the answer?</h2>
+                    <h2 className="text-2xl md:text-3xl font-bold">What is the answer?</h2>
                     <motion.div 
                         key={state.currentChallenge?.question}
                         initial={{ opacity: 0, y: -20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
-                        className="text-3xl md:text-5xl font-bold my-4 md:my-6 p-4 bg-gradient-to-br from-primary/10 to-background rounded-2xl text-primary tracking-wider shadow-inner"
+                        className="text-3xl md:text-4xl font-bold my-4 md:my-6 p-4 bg-gradient-to-br from-primary/10 to-background rounded-2xl text-primary tracking-wider shadow-inner"
                     >
                         {state.currentChallenge?.question}
                     </motion.div>
@@ -282,7 +326,7 @@ function GameClientContent() {
                             <motion.div key={i} variants={itemVariants} whileHover={{scale: 1.05, y: -5}} whileTap={{scale: 0.98}}>
                                 <Button
                                     variant="outline"
-                                    className="w-full h-24 md:h-28 text-2xl md:text-3xl font-bold shadow-lg hover:shadow-2xl bg-card hover:bg-primary/10 hover:border-primary/80 transition-all duration-200 border-2 rounded-2xl"
+                                    className="w-full h-24 md:h-28 text-xl md:text-2xl font-bold shadow-lg hover:shadow-2xl bg-card hover:bg-primary/10 hover:border-primary/80 transition-all duration-200 border-2 rounded-2xl"
                                     onClick={() => handleOptionClick(String(option))}
                                 >
                                     {String(option)}
