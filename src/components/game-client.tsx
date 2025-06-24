@@ -5,6 +5,7 @@ import { useState, useReducer, useCallback, useEffect, Suspense, useRef } from '
 import { useGame } from '@/hooks/use-game';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { Slider } from "@/components/ui/slider";
 import { Plus, Minus, X, Divide, Trophy, Timer, CheckCircle, XCircle, Sparkles, Sigma, Percent, FunctionSquare, ArrowRight, Coins, LogOut, BarChart, LayoutGrid, ArrowLeft } from 'lucide-react';
 import type { MathCategory, DifficultyLevel, GameState } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -62,6 +63,8 @@ function GameClientContent() {
 
   const [difficulty, setDifficulty] = useState<DifficultyLevel>('easy');
   const [numQuestions, setNumQuestions] = useState(10);
+  const [isCustomQuestions, setIsCustomQuestions] = useState(false);
+
 
   // Sound effect logic
   const prevPhaseRef = useRef<GameState['phase']>();
@@ -153,6 +156,16 @@ function GameClientContent() {
   const handleSelectCategory = (category: MathCategory) => {
     playSound('click');
     selectCategory(category);
+  };
+
+  const handleNumQuestionsChange = (value: string) => {
+    if (value === 'custom') {
+        setIsCustomQuestions(true);
+        setNumQuestions(25);
+    } else {
+        setIsCustomQuestions(false);
+        setNumQuestions(Number(value));
+    }
   };
 
   const renderPhase = () => {
@@ -255,22 +268,54 @@ function GameClientContent() {
                              </Card>
                            </motion.div>
                            
-                           <motion.div variants={{ hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0 } }}>
-                             <Card className="p-6 text-left shadow-lg">
-                                 <CardHeader className="p-0 mb-4">
-                                     <CardTitle>Number of Questions</CardTitle>
-                                     <CardDescription>How many questions to solve?</CardDescription>
-                                 </CardHeader>
-                                 <RadioGroup value={String(numQuestions)} onValueChange={(val) => setNumQuestions(Number(val))} className="gap-3">
-                                     {[10, 20, 30, 50].map(num => (
-                                         <div key={num} className="flex items-center space-x-2">
-                                             <RadioGroupItem value={String(num)} id={`q-${num}`} />
-                                             <Label htmlFor={`q-${num}`} className="text-base font-medium">{num} Questions</Label>
-                                         </div>
-                                     ))}
-                                 </RadioGroup>
-                             </Card>
-                           </motion.div>
+                            <motion.div variants={{ hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0 } }}>
+                                <Card className="p-6 text-left shadow-lg">
+                                    <CardHeader className="p-0 mb-4">
+                                        <CardTitle>Number of Questions</CardTitle>
+                                        <CardDescription>How many questions to solve?</CardDescription>
+                                    </CardHeader>
+                                    <RadioGroup 
+                                        value={isCustomQuestions ? 'custom' : String(numQuestions)} 
+                                        onValueChange={handleNumQuestionsChange} 
+                                        className="gap-3"
+                                    >
+                                        {[10, 20, 30, 50].map(num => (
+                                            <div key={num} className="flex items-center space-x-2">
+                                                <RadioGroupItem value={String(num)} id={`q-${num}`} />
+                                                <Label htmlFor={`q-${num}`} className="text-base font-medium">{num} Questions</Label>
+                                            </div>
+                                        ))}
+                                        <div className="flex items-center space-x-2">
+                                            <RadioGroupItem value="custom" id="q-custom" />
+                                            <Label htmlFor="q-custom" className="text-base font-medium">Custom</Label>
+                                        </div>
+                                    </RadioGroup>
+                                    {isCustomQuestions && (
+                                        <motion.div 
+                                            className="mt-4 pt-4 border-t"
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{ opacity: 1, height: 'auto' }}
+                                        >
+                                            <div className="flex justify-between items-center mb-3">
+                                                <Label htmlFor="custom-slider" className="font-semibold text-base">Custom Amount</Label>
+                                                <span className="font-bold text-lg text-primary w-12 text-center rounded-md bg-primary/10 py-1">{numQuestions}</span>
+                                            </div>
+                                            <div className="flex items-center gap-4">
+                                                <Button size="icon" variant="outline" onClick={() => setNumQuestions(q => Math.max(1, q - 1))}><Minus className="h-4 w-4" /></Button>
+                                                <Slider
+                                                    id="custom-slider"
+                                                    min={1}
+                                                    max={100}
+                                                    step={1}
+                                                    value={[numQuestions]}
+                                                    onValueChange={(value) => setNumQuestions(value[0])}
+                                                />
+                                                <Button size="icon" variant="outline" onClick={() => setNumQuestions(q => Math.min(100, q + 1))}><Plus className="h-4 w-4" /></Button>
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </Card>
+                            </motion.div>
                         </motion.div>
 
                         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0, transition: { delay: 0.2 } }}>
@@ -316,7 +361,7 @@ function GameClientContent() {
                         initial={{ opacity: 0, y: -20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
-                        className="text-3xl md:text-4xl font-bold my-4 md:my-6 p-4 bg-gradient-to-br from-primary/10 to-background rounded-2xl text-primary tracking-wider shadow-inner"
+                        className="text-2xl md:text-3xl font-bold my-4 md:my-6 p-4 bg-gradient-to-br from-primary/10 to-background rounded-2xl text-primary tracking-wider shadow-inner"
                     >
                         {state.currentChallenge?.question}
                     </motion.div>
