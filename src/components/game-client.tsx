@@ -56,7 +56,7 @@ const categoryIcons: Record<MathCategory, React.ReactNode> = {
 };
 
 function GameClientContent() {
-  const { state, selectCategory, startConfiguredGame, submitAnswer, resetGame, endGame } = useGame();
+  const { state, selectCategory, startConfiguredGame, submitAnswer, resetGame, endGame, backToConfig } = useGame();
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -222,6 +222,10 @@ function GameClientContent() {
 
                 {state.phase === 'pre-config' && (
                     <div className={cn(phaseWrapperClass, "gap-8 max-w-2xl mx-auto relative")}>
+                        <Button variant="ghost" size="icon" className="absolute top-0 right-0" onClick={backToConfig}>
+                            <ArrowLeft className="h-6 w-6 text-muted-foreground" />
+                            <span className="sr-only">Back to Categories</span>
+                        </Button>
                         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
                             <h2 className="text-3xl md:text-4xl font-bold">Configure Challenge</h2>
                             <p className="text-muted-foreground mt-2 text-lg">Set your preferences and get started.</p>

@@ -30,7 +30,8 @@ type GameAction =
   | { type: 'SUBMIT_ANSWER'; payload: { answer: string; time: number } }
   | { type: 'TICK'; payload: number }
   | { type: 'RESET' }
-  | { type: 'END_GAME' };
+  | { type: 'END_GAME' }
+  | { type: 'BACK_TO_CONFIG' };
 
 function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
@@ -63,6 +64,15 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         remainingTime: state.memorizeDuration,
       };
     }
+    
+    case 'BACK_TO_CONFIG':
+        return {
+            ...state,
+            phase: 'config',
+            category: null,
+            difficultyLevel: 'easy',
+            totalQuestions: 10,
+        };
 
     case 'NEXT_QUESTION': {
         if (!state.category) return state;
@@ -537,6 +547,10 @@ export const useGame = () => {
   const endGame = useCallback(() => {
     dispatch({ type: 'END_GAME' });
   }, []);
+  
+  const backToConfig = useCallback(() => {
+      dispatch({ type: 'BACK_TO_CONFIG' });
+  }, []);
 
   const submitAnswer = useCallback((answer: string) => {
     const timeTaken = Date.now() - state.startTime;
@@ -553,5 +567,5 @@ export const useGame = () => {
     return () => clearInterval(timer);
   }, [state.phase, state.remainingTime]);
 
-  return { state, selectCategory, startConfiguredGame, submitAnswer, resetGame, endGame };
+  return { state, selectCategory, startConfiguredGame, submitAnswer, resetGame, endGame, backToConfig };
 };
