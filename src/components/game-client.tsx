@@ -1,16 +1,19 @@
 
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useGame } from '@/hooks/use-game';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Plus, Minus, X, Divide, BrainCircuit, Trophy, Timer, CheckCircle, XCircle, Sparkles, Sigma, Percent, FunctionSquare, ArrowRight, Coins, LogOut } from 'lucide-react';
-import type { MathCategory } from '@/lib/types';
+import { Plus, Minus, X, Divide, BrainCircuit, Trophy, Timer, CheckCircle, XCircle, Sparkles, Sigma, Percent, FunctionSquare, ArrowRight, Coins, LogOut, BarChart } from 'lucide-react';
+import type { MathCategory, DifficultyLevel } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 const quickStartCategories: MathCategory[] = ['addition', 'subtraction', 'multiplication', 'mixed'];
 
@@ -53,21 +56,27 @@ const categoryIcons: Record<MathCategory, React.ReactNode> = {
 
 
 export function GameClient() {
-  const { state, setCategory, startGame, submitAnswer, resetGame } = useGame();
+  const { state, selectCategory, startConfiguredGame, submitAnswer, resetGame } = useGame();
   const searchParams = useSearchParams();
   const router = useRouter();
+
+  const [difficulty, setDifficulty] = useState<DifficultyLevel>('easy');
+  const [numQuestions, setNumQuestions] = useState(10);
 
   useEffect(() => {
     const categoryFromUrl = searchParams.get('category') as MathCategory | null;
     if (categoryFromUrl && state.phase === 'config') {
-      setCategory(categoryFromUrl);
-      startGame();
+      selectCategory(categoryFromUrl);
       router.replace('/app/challenge', { scroll: false });
     }
-  }, [searchParams, state.phase, setCategory, startGame, router]);
+  }, [searchParams, state.phase, selectCategory, router]);
 
   const handleOptionClick = (option: string) => {
     submitAnswer(option);
+  };
+
+  const handleStartChallenge = () => {
+    startConfiguredGame({ difficultyLevel: difficulty, totalQuestions: numQuestions });
   };
   
   const renderPhase = () => {
@@ -93,7 +102,7 @@ export function GameClient() {
     const phaseWrapperClass = "w-full flex-grow flex flex-col items-center justify-center text-center p-4";
 
     return (
-      <div className="relative w-full flex-grow flex items-center justify-center overflow-hidden" style={{ perspective: '1200px' }}>
+      <div className="relative w-full flex-grow flex items-center justify-center overflow-hidden">
         <AnimatePresence mode="wait">
             <motion.div
                 key={state.phase}
@@ -118,7 +127,7 @@ export function GameClient() {
                                 <Button
                                     variant={'outline'}
                                     className="h-28 text-base flex-col gap-2 transition-all duration-300 transform hover:-translate-y-2 hover:bg-primary/10 hover:border-primary w-full shadow-lg border-2"
-                                    onClick={() => { setCategory(cat); startGame(); }}
+                                    onClick={() => selectCategory(cat)}
                                 >
                                     <div className="text-primary">{categoryIcons[cat]}</div>
                                     <span className="capitalize font-semibold">{cat}</span>
@@ -133,9 +142,67 @@ export function GameClient() {
                     </Link>
                 </div>
                 )}
+
+                {state.phase === 'pre-config' && (
+                    <div className={cn(phaseWrapperClass, "gap-8 max-w-2xl mx-auto")}>
+                        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
+                            <h2 className="text-3xl md:text-4xl font-bold">Configure Challenge</h2>
+                            <p className="text-muted-foreground mt-2 text-lg">Set your preferences and get started.</p>
+                        </motion.div>
+                        
+                        <motion.div className="w-full grid md:grid-cols-2 gap-8" initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: 0.1 }}}}>
+                           <motion.div variants={{ hidden: { opacity: 0, x: -20 }, visible: { opacity: 1, x: 0 } }}>
+                             <Card className="p-6 text-left">
+                                 <CardHeader className="p-0 mb-4">
+                                     <CardTitle>Difficulty</CardTitle>
+                                     <CardDescription>How tough should the questions be?</CardDescription>
+                                 </CardHeader>
+                                 <RadioGroup value={difficulty} onValueChange={(val) => setDifficulty(val as DifficultyLevel)} className="gap-3">
+                                     <div className="flex items-center space-x-2">
+                                         <RadioGroupItem value="easy" id="easy" />
+                                         <Label htmlFor="easy" className="text-base font-medium">Easy</Label>
+                                     </div>
+                                     <div className="flex items-center space-x-2">
+                                         <RadioGroupItem value="medium" id="medium" />
+                                         <Label htmlFor="medium" className="text-base font-medium">Medium</Label>
+                                     </div>
+                                     <div className="flex items-center space-x-2">
+                                         <RadioGroupItem value="hard" id="hard" />
+                                         <Label htmlFor="hard" className="text-base font-medium">Hard</Label>
+                                     </div>
+                                 </RadioGroup>
+                             </Card>
+                           </motion.div>
+                           
+                           <motion.div variants={{ hidden: { opacity: 0, x: 20 }, visible: { opacity: 1, x: 0 } }}>
+                             <Card className="p-6 text-left">
+                                 <CardHeader className="p-0 mb-4">
+                                     <CardTitle>Number of Questions</CardTitle>
+                                     <CardDescription>How many questions to solve?</CardDescription>
+                                 </CardHeader>
+                                 <RadioGroup value={String(numQuestions)} onValueChange={(val) => setNumQuestions(Number(val))} className="gap-3">
+                                     {[10, 20, 30, 50].map(num => (
+                                         <div key={num} className="flex items-center space-x-2">
+                                             <RadioGroupItem value={String(num)} id={`q-${num}`} />
+                                             <Label htmlFor={`q-${num}`} className="text-base font-medium">{num} Questions</Label>
+                                         </div>
+                                     ))}
+                                 </RadioGroup>
+                             </Card>
+                           </motion.div>
+                        </motion.div>
+
+                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0, transition: { delay: 0.2 } }}>
+                            <Button size="lg" className="w-full max-w-md text-lg shadow-lg" onClick={handleStartChallenge}>
+                                Start Challenge
+                            </Button>
+                        </motion.div>
+                    </div>
+                )}
+
                 {state.phase === 'memorize' && (
                 <div className={phaseWrapperClass}>
-                    <p className="text-sm font-semibold tracking-wider uppercase text-primary mb-3">Phase 1 of 2</p>
+                    <p className="text-sm font-semibold tracking-wider uppercase text-primary mb-3">Memorize</p>
                     <h2 className="text-2xl md:text-4xl font-bold mb-6">Memorize the numbers</h2>
                     <motion.div 
                         className="my-8 flex justify-center items-center gap-4 sm:gap-6"
@@ -161,8 +228,8 @@ export function GameClient() {
                 )}
                 {state.phase === 'solve' && (
                 <div className={phaseWrapperClass}>
-                    <p className="text-sm font-semibold tracking-wider uppercase text-primary mb-3">Phase 2 of 2</p>
-                    <h2 className="text-2xl md:text-4xl font-bold">What's the answer?</h2>
+                    <p className="text-sm font-semibold tracking-wider uppercase text-primary mb-3">Solve</p>
+                    <h2 className="text-2xl md:text-4xl font-bold">What is the answer?</h2>
                     <motion.div 
                         key={state.currentChallenge?.question}
                         initial={{ opacity: 0, y: -20, scale: 0.95 }}
@@ -231,6 +298,31 @@ export function GameClient() {
                     <Progress value={(state.remainingTime / 2000) * 100} className="mt-3 w-1/2 max-w-xs h-3" />
                 </div>
                 )}
+                 {state.phase === 'summary' && (
+                    <div className={cn(phaseWrapperClass, "gap-4")}>
+                        <motion.div initial={{scale:0, opacity: 0}} animate={{scale:1, opacity: 1, transition: {delay: 0.2, type: 'spring'}}} >
+                          <Trophy className="w-24 h-24 text-yellow-400" />
+                        </motion.div>
+                        <h2 className="text-4xl md:text-5xl font-bold">Challenge Complete!</h2>
+                        <p className="text-muted-foreground text-xl">Here's how you did:</p>
+                        
+                        <div className="grid grid-cols-2 gap-4 mt-4 text-left p-6 rounded-lg bg-secondary/50 w-full max-w-md">
+                            <p className="font-medium text-muted-foreground">Final Score:</p>
+                            <p className="text-2xl font-bold text-right">{state.score}</p>
+
+                            <p className="font-medium text-muted-foreground">Coins Earned:</p>
+                            <p className="text-2xl font-bold text-right flex items-center justify-end gap-2">{state.coins} <Coins className="w-6 h-6 text-yellow-500"/></p>
+
+                            <p className="font-medium text-muted-foreground">Correct Answers:</p>
+                            <p className="text-2xl font-bold text-right">{state.history.filter(h => h.correct).length} / {state.totalQuestions}</p>
+                        </div>
+                        
+                        <div className="flex gap-4 mt-6">
+                            <Button size="lg" onClick={resetGame}>Play Again</Button>
+                            <Button size="lg" variant="outline" onClick={resetGame}>Choose New Category</Button>
+                        </div>
+                    </div>
+                )}
             </motion.div>
         </AnimatePresence>
       </div>
@@ -242,12 +334,13 @@ export function GameClient() {
         <div className="p-3 flex items-center justify-between gap-x-4">
             <div className="flex items-center flex-wrap gap-x-4 gap-y-2">
                 <h2 className="text-lg font-bold tracking-tight">
-                    {state.phase !== 'config' ? (
+                    {state.category ? (
                         <>Challenge: <span className="text-primary capitalize">{state.category.replace(/-/g, ' ')}</span></>
                     ) : 'MathMind Challenge'}
                 </h2>
-                {state.phase !== 'config' && (
+                {state.phase !== 'config' && state.phase !== 'pre-config' && state.phase !== 'summary' && (
                     <div className="flex items-center flex-wrap justify-center gap-2 text-xs font-medium">
+                        <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><BarChart className="w-3 h-3 text-blue-400" />Question: <span className="font-bold tabular-nums">{state.currentQuestionIndex}/{state.totalQuestions}</span></div>
                         <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><Trophy className="w-3 h-3 text-orange-400" /> <span className="font-bold tabular-nums">{state.score}</span></div>
                         <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><Coins className="w-3 h-3 text-yellow-400" /> <span className="font-bold tabular-nums">{state.coins}</span></div>
                         <div className="flex items-center gap-1.5 bg-secondary py-1 px-2.5 rounded-full"><BrainCircuit className="w-3 h-3 text-primary" /> <span className="font-bold tabular-nums">{state.difficulty}</span></div>
@@ -255,7 +348,7 @@ export function GameClient() {
                 )}
             </div>
 
-            {state.phase !== 'config' && (
+            {state.phase !== 'config' && state.phase !== 'pre-config' && state.phase !== 'summary' && (
                 <Button variant="ghost" size="icon" onClick={resetGame} className="text-muted-foreground hover:text-destructive shrink-0">
                     <LogOut className="h-5 w-5" />
                     <span className="sr-only">End Challenge</span>

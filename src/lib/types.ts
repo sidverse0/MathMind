@@ -1,3 +1,5 @@
+export type DifficultyLevel = 'easy' | 'medium' | 'hard';
+
 export type MathCategory = 
   // Existing
   | 'addition' | 'subtraction' | 'multiplication' | 'division' | 'mixed' 
@@ -34,9 +36,12 @@ export interface PerformanceRecord {
 }
 
 export interface GameState {
-  phase: 'config' | 'memorize' | 'solve' | 'result';
-  category: MathCategory;
-  difficulty: number;
+  phase: 'config' | 'pre-config' | 'memorize' | 'solve' | 'result' | 'summary';
+  category: MathCategory | null;
+  difficultyLevel: DifficultyLevel;
+  difficulty: number; // 1-10
+  totalQuestions: number;
+  currentQuestionIndex: number;
   score: number;
   coins: number;
   currentChallenge: Challenge | null;

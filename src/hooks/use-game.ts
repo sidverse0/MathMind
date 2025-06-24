@@ -1,14 +1,15 @@
 'use client';
 
 import { useState, useReducer, useCallback, useEffect } from 'react';
-import type { GameState, MathCategory, Challenge, PerformanceRecord, OperatorSymbol } from '@/lib/types';
-import { adjustDifficulty } from '@/ai/flows/adaptive-difficulty';
-import { useToast } from '@/hooks/use-toast';
+import type { GameState, MathCategory, Challenge, PerformanceRecord, OperatorSymbol, DifficultyLevel } from '@/lib/types';
 
 const initialState: GameState = {
   phase: 'config',
-  category: 'addition',
-  difficulty: 1,
+  category: null,
+  difficultyLevel: 'easy',
+  difficulty: 2,
+  totalQuestions: 10,
+  currentQuestionIndex: 0,
   score: 0,
   coins: 0,
   currentChallenge: null,
@@ -21,31 +22,60 @@ const initialState: GameState = {
 };
 
 type GameAction =
-  | { type: 'SET_CATEGORY'; payload: MathCategory }
-  | { type: 'START_GAME' }
+  | { type: 'SELECT_CATEGORY'; payload: MathCategory }
+  | { type: 'START_CONFIGURED_GAME'; payload: { difficultyLevel: DifficultyLevel; totalQuestions: number } }
+  | { type: 'NEXT_QUESTION' }
   | { type: 'START_SOLVE' }
   | { type: 'SUBMIT_ANSWER'; payload: { answer: string; time: number } }
   | { type: 'TICK'; payload: number }
-  | { type: 'SET_DIFFICULTY'; payload: number }
   | { type: 'RESET' };
 
 function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
-    case 'SET_CATEGORY':
-      return { ...state, category: action.payload };
-    case 'START_GAME': {
-      const challenge = generateChallenge(state.category, state.difficulty);
+    case 'SELECT_CATEGORY':
+      return { ...state, phase: 'pre-config', category: action.payload };
+
+    case 'START_CONFIGURED_GAME': {
+      if (!state.category) return state;
+      const { difficultyLevel, totalQuestions } = action.payload;
+      
+      let difficulty: number;
+      switch (difficultyLevel) {
+        case 'easy': difficulty = 2; break;
+        case 'medium': difficulty = 5; break;
+        case 'hard': difficulty = 8; break;
+        default: difficulty = 2;
+      }
+      
+      const challenge = generateChallenge(state.category, difficulty);
+      
       return {
         ...initialState,
         category: state.category,
-        difficulty: state.difficulty,
-        history: state.history,
-        score: state.score,
-        coins: state.coins,
         phase: 'memorize',
+        difficultyLevel,
+        totalQuestions,
+        difficulty,
+        currentQuestionIndex: 1,
         currentChallenge: challenge,
         remainingTime: state.memorizeDuration,
       };
+    }
+
+    case 'NEXT_QUESTION': {
+        if (!state.category) return state;
+        if (state.currentQuestionIndex >= state.totalQuestions) {
+            return { ...state, phase: 'summary' };
+        }
+        const challenge = generateChallenge(state.category, state.difficulty);
+        return {
+            ...state,
+            phase: 'memorize',
+            feedback: '',
+            currentChallenge: challenge,
+            currentQuestionIndex: state.currentQuestionIndex + 1,
+            remainingTime: state.memorizeDuration,
+        };
     }
     case 'START_SOLVE':
       return {
@@ -75,14 +105,12 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       if (newTime <= 0) {
         if (state.phase === 'memorize') return { ...gameReducer(state, { type: 'START_SOLVE' }) };
         if (state.phase === 'solve') return { ...state, phase: 'result', feedback: 'timeup', remainingTime: 2000 };
-        if (state.phase === 'result') return { ...gameReducer(state, { type: 'START_GAME' }) };
+        if (state.phase === 'result') return { ...gameReducer(state, { type: 'NEXT_QUESTION' }) };
       }
       return { ...state, remainingTime: newTime };
     }
-    case 'SET_DIFFICULTY':
-      return { ...state, difficulty: action.payload };
     case 'RESET':
-      return { ...initialState, history: state.history, score: state.score, coins: state.coins };
+      return { ...initialState };
     default:
       return state;
   }
@@ -486,16 +514,15 @@ function generateChallenge(category: MathCategory, difficulty: number): Challeng
 
 export const useGame = () => {
   const [state, dispatch] = useReducer(gameReducer, initialState);
-  const { toast } = useToast();
 
-  const setCategory = useCallback((category: MathCategory) => {
-    dispatch({ type: 'SET_CATEGORY', payload: category });
+  const selectCategory = useCallback((category: MathCategory) => {
+    dispatch({ type: 'SELECT_CATEGORY', payload: category });
   }, []);
 
-  const startGame = useCallback(() => {
-    dispatch({ type: 'START_GAME' });
+  const startConfiguredGame = useCallback((config: { difficultyLevel: DifficultyLevel; totalQuestions: number }) => {
+    dispatch({ type: 'START_CONFIGURED_GAME', payload: config });
   }, []);
-  
+
   const resetGame = useCallback(() => {
     dispatch({ type: 'RESET' });
   }, []);
@@ -506,7 +533,7 @@ export const useGame = () => {
   }, [state.startTime]);
 
   useEffect(() => {
-    if (state.phase === 'config' || state.remainingTime <= 0) return;
+    if (state.phase === 'config' || state.phase === 'pre-config' || state.phase === 'summary' || state.remainingTime <= 0) return;
 
     const timer = setInterval(() => {
       dispatch({ type: 'TICK', payload: 100 });
@@ -514,36 +541,6 @@ export const useGame = () => {
 
     return () => clearInterval(timer);
   }, [state.phase, state.remainingTime]);
-  
-  useEffect(() => {
-    if (state.history.length > 0 && state.history.length % 5 === 0 && state.phase === 'result') {
-      const recentHistory = state.history.slice(-5);
-      const accuracy = recentHistory.filter(h => h.correct).length / recentHistory.length;
-      const averageTime = recentHistory.reduce((acc, h) => acc + h.time, 0) / recentHistory.length / 1000;
-      
-      adjustDifficulty({
-        accuracy,
-        averageTime,
-        currentDifficulty: state.difficulty
-      }).then(res => {
-        const newDifficulty = Math.max(1, Math.min(10, res.newDifficulty));
-        if(newDifficulty !== state.difficulty) {
-            dispatch({ type: 'SET_DIFFICULTY', payload: newDifficulty });
-            toast({
-                title: "Difficulty Adjusted!",
-                description: `${res.reason} New difficulty: ${newDifficulty}.`,
-            });
-        }
-      }).catch(err => {
-        console.error("Failed to adjust difficulty", err);
-        toast({
-            variant: "destructive",
-            title: "AI Error",
-            description: "Could not adjust difficulty.",
-        });
-      });
-    }
-  }, [state.history, state.phase, state.difficulty, toast]);
 
-  return { state, setCategory, startGame, submitAnswer, resetGame };
+  return { state, selectCategory, startConfiguredGame, submitAnswer, resetGame };
 };
