@@ -17,7 +17,7 @@ const quickAccessCategories = [
 
 const topPlayers = [
   { rank: 1, name: "Alex", avatar: "https://files.catbox.moe/uvi8l9.png" },
-  { rank: 2, name: "Maria", avatar: "https://files.catbox.moe/uvi8l9.png" },
+  { rank: 2, name: "Maria", avatar: "https://files.catbox.moe/rv4git.jpg" },
 ];
 
 const userRank = { rank: 3, name: "You" };
@@ -27,16 +27,25 @@ export default function DashboardPage() {
     const [userAvatar, setUserAvatar] = useState("https://files.catbox.moe/uvi8l9.png");
 
     useEffect(() => {
-        const storedName = localStorage.getItem('mathMindUserName');
-        if (storedName) {
-            setUserName(storedName);
-        }
-        const storedGender = localStorage.getItem('mathMindUserGender');
-        if (storedGender === 'female') {
-            setUserAvatar('https://files.catbox.moe/rv4git.jpg');
-        } else {
-            setUserAvatar('https://files.catbox.moe/uvi8l9.png');
-        }
+        const updateUserData = () => {
+            const storedName = localStorage.getItem('mathMindUserName');
+            if (storedName) {
+                setUserName(storedName);
+            }
+            const storedGender = localStorage.getItem('mathMindUserGender');
+            if (storedGender === 'female') {
+                setUserAvatar('https://files.catbox.moe/rv4git.jpg');
+            } else {
+                setUserAvatar('https://files.catbox.moe/uvi8l9.png');
+            }
+        };
+
+        updateUserData();
+        window.addEventListener('pageshow', updateUserData);
+
+        return () => {
+            window.removeEventListener('pageshow', updateUserData);
+        };
     }, []);
 
     const containerVariants = {

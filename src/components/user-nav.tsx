@@ -9,12 +9,21 @@ export function UserNav() {
   const [avatarUrl, setAvatarUrl] = useState("https://files.catbox.moe/uvi8l9.png");
 
   useEffect(() => {
-    const storedGender = localStorage.getItem('mathMindUserGender');
-    if (storedGender === 'female') {
-      setAvatarUrl('https://files.catbox.moe/rv4git.jpg');
-    } else {
-      setAvatarUrl('https://files.catbox.moe/uvi8l9.png');
-    }
+    const updateAvatar = () => {
+        const storedGender = localStorage.getItem('mathMindUserGender');
+        if (storedGender === 'female') {
+          setAvatarUrl('https://files.catbox.moe/rv4git.jpg');
+        } else {
+          setAvatarUrl('https://files.catbox.moe/uvi8l9.png');
+        }
+    };
+    
+    updateAvatar();
+    window.addEventListener('pageshow', updateAvatar);
+    
+    return () => {
+        window.removeEventListener('pageshow', updateAvatar);
+    };
   }, []);
 
   return (

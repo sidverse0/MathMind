@@ -10,24 +10,33 @@ import { cn } from "@/lib/utils";
 
 const leaderboardData = [
   { rank: 1, name: "Alex", score: 15420, avatar: "https://files.catbox.moe/uvi8l9.png" },
-  { rank: 2, name: "Maria", score: 14890, avatar: "https://files.catbox.moe/uvi8l9.png" },
+  { rank: 2, name: "Maria", score: 14890, avatar: "https://files.catbox.moe/rv4git.jpg" },
   { rank: 3, name: "You", score: 14500, avatar: "https://files.catbox.moe/uvi8l9.png" },
   { rank: 4, name: "David", score: 13900, avatar: "https://files.catbox.moe/uvi8l9.png" },
-  { rank: 5, name: "Sophia", score: 13750, avatar: "https://files.catbox.moe/uvi8l9.png" },
+  { rank: 5, name: "Sophia", score: 13750, avatar: "https://files.catbox.moe/rv4git.jpg" },
   { rank: 6, name: "Liam", score: 12100, avatar: "https://files.catbox.moe/uvi8l9.png" },
-  { rank: 7, name: "Olivia", score: 11500, avatar: "https://files.catbox.moe/uvi8l9.png" },
+  { rank: 7, name: "Olivia", score: 11500, avatar: "https://files.catbox.moe/rv4git.jpg" },
 ];
 
 export default function LeaderboardPage() {
   const [dynamicLeaderboard, setDynamicLeaderboard] = useState(leaderboardData);
 
   useEffect(() => {
-    const storedGender = localStorage.getItem('mathMindUserGender');
-    const userAvatar = storedGender === 'female' ? 'https://files.catbox.moe/rv4git.jpg' : 'https://files.catbox.moe/uvi8l9.png';
-    
-    setDynamicLeaderboard(leaderboardData.map(player => 
-        player.name === "You" ? { ...player, avatar: userAvatar } : player
-    ));
+    const updateUserAvatar = () => {
+        const storedGender = localStorage.getItem('mathMindUserGender');
+        const userAvatar = storedGender === 'female' ? 'https://files.catbox.moe/rv4git.jpg' : 'https://files.catbox.moe/uvi8l9.png';
+        
+        setDynamicLeaderboard(leaderboardData.map(player => 
+            player.name === "You" ? { ...player, avatar: userAvatar } : player
+        ));
+    };
+
+    updateUserAvatar();
+    window.addEventListener('pageshow', updateUserAvatar);
+
+    return () => {
+      window.removeEventListener('pageshow', updateUserAvatar);
+    };
   }, []);
 
   const containerVariants = {
