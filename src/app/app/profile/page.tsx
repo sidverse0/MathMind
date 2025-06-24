@@ -45,35 +45,13 @@ export default function ProfilePage() {
                     </motion.div>
                 </div>
                 <CardHeader className="pt-16 md:pt-20 text-center">
-                    <CardTitle className="text-3xl md:text-4xl">{name}</CardTitle>
-                    <CardDescription className="text-base">Mathlete since yesterday</CardDescription>
-                </CardHeader>
-                <CardContent className="p-4 sm:p-6">
-                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                        {statItems.map((item, index) => (
-                            <motion.div 
-                                key={item.label}
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.4 + index * 0.1 }}
-                            >
-                                <Card className="p-4 flex items-center gap-4 hover:bg-secondary/80 transition-colors">
-                                    <div className="p-3 bg-primary/10 rounded-lg">
-                                        {item.icon}
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-muted-foreground">{item.label}</p>
-                                        <p className="text-xl md:text-2xl font-bold">{item.value}</p>
-                                    </div>
-                                </Card>
-                            </motion.div>
-                        ))}
-                    </div>
-                    <div className="mt-8 text-center">
+                    <div className="flex justify-center items-center gap-2">
+                        <CardTitle className="text-3xl md:text-4xl">{name}</CardTitle>
                         <Dialog>
                             <DialogTrigger asChild>
-                                <Button onClick={() => setTempName(name)}>
-                                    <Edit className="mr-2 h-4 w-4" /> Edit Profile
+                                <Button variant="ghost" size="icon" onClick={() => setTempName(name)}>
+                                    <Edit className="h-5 w-5 text-muted-foreground" />
+                                    <span className="sr-only">Edit name</span>
                                 </Button>
                             </DialogTrigger>
                             <DialogContent className="sm:max-w-[425px]">
@@ -101,6 +79,29 @@ export default function ProfilePage() {
                                 </DialogFooter>
                             </DialogContent>
                         </Dialog>
+                    </div>
+                    <CardDescription className="text-base">Mathlete since yesterday</CardDescription>
+                </CardHeader>
+                <CardContent className="p-4 sm:p-6">
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {statItems.map((item, index) => (
+                            <motion.div 
+                                key={item.label}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.4 + index * 0.1 }}
+                            >
+                                <Card className="p-4 flex items-center gap-4 hover:bg-secondary/80 transition-colors">
+                                    <div className="p-3 bg-primary/10 rounded-lg">
+                                        {item.icon}
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-muted-foreground">{item.label}</p>
+                                        <p className="text-xl md:text-2xl font-bold">{item.value}</p>
+                                    </div>
+                                </Card>
+                            </motion.div>
+                        ))}
                     </div>
                 </CardContent>
             </Card>
