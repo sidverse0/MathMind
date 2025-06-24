@@ -68,9 +68,10 @@ function SummaryContent() {
                     <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Challenge Summary</h1>
                     <p className="text-muted-foreground mt-2 text-base">Here's how you performed.</p>
                 </div>
-                <Link href="/app/challenge/categories" className="w-full sm:w-auto">
-                    <Button variant="outline" className="w-full sm:w-auto">
-                        <ArrowLeft className="mr-2 h-4 w-4" /> Back to Categories
+                <Link href={category ? `/app/challenge?category=${category}` : '/app/challenge/categories'} className="w-full sm:w-auto">
+                    <Button size="lg" className="shadow-lg w-full sm:w-auto" disabled={!category}>
+                        <RotateCw className="mr-2 h-4 w-4" />
+                        Play Another Round
                     </Button>
                 </Link>
             </motion.div>
@@ -164,10 +165,9 @@ function SummaryContent() {
             </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0, transition: { delay: 0.5 }}} className="flex justify-center">
-                <Link href={category ? `/app/challenge?category=${category}` : '/app/challenge/categories'}>
-                    <Button size="lg" className="shadow-lg" disabled={!category}>
-                        <RotateCw className="mr-2 h-4 w-4" />
-                        Play Another Round
+                <Link href="/app/challenge/categories">
+                    <Button variant="outline">
+                        <ArrowLeft className="mr-2 h-4 w-4" /> Back to Categories
                     </Button>
                 </Link>
             </motion.div>
