@@ -13,6 +13,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'MathMind: Brain Training',
   description: 'Engage in fun, adaptive math challenges designed to sharpen your memory and calculation skills.',
+  icons: null,
 };
 
 export default function RootLayout({
