@@ -43,6 +43,10 @@ const statCards = [
     { label: "Incorrect Answers", value: "48", icon: <XCircle className="h-8 w-8 text-red-500"/> },
 ];
 
+const renderCustomLegend = () => {
+    return <p className="text-center text-sm text-muted-foreground mt-4">Hover to see details</p>;
+}
+
 export default function ProgressPage() {
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -122,7 +126,7 @@ export default function ProgressPage() {
                                     <Cell key={`cell-${index}`} fill={entry.color} />
                                 ))}
                                 </Pie>
-                                <Legend content={<p className="text-center text-sm text-muted-foreground mt-4">Hover to see details</p>} />
+                                <Legend content={renderCustomLegend} />
                             </PieChart>
                         </ResponsiveContainer>
                     </ChartContainer>
