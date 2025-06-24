@@ -39,7 +39,7 @@ export default function ProfilePage() {
                         className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2"
                     >
                         <Avatar className="h-32 w-32 border-8 border-background shadow-xl">
-                            <AvatarImage src="https://placehold.co/128x128.png" data-ai-hint="smiling woman" />
+                            <AvatarImage src="https://files.catbox.moe/uvi8l9.png" alt="User Avatar" />
                             <AvatarFallback className="text-4xl">YOU</AvatarFallback>
                         </Avatar>
                     </motion.div>
