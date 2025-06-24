@@ -53,20 +53,24 @@ function SummaryContent() {
 
     return (
         <div className="flex flex-col gap-8">
-            <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex justify-between items-center">
+            <motion.div 
+                initial={{ opacity: 0, y: -20 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
+            >
                 <div>
                     <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Challenge Summary</h1>
                     <p className="text-muted-foreground mt-2 text-base">Here's how you performed.</p>
                 </div>
-                <Link href="/app/challenge/categories">
-                    <Button variant="outline">
+                <Link href="/app/challenge/categories" className="w-full sm:w-auto">
+                    <Button variant="outline" className="w-full sm:w-auto">
                         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Categories
                     </Button>
                 </Link>
             </motion.div>
 
             <motion.div 
-                className="grid gap-8 lg:grid-cols-5"
+                className="grid gap-8 grid-cols-1 lg:grid-cols-5"
                 initial="hidden"
                 animate="visible"
                 variants={containerVariants}
@@ -79,7 +83,7 @@ function SummaryContent() {
                         </CardHeader>
                         <CardContent>
                             {pieData.length > 0 ? (
-                                <ChartContainer config={{}} className="h-[300px] w-full">
+                                <ChartContainer config={{}} className="h-[250px] sm:h-[300px] w-full">
                                     <ResponsiveContainer>
                                         <PieChart>
                                             <Tooltip content={<ChartTooltipContent hideLabel />} />
@@ -102,7 +106,7 @@ function SummaryContent() {
                                     </ResponsiveContainer>
                                 </ChartContainer>
                             ) : (
-                                <div className="h-[300px] flex items-center justify-center text-muted-foreground">
+                                <div className="h-[250px] sm:h-[300px] flex items-center justify-center text-muted-foreground">
                                     No data to display.
                                 </div>
                             )}
@@ -114,19 +118,20 @@ function SummaryContent() {
                     <Card className="shadow-lg h-full">
                         <CardHeader>
                             <CardTitle>Total Score & Coins</CardTitle>
+                             <CardDescription>Your rewards from this round.</CardDescription>
                         </CardHeader>
-                        <CardContent className="flex flex-col gap-4">
-                            <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
+                        <CardContent className="flex flex-col gap-4 justify-center h-full pt-4">
+                            <div className="flex items-center justify-between p-4 rounded-lg bg-secondary/50">
                                 <div className="flex items-center gap-3">
-                                    <Trophy className="h-5 w-5 text-orange-400" />
-                                    <span>Total Score</span>
+                                    <Trophy className="h-6 w-6 text-orange-400" />
+                                    <span className="font-medium">Total Score</span>
                                 </div>
                                 <span className="font-bold text-xl">{score}</span>
                             </div>
-                            <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
+                            <div className="flex items-center justify-between p-4 rounded-lg bg-secondary/50">
                                 <div className="flex items-center gap-3">
-                                    <Coins className="h-5 w-5 text-yellow-400" />
-                                    <span>Coins Earned</span>
+                                    <Coins className="h-6 w-6 text-yellow-400" />
+                                    <span className="font-medium">Coins Earned</span>
                                 </div>
                                 <span className="font-bold text-xl">{coins}</span>
                             </div>
@@ -136,7 +141,7 @@ function SummaryContent() {
             </motion.div>
 
             <motion.div
-                className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
+                className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5"
                 variants={containerVariants}
                 initial="hidden"
                 animate="visible"
@@ -154,7 +159,7 @@ function SummaryContent() {
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0, transition: { delay: 0.5 }}} className="flex justify-center">
                 <Link href="/app/challenge/categories">
-                    <Button size="lg">
+                    <Button size="lg" className="shadow-lg">
                         Play Another Round
                     </Button>
                 </Link>
@@ -165,7 +170,7 @@ function SummaryContent() {
 
 export default function SummaryPage() {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div className="flex h-full w-full items-center justify-center">Loading summary...</div>}>
             <SummaryContent />
         </Suspense>
     )
