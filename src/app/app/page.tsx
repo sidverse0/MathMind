@@ -1,12 +1,13 @@
-
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Gamepad2, Trophy, Coins, BrainCircuit, Star, Sigma, Square, Plus } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Image from 'next/image';
 
 const quickAccessCategories = [
     { name: "Mixed", icon: <Plus className="h-6 w-6" />, href: "/app/challenge?category=mixed" },
@@ -22,6 +23,15 @@ const topPlayers = [
 const userRank = { rank: 3, name: "You", avatar: "https://files.catbox.moe/uvi8l9.png" };
 
 export default function DashboardPage() {
+    const [userName, setUserName] = useState("Mathlete");
+
+    useEffect(() => {
+        const storedName = localStorage.getItem('mathMindUserName');
+        if (storedName) {
+            setUserName(storedName);
+        }
+    }, []);
+
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -43,9 +53,22 @@ export default function DashboardPage() {
         initial={{ opacity: 0, y: -20 }} 
         animate={{ opacity: 1, y: 0 }} 
         transition={{ duration: 0.5 }}
+        className="flex justify-between items-center"
       >
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Welcome back, Mathlete!</h1>
-        <p className="text-muted-foreground mt-2 text-base">Your mind is a muscle. Let's make it stronger today.</p>
+        <div>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Welcome back, {userName}!</h1>
+            <p className="text-muted-foreground mt-2 text-base">Your mind is a muscle. Let's make it stronger today.</p>
+        </div>
+        <Link href="https://files.catbox.moe/i6khoe.jpg" target="_blank" rel="noopener noreferrer">
+            <Button variant="outline" className="shadow-md hidden sm:flex">
+                <Image src="https://files.catbox.moe/aawyf3.png" alt="Buy me a coffee" width={24} height={24} className="mr-2 rounded-full" />
+                Buy me a coffee
+            </Button>
+            <Button variant="outline" size="icon" className="shadow-md sm:hidden">
+                <Image src="https://files.catbox.moe/aawyf3.png" alt="Buy me a coffee" width={24} height={24} className="rounded-full" />
+                <span className="sr-only">Buy me a coffee</span>
+            </Button>
+        </Link>
       </motion.div>
 
       <motion.div 

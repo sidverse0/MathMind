@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Trophy, Coins, Star, BarChart, Clock, Target, Edit } from "lucide-react";
@@ -23,8 +23,17 @@ export default function ProfilePage() {
   const [name, setName] = useState("Your Name");
   const [tempName, setTempName] = useState(name);
 
+  useEffect(() => {
+    const storedName = localStorage.getItem('mathMindUserName');
+    if (storedName) {
+      setName(storedName);
+      setTempName(storedName);
+    }
+  }, []);
+
   const handleSaveChanges = () => {
     setName(tempName);
+    localStorage.setItem('mathMindUserName', tempName);
   };
 
   return (
