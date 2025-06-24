@@ -74,21 +74,22 @@ export default function DashboardPage() {
         initial={{ opacity: 0, y: -20 }} 
         animate={{ opacity: 1, y: 0 }} 
         transition={{ duration: 0.5 }}
-        className="flex justify-between items-center"
+        className="flex justify-between items-start"
       >
         <div>
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Welcome back, {userName}!</h1>
             <p className="text-muted-foreground mt-2 text-base">Your mind is a muscle. Let's make it stronger today.</p>
         </div>
-        <Link href="https://files.catbox.moe/i6khoe.jpg" target="_blank" rel="noopener noreferrer">
-            <Button variant="outline" className="shadow-md hidden sm:flex">
-                <Image src="https://files.catbox.moe/aawyf3.png" alt="Buy me a coffee" width={24} height={24} className="mr-2 rounded-full" />
-                Buy me a coffee
-            </Button>
-            <Button variant="outline" size="icon" className="shadow-md sm:hidden">
-                <Image src="https://files.catbox.moe/aawyf3.png" alt="Buy me a coffee" width={24} height={24} className="rounded-full" />
-                <span className="sr-only">Buy me a coffee</span>
-            </Button>
+        <Link href="https://files.catbox.moe/i6khoe.jpg" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 group">
+            <div className="relative w-14 h-14">
+                <Image 
+                    src="https://files.catbox.moe/j7lhm0.png" 
+                    alt="Owner Sid" 
+                    fill 
+                    className="rounded-full object-cover border-4 border-primary/30 shadow-lg transition-transform group-hover:scale-105"
+                />
+            </div>
+            <span className="text-xs font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400 transition-opacity group-hover:opacity-80">Owner-Sid</span>
         </Link>
       </motion.div>
 
