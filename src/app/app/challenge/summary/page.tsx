@@ -5,7 +5,7 @@ import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, CheckCircle, XCircle, SkipForward, Target, Clock, Trophy, Coins } from 'lucide-react';
+import { ArrowLeft, CheckCircle, XCircle, SkipForward, Target, Clock, Trophy, Coins, RotateCw } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
 import { motion } from 'framer-motion';
@@ -23,6 +23,7 @@ function SummaryContent() {
     const skipped = Number(searchParams.get('skipped') || 0);
     const accuracy = Number(searchParams.get('accuracy') || 0);
     const avgTime = Number(searchParams.get('avgTime') || 0);
+    const category = searchParams.get('category');
 
     const pieData = [
         { name: 'Correct', value: correct },
@@ -158,8 +159,9 @@ function SummaryContent() {
             </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0, transition: { delay: 0.5 }}} className="flex justify-center">
-                <Link href="/app/challenge/categories">
-                    <Button size="lg" className="shadow-lg">
+                <Link href={category ? `/app/challenge?category=${category}` : '/app/challenge/categories'}>
+                    <Button size="lg" className="shadow-lg" disabled={!category}>
+                        <RotateCw className="mr-2 h-4 w-4" />
                         Play Another Round
                     </Button>
                 </Link>

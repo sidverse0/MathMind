@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useState, Suspense } from 'react';
+import { useState, useReducer, useCallback, useEffect, Suspense } from 'react';
 import { useGame } from '@/hooks/use-game';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -94,13 +94,14 @@ function GameClientContent() {
         skipped: String(skipped),
         accuracy: String(accuracy),
         avgTime: String(avgTime),
-        totalQuestions: String(state.totalQuestions)
+        totalQuestions: String(state.totalQuestions),
+        category: state.category || 'mixed',
       });
       
       router.push(`/app/challenge/summary?${params.toString()}`);
       resetGame();
     }
-  }, [state.phase, state.history, state.score, state.coins, state.totalQuestions, router, resetGame]);
+  }, [state.phase, state.history, state.score, state.coins, state.totalQuestions, state.category, router, resetGame]);
 
   const handleOptionClick = (option: string) => {
     submitAnswer(option);
