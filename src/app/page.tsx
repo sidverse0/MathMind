@@ -89,10 +89,14 @@ export default function LandingPage() {
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
+                    className="flex flex-col items-center gap-2"
                 >
                     <h2 className="text-4xl md:text-6xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-500 to-teal-500">
-                        Turning Math into Magic!
+                        MathMagix
                     </h2>
+                    <p className="text-lg md:text-xl text-muted-foreground font-medium">
+                        Turning Math into Magic!
+                    </p>
                 </motion.div>
 
                 <motion.p 
