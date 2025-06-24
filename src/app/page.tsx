@@ -1,12 +1,14 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { BrainCircuit, ArrowRight, Zap, Trophy, BarChart, Instagram, Youtube, Wand2, MessageCircle } from 'lucide-react';
+import { BrainCircuit, ArrowRight, Zap, Trophy, BarChart, Wand2, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Instagram, Youtube } from 'lucide-react';
+
 
 const featureCards = [
     {
@@ -140,10 +142,16 @@ export default function LandingPage() {
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.4 }}
+                    className="flex flex-col sm:flex-row items-center gap-4"
                 >
                     <Link href="/app">
                         <Button size="lg" className="text-lg shadow-lg shadow-primary/30">
                             Start Your Journey <ArrowRight className="ml-2" />
+                        </Button>
+                    </Link>
+                    <Link href="/about">
+                        <Button size="lg" variant="outline" className="text-lg">
+                            Learn More
                         </Button>
                     </Link>
                 </motion.div>
@@ -169,42 +177,7 @@ export default function LandingPage() {
                 </Scroller>
             </div>
         </section>
-
-        <section className="py-20 md:py-32">
-            <div className="container text-center px-4">
-                <h3 className="text-3xl md:text-4xl font-bold tracking-tight">Ready to Become a MathMagician?</h3>
-                <p className="mt-4 max-w-2xl mx-auto text-base md:text-lg text-muted-foreground">
-                    Join thousands of users sharpening their skills. It's free to get started!
-                </p>
-                <div className="mt-8">
-                    <Link href="/app">
-                        <Button size="lg" className="text-lg shadow-lg shadow-primary/30">
-                            Let's Go! <ArrowRight className="ml-2" />
-                        </Button>
-                    </Link>
-                </div>
-            </div>
-        </section>
       </main>
-      <footer className="border-t bg-background">
-            <div className="container py-6 flex flex-col sm:flex-row justify-between items-center gap-4 px-4 sm:px-6 lg:px-8">
-                <p className="text-sm text-muted-foreground text-center sm:text-left">© {new Date().getFullYear()} MathMagix. Built by Sid.</p>
-                <div className="flex items-center gap-4">
-                    <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-muted-foreground hover:text-primary transition-colors">
-                        <Instagram />
-                    </a>
-                    <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Telegram" className="text-muted-foreground hover:text-primary transition-colors">
-                        <TelegramIcon />
-                    </a>
-                    <a href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="text-muted-foreground hover:text-primary transition-colors">
-                        <WhatsAppIcon />
-                    </a>
-                    <a href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-muted-foreground hover:text-primary transition-colors">
-                        <Youtube />
-                    </a>
-                </div>
-            </div>
-      </footer>
     </div>
   );
 }
