@@ -71,68 +71,68 @@ function SummaryContent() {
                 animate="visible"
                 variants={containerVariants}
             >
-                <Card className="shadow-lg lg:col-span-3">
-                    <CardHeader>
-                        <CardTitle>Performance Breakdown</CardTitle>
-                        <CardDescription>A visual summary of your answers.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        {pieData.length > 0 ? (
-                            <ChartContainer config={{}} className="h-[300px] w-full">
-                                <ResponsiveContainer>
-                                    <PieChart>
-                                        <Tooltip content={<ChartTooltipContent hideLabel />} />
-                                        <Legend />
-                                        <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} labelLine={false} label={({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
-                                            const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-                                            const x = cx + radius * Math.cos(-midAngle * (Math.PI / 180));
-                                            const y = cy + radius * Math.sin(-midAngle * (Math.PI / 180));
-                                            return (
-                                                <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" className="text-sm font-bold">
-                                                    {`${(percent * 100).toFixed(0)}%`}
-                                                </text>
-                                            );
-                                        }}>
-                                            {pieData.map((entry, index) => (
-                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                            ))}
-                                        </Pie>
-                                    </PieChart>
-                                </ResponsiveContainer>
-                            </ChartContainer>
-                        ) : (
-                            <div className="h-[300px] flex items-center justify-center text-muted-foreground">
-                                No data to display.
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
+                <motion.div variants={itemVariants} className="lg:col-span-3">
+                    <Card className="shadow-lg h-full">
+                        <CardHeader>
+                            <CardTitle>Performance Breakdown</CardTitle>
+                            <CardDescription>A visual summary of your answers.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            {pieData.length > 0 ? (
+                                <ChartContainer config={{}} className="h-[300px] w-full">
+                                    <ResponsiveContainer>
+                                        <PieChart>
+                                            <Tooltip content={<ChartTooltipContent hideLabel />} />
+                                            <Legend />
+                                            <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} labelLine={false} label={({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
+                                                const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+                                                const x = cx + radius * Math.cos(-midAngle * (Math.PI / 180));
+                                                const y = cy + radius * Math.sin(-midAngle * (Math.PI / 180));
+                                                return (
+                                                    <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" className="text-sm font-bold">
+                                                        {`${(percent * 100).toFixed(0)}%`}
+                                                    </text>
+                                                );
+                                            }}>
+                                                {pieData.map((entry, index) => (
+                                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                                ))}
+                                            </Pie>
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                </ChartContainer>
+                            ) : (
+                                <div className="h-[300px] flex items-center justify-center text-muted-foreground">
+                                    No data to display.
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+                </motion.div>
 
-                <div className="lg:col-span-2 flex flex-col gap-8">
-                     <motion.div variants={itemVariants}>
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Total Score & Coins</CardTitle>
-                            </CardHeader>
-                            <CardContent className="flex flex-col gap-4">
-                                <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
-                                    <div className="flex items-center gap-3">
-                                        <Trophy className="h-5 w-5 text-orange-400" />
-                                        <span>Total Score</span>
-                                    </div>
-                                    <span className="font-bold text-xl">{score}</span>
+                <motion.div variants={itemVariants} className="lg:col-span-2">
+                    <Card className="shadow-lg h-full">
+                        <CardHeader>
+                            <CardTitle>Total Score & Coins</CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex flex-col gap-4">
+                            <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
+                                <div className="flex items-center gap-3">
+                                    <Trophy className="h-5 w-5 text-orange-400" />
+                                    <span>Total Score</span>
                                 </div>
-                                <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
-                                    <div className="flex items-center gap-3">
-                                        <Coins className="h-5 w-5 text-yellow-400" />
-                                        <span>Coins Earned</span>
-                                    </div>
-                                    <span className="font-bold text-xl">{coins}</span>
+                                <span className="font-bold text-xl">{score}</span>
+                            </div>
+                            <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
+                                <div className="flex items-center gap-3">
+                                    <Coins className="h-5 w-5 text-yellow-400" />
+                                    <span>Coins Earned</span>
                                 </div>
-                            </CardContent>
-                        </Card>
-                     </motion.div>
-                </div>
+                                <span className="font-bold text-xl">{coins}</span>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </motion.div>
             </motion.div>
 
             <motion.div
@@ -143,7 +143,7 @@ function SummaryContent() {
             >
                 {statCards.map((stat) => (
                     <motion.div key={stat.label} variants={itemVariants}>
-                        <Card className="hover:border-primary/50 transition-colors h-full flex flex-col p-4 items-center text-center gap-3">
+                        <Card className="hover:border-primary/50 transition-colors h-full flex flex-col p-4 items-center text-center gap-3 shadow-md">
                             {stat.icon}
                             <p className="text-sm text-muted-foreground font-medium">{stat.label}</p>
                             <p className="text-2xl font-bold">{stat.value}</p>
