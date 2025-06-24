@@ -36,11 +36,11 @@ const categoryChartConfig = {
 } satisfies ChartConfig;
 
 const statCards = [
-    { label: "Best Score", value: "1,100", icon: <TrendingUp className="h-8 w-8 text-primary"/> },
-    { label: "Avg. Accuracy", value: "88%", icon: <Target className="h-8 w-8 text-green-500"/> },
-    { label: "Avg. Time/Q", value: "4.2s", icon: <Clock className="h-8 w-8 text-yellow-500"/> },
-    { label: "Correct Answers", value: "352", icon: <CheckCircle className="h-8 w-8 text-blue-500"/> },
-    { label: "Incorrect Answers", value: "48", icon: <XCircle className="h-8 w-8 text-red-500"/> },
+    { label: "Best Score", value: "1,100", icon: <TrendingUp className="h-6 w-6 text-primary"/> },
+    { label: "Avg. Accuracy", value: "88%", icon: <Target className="h-6 w-6 text-green-500"/> },
+    { label: "Avg. Time/Q", value: "4.2s", icon: <Clock className="h-6 w-6 text-yellow-500"/> },
+    { label: "Correct Answers", value: "352", icon: <CheckCircle className="h-6 w-6 text-blue-500"/> },
+    { label: "Incorrect Answers", value: "48", icon: <XCircle className="h-6 w-6 text-red-500"/> },
 ];
 
 const renderCustomLegend = () => {
@@ -64,8 +64,8 @@ export default function ProgressPage() {
     return (
     <div className="flex flex-col gap-8">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
-            <h1 className="text-4xl font-bold tracking-tight">Your Progress</h1>
-            <p className="text-muted-foreground mt-2">Track your journey to becoming a MathMind.</p>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Your Progress</h1>
+            <p className="text-muted-foreground mt-2 text-base">Track your journey to becoming a MathMind.</p>
         </motion.div>
 
         <motion.div 
@@ -78,8 +78,8 @@ export default function ProgressPage() {
                 <motion.div key={stat.label} variants={itemVariants}>
                     <Card className="hover:border-primary/50 transition-colors h-full flex flex-col p-4 items-center text-center gap-3">
                         {stat.icon}
-                        <p className="text-muted-foreground font-medium">{stat.label}</p>
-                        <p className="text-3xl font-bold">{stat.value}</p>
+                        <p className="text-sm text-muted-foreground font-medium">{stat.label}</p>
+                        <p className="text-2xl font-bold">{stat.value}</p>
                     </Card>
                 </motion.div>
             ))}

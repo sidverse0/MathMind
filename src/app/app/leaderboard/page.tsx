@@ -23,7 +23,7 @@ export default function LeaderboardPage() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1
+        staggerChildren: 0.07
       }
     }
   };
@@ -49,8 +49,8 @@ export default function LeaderboardPage() {
       >
         <Trophy className="h-10 w-10 text-yellow-500" />
         <div>
-            <h1 className="text-4xl font-bold tracking-tight">Leaderboard</h1>
-            <p className="text-muted-foreground mt-1">See how you stack up against the top MathMinds.</p>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Leaderboard</h1>
+            <p className="text-muted-foreground mt-1 text-base">See how you stack up against the top MathMinds.</p>
         </div>
       </motion.div>
       <Card className="shadow-lg">
@@ -58,9 +58,9 @@ export default function LeaderboardPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[100px] text-center">Rank</TableHead>
-                <TableHead>Player</TableHead>
-                <TableHead className="text-right">Score</TableHead>
+                <TableHead className="w-[100px] text-center text-base">Rank</TableHead>
+                <TableHead className="text-base">Player</TableHead>
+                <TableHead className="text-right text-base">Score</TableHead>
               </TableRow>
             </TableHeader>
             <motion.tbody variants={containerVariants} initial="hidden" animate="visible">
@@ -83,14 +83,14 @@ export default function LeaderboardPage() {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-4">
-                        <Avatar className={cn("h-12 w-12 border-4 shadow-md", getRankColor(player.rank))}>
-                            <AvatarImage src={player.avatar} alt="User Avatar" />
+                        <Avatar className={cn("h-10 w-10 md:h-12 md:w-12 border-4 shadow-md", getRankColor(player.rank))}>
+                            <AvatarImage src={player.avatar} alt={player.name} />
                             <AvatarFallback>{player.name.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <span className="font-medium text-base">{player.name}</span>
                     </div>
                   </TableCell>
-                  <TableCell className="text-right font-bold text-xl">{player.score.toLocaleString()}</TableCell>
+                  <TableCell className="text-right font-bold text-lg md:text-xl">{player.score.toLocaleString()}</TableCell>
                 </motion.tr>
               ))}
             </motion.tbody>

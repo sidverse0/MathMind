@@ -4,11 +4,15 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from "@/components/ui/toaster"
 import { Inter } from 'next/font/google';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+const inter = Inter({ 
+  subsets: ['latin'], 
+  variable: '--font-inter',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'MathMind: Brain Training',
-  description: 'Engage in memory math challenges with adaptive difficulty.',
+  description: 'Engage in fun, adaptive math challenges designed to sharpen your memory and calculation skills.',
 };
 
 export default function RootLayout({

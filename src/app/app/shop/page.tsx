@@ -36,8 +36,8 @@ export default function ShopPage() {
         animate={{opacity: 1, y: 0}}
       >
         <div>
-            <h1 className="text-4xl font-bold tracking-tight">Power-up Shop</h1>
-            <p className="text-muted-foreground mt-1">Spend your coins on helpful power-ups.</p>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Power-up Shop</h1>
+            <p className="text-muted-foreground mt-1 text-base">Spend your coins on helpful power-ups.</p>
         </div>
         <div className="flex items-center gap-2 p-3 rounded-lg bg-background shadow-md border">
             <Coins className="w-8 h-8 text-yellow-500" /> 
@@ -64,18 +64,19 @@ export default function ShopPage() {
                             src={item.image} 
                             alt={item.name} 
                             fill={true} 
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             style={{objectFit: 'cover'}} 
                             data-ai-hint={item.hint}
                             className="transition-transform duration-300 group-hover:scale-105"
                           />
                         </div>
                         <div className="p-6">
-                            <CardTitle className="flex items-center gap-2 text-2xl">{item.icon} {item.name}</CardTitle>
-                            <CardDescription className="mt-2">{item.description}</CardDescription>
+                            <CardTitle className="flex items-center gap-2 text-xl md:text-2xl">{item.icon} {item.name}</CardTitle>
+                            <CardDescription className="mt-2 text-base">{item.description}</CardDescription>
                         </div>
                     </CardHeader>
                     <CardFooter className="mt-auto p-6 bg-secondary/50">
-                        <Button className="w-full text-lg shadow-md hover:shadow-lg transition-shadow">
+                        <Button className="w-full text-base md:text-lg shadow-md hover:shadow-lg transition-shadow">
                             Buy for <Coins className="w-5 h-5 mx-2" /> {item.price}
                         </Button>
                     </CardFooter>

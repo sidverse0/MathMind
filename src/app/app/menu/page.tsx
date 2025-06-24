@@ -14,9 +14,9 @@ export default function MenuPage() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
     >
-      <div className="w-full max-w-md text-center">
-        <h1 className="text-5xl font-bold tracking-tighter mb-2 bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-400 to-teal-400">Menu</h1>
-        <p className="text-muted-foreground mb-8">Navigate to any section of the app.</p>
+      <div className="w-full max-w-sm text-center">
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tighter mb-2 bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-400 to-teal-400">Menu</h1>
+        <p className="text-muted-foreground mb-8 text-base">Navigate to any section of the app.</p>
         <MainNav />
         <div className="mt-12">
             <Link href="/app">

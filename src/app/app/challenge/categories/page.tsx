@@ -2,7 +2,6 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ArrowLeft, Plus, Minus, X, Divide, Sparkles, Sigma, Percent, FunctionSquare, SquareRadical, Braces, Square, RectangleHorizontal, Triangle, Circle, Combine, Milestone, Anchor, Key, BarChart, BetweenHorizontalStart, Pilcrow, UnfoldVertical, PercentCircle, Banknote, UtilityPole, Timer, Puzzle } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -62,8 +61,8 @@ export default function CategoriesPage() {
             animate={{ opacity: 1, y: 0 }}
         >
             <div>
-                <h1 className="text-4xl font-bold tracking-tight">All Categories</h1>
-                <p className="text-muted-foreground mt-1">Pick a challenge to test your skills.</p>
+                <h1 className="text-3xl md:text-4xl font-bold tracking-tight">All Categories</h1>
+                <p className="text-muted-foreground mt-1 text-base">Pick a challenge to test your skills.</p>
             </div>
             <Link href="/app/challenge">
                 <Button variant="outline">
@@ -85,11 +84,11 @@ export default function CategoriesPage() {
                         <motion.div key={cat} variants={itemVariants}>
                             <Button
                                 variant="outline"
-                                className="w-full h-24 text-md flex-col gap-2 justify-center transition-all duration-300 transform hover:scale-105 hover:bg-primary/10 hover:border-primary"
+                                className="w-full h-28 text-base flex-col gap-2 justify-center transition-all duration-300 transform hover:scale-105 hover:bg-primary/10 hover:border-primary"
                                 onClick={() => handleCategorySelect(cat)}
                             >
                                 <div className="h-8 w-8 text-primary">{categoryIcons[cat]}</div>
-                                <span className="capitalize text-center">{cat.replace(/-/g, ' ')}</span>
+                                <span className="capitalize text-center text-wrap px-1">{cat.replace(/-/g, ' ')}</span>
                             </Button>
                         </motion.div>
                     ))}

@@ -7,12 +7,12 @@ import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 
 const navItems = [
-  { href: '/app', label: 'Dashboard', icon: <LayoutDashboard className="h-8 w-8" /> },
-  { href: '/app/challenge', label: 'Challenge', icon: <BrainCircuit className="h-8 w-8" /> },
-  { href: '/app/progress', label: 'Progress', icon: <TrendingUp className="h-8 w-8" /> },
-  { href: '/app/leaderboard', label: 'Leaderboard', icon: <Trophy className="h-8 w-8" /> },
-  { href: '/app/shop', label: 'Shop', icon: <Store className="h-8 w-8" /> },
-  { href: '/app/profile', label: 'Profile', icon: <User className="h-8 w-8" /> },
+  { href: '/app', label: 'Dashboard', icon: <LayoutDashboard className="h-6 w-6" /> },
+  { href: '/app/challenge', label: 'Challenge', icon: <BrainCircuit className="h-6 w-6" /> },
+  { href: '/app/progress', label: 'Progress', icon: <TrendingUp className="h-6 w-6" /> },
+  { href: '/app/leaderboard', label: 'Leaderboard', icon: <Trophy className="h-6 w-6" /> },
+  { href: '/app/shop', label: 'Shop', icon: <Store className="h-6 w-6" /> },
+  { href: '/app/profile', label: 'Profile', icon: <User className="h-6 w-6" /> },
 ];
 
 export function MainNav() {
@@ -35,7 +35,7 @@ export function MainNav() {
 
   return (
     <motion.div 
-      className="flex flex-col gap-4"
+      className="flex flex-col gap-3"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -44,7 +44,7 @@ export function MainNav() {
         <motion.div key={item.href} variants={itemVariants} whileHover={{scale: 1.03}} whileTap={{scale: 0.98}}>
             <Button
               variant={pathname.startsWith(item.href) && (item.href !== '/app' || pathname === '/app') ? 'default' : 'outline'}
-              className="w-full h-20 justify-start text-lg p-6 shadow-sm"
+              className="w-full h-16 justify-start text-base p-4 shadow-sm"
               asChild
             >
               <Link href={item.href}>

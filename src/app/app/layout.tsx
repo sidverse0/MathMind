@@ -11,7 +11,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col bg-secondary/50">
       <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center">
+        <div className="container flex h-16 items-center px-4 sm:px-6 lg:px-8">
           <Link href="/app" className='flex items-center gap-2 mr-auto'>
             <BrainCircuit className="h-8 w-8 text-primary" />
             <h1 className="text-2xl font-bold tracking-tight font-headline">
@@ -31,11 +31,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
       </header>
       <motion.main
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 20 }}
-        transition={{ duration: 0.5 }}
-        className="flex-1 container py-6 md:py-10"
+        exit={{ opacity: 0, y: 15 }}
+        transition={{ duration: 0.3 }}
+        className="flex-1 container py-6 md:py-8 px-4 sm:px-6 lg:px-8"
       >
         {children}
       </motion.main>

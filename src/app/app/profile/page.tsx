@@ -11,12 +11,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 const statItems = [
-    { label: "Total Score", value: "14,500", icon: <Trophy className="h-8 w-8 text-orange-400"/> },
-    { label: "Coins", value: "573", icon: <Coins className="h-8 w-8 text-yellow-400"/> },
-    { label: "Global Rank", value: "#3", icon: <Star className="h-8 w-8 text-indigo-400"/> },
-    { label: "Top Skill", value: "Addition", icon: <BarChart className="h-8 w-8 text-blue-400"/> },
-    { label: "Avg. Time", value: "4.2s", icon: <Clock className="h-8 w-8 text-red-400"/> },
-    { label: "Accuracy", value: "88%", icon: <Target className="h-8 w-8 text-green-400"/> }
+    { label: "Total Score", value: "14,500", icon: <Trophy className="h-6 w-6 text-orange-400"/> },
+    { label: "Coins", value: "573", icon: <Coins className="h-6 w-6 text-yellow-400"/> },
+    { label: "Global Rank", value: "#3", icon: <Star className="h-6 w-6 text-indigo-400"/> },
+    { label: "Top Skill", value: "Addition", icon: <BarChart className="h-6 w-6 text-blue-400"/> },
+    { label: "Avg. Time", value: "4.2s", icon: <Clock className="h-6 w-6 text-red-400"/> },
+    { label: "Accuracy", value: "88%", icon: <Target className="h-6 w-6 text-green-400"/> }
 ];
 
 export default function ProfilePage() {
@@ -31,24 +31,24 @@ export default function ProfilePage() {
     <div className="flex flex-col gap-8">
         <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
             <Card className="shadow-lg overflow-hidden">
-                <div className="relative h-48 bg-gradient-to-br from-primary/20 to-primary/5">
+                <div className="relative h-36 md:h-48 bg-gradient-to-br from-primary/20 to-primary/5">
                     <motion.div 
                         initial={{ scale: 0, y: 100 }} 
                         animate={{ scale: 1, y: 0 }} 
                         transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
                         className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2"
                     >
-                        <Avatar className="h-32 w-32 border-8 border-background shadow-xl">
+                        <Avatar className="h-28 w-28 md:h-32 md:w-32 border-8 border-background shadow-xl">
                             <AvatarImage src="https://files.catbox.moe/uvi8l9.png" alt="User Avatar" />
                             <AvatarFallback className="text-4xl">YOU</AvatarFallback>
                         </Avatar>
                     </motion.div>
                 </div>
-                <CardHeader className="pt-20 text-center">
-                    <CardTitle className="text-4xl">{name}</CardTitle>
-                    <CardDescription className="text-lg">Mathlete since yesterday</CardDescription>
+                <CardHeader className="pt-16 md:pt-20 text-center">
+                    <CardTitle className="text-3xl md:text-4xl">{name}</CardTitle>
+                    <CardDescription className="text-base">Mathlete since yesterday</CardDescription>
                 </CardHeader>
-                <CardContent className="p-6">
+                <CardContent className="p-4 sm:p-6">
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                         {statItems.map((item, index) => (
                             <motion.div 
@@ -63,7 +63,7 @@ export default function ProfilePage() {
                                     </div>
                                     <div>
                                         <p className="text-sm text-muted-foreground">{item.label}</p>
-                                        <p className="text-2xl font-bold">{item.value}</p>
+                                        <p className="text-xl md:text-2xl font-bold">{item.value}</p>
                                     </div>
                                 </Card>
                             </motion.div>
