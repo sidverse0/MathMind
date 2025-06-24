@@ -68,7 +68,7 @@ export default function LandingPage() {
                 <PopoverTrigger asChild>
                     <Button variant="outline">
                         <MessageCircle className="mr-2 h-4 w-4" />
-                        Contact Us
+                        Connect
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-2">
