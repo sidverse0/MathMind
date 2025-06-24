@@ -65,6 +65,8 @@ function GameClientContent() {
   const [numQuestions, setNumQuestions] = useState(10);
   const [isCustomQuestions, setIsCustomQuestions] = useState(false);
 
+  const optionColorClasses = ['bg-chart-1', 'bg-chart-2', 'bg-chart-3', 'bg-chart-4'];
+
 
   // Sound effect logic
   const prevGameState = useRef<GameState>(state);
@@ -365,25 +367,27 @@ function GameClientContent() {
                         initial={{ opacity: 0, y: -20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
-                        className="text-xl md:text-2xl font-bold my-4 md:my-6 p-4 bg-gradient-to-br from-primary/10 to-background rounded-2xl text-primary tracking-wider shadow-inner"
+                        className="text-3xl md:text-5xl font-bold my-8 p-8 bg-card shadow-2xl rounded-3xl text-center tracking-wide"
                     >
                         {state.currentChallenge?.question}
                     </motion.div>
                      <motion.div 
-                        className="grid grid-cols-2 gap-4 md:gap-6 w-full max-w-2xl"
+                        className="grid grid-cols-2 gap-4 md:gap-6 w-full max-w-3xl"
                         variants={itemContainerVariants}
                         initial="hidden"
                         animate="visible"
                     >
                         {state.currentChallenge?.options.map((option, i) => (
                             <motion.div key={i} variants={itemVariants} whileHover={{scale: 1.05, y: -5}} whileTap={{scale: 0.98}}>
-                                <Button
-                                    variant="outline"
-                                    className="w-full h-24 md:h-28 text-xl md:text-2xl font-bold shadow-lg hover:shadow-2xl bg-card hover:bg-primary/10 hover:border-primary/80 transition-all duration-200 border-2 rounded-2xl"
+                                <button
+                                    className={cn(
+                                        "w-full h-24 md:h-28 text-xl md:text-2xl font-bold shadow-lg hover:shadow-2xl transition-all duration-200 rounded-2xl text-primary-foreground flex items-center justify-center focus:outline-none focus:ring-4 focus:ring-primary/50",
+                                        optionColorClasses[i % optionColorClasses.length]
+                                    )}
                                     onClick={() => handleOptionClick(String(option))}
                                 >
                                     {String(option)}
-                                </Button>
+                                </button>
                             </motion.div>
                         ))}
                     </motion.div>
