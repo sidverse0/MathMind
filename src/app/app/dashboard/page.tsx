@@ -178,7 +178,7 @@ export default function DashboardPage() {
                       <span className="font-bold w-6 text-center">{userRank.rank}</span>
                       <Avatar className="h-8 w-8">
                         <AvatarImage src={userData?.avatar} alt={userData?.name} />
-                        <AvatarFallback>{userData?.name.charAt(0)}</AvatarFallback>
+                        <AvatarFallback>{userData?.name?.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <span className="font-medium text-primary">{userRank.name}</span>
                     </div>

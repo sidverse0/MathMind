@@ -56,7 +56,7 @@ export default function ProfilePage() {
                     >
                         <Avatar className="h-28 w-28 md:h-32 md:w-32 border-8 border-background shadow-xl">
                             <AvatarImage src={userData.avatar} alt="User Avatar" />
-                            <AvatarFallback className="text-4xl">{userData.name.charAt(0)}</AvatarFallback>
+                            <AvatarFallback className="text-4xl">{userData.name?.charAt(0)}</AvatarFallback>
                         </Avatar>
                     </motion.div>
                 </div>
