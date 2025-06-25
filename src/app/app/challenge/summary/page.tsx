@@ -45,7 +45,7 @@ function SummaryContent() {
                     const difficultyAdjustment = await adjustDifficulty({
                         accuracy: accuracy / 100, // expecting 0-1
                         averageTime: avgTime,
-                        currentDifficulty: userData.difficulty,
+                        currentDifficulty: userData.difficulty || 5,
                     });
                     newDifficulty = difficultyAdjustment.newDifficulty;
                     toast({
