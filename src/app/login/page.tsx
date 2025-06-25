@@ -33,8 +33,27 @@ export default function LoginPage() {
 
   const handleSignIn = async () => {
     setIsSigningIn(true);
-    await signInWithGoogle();
-    // Don't need to set isSigningIn to false, as a redirect will occur
+    try {
+      await signInWithGoogle();
+      // On success, the `useEffect` above will handle the redirect.
+      // We don't need to set `isSigningIn` to false because the component will unmount.
+    } catch (error: any) {
+      // This will catch errors, including when the user closes the popup.
+      // We can check the error code to decide if we should log it.
+      if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
+        if (error.code === 'auth/unauthorized-domain') {
+          console.error(
+            'Firebase Auth Error: This domain is not authorized for OAuth operations. ' +
+            "Please go to your Firebase project's Authentication settings, " +
+            "click on the 'Settings' tab, and add your domain to the 'Authorized domains' list."
+          );
+        } else {
+          console.error("Error signing in with Google", error);
+        }
+      }
+      // Always reset the button state on any kind of error or cancellation.
+      setIsSigningIn(false);
+    }
   };
 
   // While loading, or if user exists (and we're about to redirect), show loading indicator.

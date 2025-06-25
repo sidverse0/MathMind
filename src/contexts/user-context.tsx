@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { User } from 'firebase/auth';
@@ -98,26 +99,10 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const signInWithGoogle = async () => {
     if (!auth || !googleProvider) {
         console.error("Firebase is not configured. Please add your Firebase credentials to the .env file.");
-        return;
+        throw new Error("Firebase not configured");
     }
-    try {
-      await signInWithPopup(auth, googleProvider);
-    } catch (error: any) {
-      // Gracefully handle the case where the user closes the popup.
-      if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/cancelled-popup-request') {
-        return;
-      }
-      
-      if (error.code === 'auth/unauthorized-domain') {
-        console.error(
-          'Firebase Auth Error: This domain is not authorized for OAuth operations. ' +
-          "Please go to your Firebase project's Authentication settings, " +
-          "click on the 'Settings' tab, and add your domain to the 'Authorized domains' list."
-        );
-      } else {
-        console.error("Error signing in with Google", error);
-      }
-    }
+    // Let the calling component handle errors, including user cancellation.
+    await signInWithPopup(auth, googleProvider);
   };
 
   const signOut = async () => {
