@@ -15,7 +15,11 @@ import { useUser } from '@/contexts/user-context';
 import { adjustDifficulty } from '@/ai/flows/adaptive-difficulty';
 import { useToast } from '@/hooks/use-toast';
 
-const COLORS = ['hsl(var(--chart-1))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))'];
+const SUMMARY_PIE_COLORS: { [key: string]: string } = {
+  'Correct': 'hsl(var(--primary))', // Blue
+  'Incorrect': 'hsl(var(--destructive))', // Red
+  'Skipped': 'hsl(var(--chart-3))', // Ocean/Light Blue
+};
 
 function SummaryContent() {
     const searchParams = useSearchParams();
@@ -69,7 +73,7 @@ function SummaryContent() {
         };
 
         applySummary();
-    }, [userData, summaryApplied, coinsEarned, score, finalDifficulty, accuracy, avgTime, updateUserData, toast]);
+    }, [userData, summaryApplied, coinsEarned, score, finalDifficulty, accuracy, avgTime, updateUserData, toast, category]);
 
     const pieData = [
         { name: 'Correct', value: correct },
@@ -146,8 +150,8 @@ function SummaryContent() {
                                                     </text>
                                                 );
                                             }}>
-                                                {pieData.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                                {pieData.map((entry) => (
+                                                    <Cell key={`cell-${entry.name}`} fill={SUMMARY_PIE_COLORS[entry.name]} />
                                                 ))}
                                             </Pie>
                                         </PieChart>
