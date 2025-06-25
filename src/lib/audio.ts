@@ -12,12 +12,12 @@ export type SoundEffect =
 const defaultToneUrl = 'https://files.catbox.moe/p7zmwi.wav';
 
 const soundUrls: Record<SoundEffect, string> = {
-  click: 'https://files.catbox.moe/lqc1qo.mp3,
-  correct: 'https://files.catbox.moe/4f1rt8.mp3',
+  click: 'https://files.catbox.moe/dw2po2.wav,
+  correct: 'https://files.catbox.moe/3a4v3b.wav',
   incorrect: 'https://files.catbox.moe/p7zmwi.wav,
-  timeup: 'https://files.catbox.moe/tro79f.mp3,
-  summary: 'https://files.catbox.moe/7k0i4m.mp3,
-  flash: 'https://files.catbox.moe/n6xta2.mp3,
+  timeup: 'https://files.catbox.moe/2k30ep.wav,
+  summary: 'https://files.catbox.moe/2vjgnw.wav,
+  flash: 'https://files.catbox.moe/41zoqv.wav,
 };
 
 // Use a simple cache to avoid re-creating Audio objects
