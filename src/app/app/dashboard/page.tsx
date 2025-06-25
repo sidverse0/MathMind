@@ -71,13 +71,13 @@ export default function DashboardPage() {
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Welcome back, {userData?.name}!</h1>
             <p className="text-muted-foreground mt-2 text-base">Think Smart. Solve Fast.</p>
         </div>
-        <Link href="https://files.catbox.moe/i6khoe.jpg" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 group">
+        <Link href="https://files.catbox.moe/j7lhm0.png" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 group">
             <div className="relative w-14 h-14">
                 <Image 
                     src="https://files.catbox.moe/j7lhm0.png" 
-                    alt="Owner Sid" 
+                    alt="Owner" 
                     fill 
-                    className="rounded-full object-cover border-4 border-primary/30 shadow-lg transition-transform group-hover:scale-105"
+                    className="rounded-full object-cover border-4 border-primary shadow-lg transition-transform group-hover:scale-105"
                 />
             </div>
             <span className="text-xs font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400 transition-opacity group-hover:opacity-80">Owner</span>
