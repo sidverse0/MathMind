@@ -60,7 +60,10 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
         unsubscribe = onSnapshot(userRef, async (docSnap) => {
           if (docSnap.exists()) {
-            setUserData(docSnap.data() as UserData);
+            const data = docSnap.data();
+            // Ensure inventory exists and has all keys to prevent runtime errors
+            const fullInventory = { ...defaultInventory, ...(data.inventory || {}) };
+            setUserData({ ...data, inventory: fullInventory } as UserData);
           } else {
             const newUser: UserData = {
               uid: authUser.uid,
