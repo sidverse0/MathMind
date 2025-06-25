@@ -56,22 +56,22 @@ export default function LandingPage() {
                 <PopoverContent className="w-auto p-2">
                     <div className="flex gap-2">
                         <Button asChild variant="outline" size="icon" className="rounded-full">
-                            <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                            <a href="https://www.instagram.com/reyaz_sid" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                                 <Instagram />
                             </a>
                         </Button>
                         <Button asChild variant="outline" size="icon" className="rounded-full">
-                            <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+                            <a href="https://www.t.me/pvt_s1n" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
                                 <TelegramIcon />
                             </a>
                         </Button>
                         <Button asChild variant="outline" size="icon" className="rounded-full">
-                            <a href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                            <a href="https://www.wa.me/+918521672813" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
                                 <WhatsAppIcon />
                             </a>
                         </Button>
                         <Button asChild variant="outline" size="icon" className="rounded-full">
-                            <a href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                            <a href="https://www.youtube.com/@shaitaanidastaan" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
                                 <Youtube />
                             </a>
                         </Button>
@@ -120,7 +120,7 @@ export default function LandingPage() {
                     transition={{ duration: 0.5, delay: 0.3 }}
                     className="max-w-2xl text-base md:text-lg text-muted-foreground"
                 >
-                    Engage in fun, adaptive math challenges designed to sharpen your memory and calculation skills. Rise through the ranks and become a MathMind!
+                    Engage in fun, Adaptive Math Challenges designed to sharpen your memory and calculation skills.
                 </motion.p>
                 <motion.div
                     initial={{ scale: 0.9, opacity: 0 }}
