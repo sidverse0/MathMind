@@ -1,7 +1,7 @@
 
 'use client';
 
-import type { User } from 'firebase/auth';
+import type { User, UserCredential } from 'firebase/auth';
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { auth, db, googleProvider } from '@/lib/firebase';
 import { signInWithPopup, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
@@ -25,7 +25,7 @@ interface UserContextType {
   user: User | null;
   userData: UserData | null;
   loading: boolean;
-  signInWithGoogle: () => Promise<void>;
+  signInWithGoogle: () => Promise<UserCredential>;
   signOut: () => Promise<void>;
   updateUserData: (data: Partial<UserData>) => Promise<void>;
 }
@@ -102,8 +102,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         console.error("Firebase is not configured. Please add your Firebase credentials to the .env file.");
         throw new Error("Firebase not configured");
     }
-    // Let the calling component handle errors, including user cancellation.
-    await signInWithPopup(auth, googleProvider);
+    return signInWithPopup(auth, googleProvider);
   };
 
   const signOut = async () => {

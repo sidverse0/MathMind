@@ -34,9 +34,12 @@ export default function LoginPage() {
   const handleSignIn = async () => {
     setIsSigningIn(true);
     try {
-      await signInWithGoogle();
-      // On success, the `useEffect` above will handle the redirect.
-      // We don't need to set `isSigningIn` to false because the component will unmount.
+      const result = await signInWithGoogle();
+      // On success, the context's onAuthStateChanged will handle data creation/fetching,
+      // and we can navigate to the app.
+      if (result.user) {
+        router.push('/app');
+      }
     } catch (error: any) {
       // This will catch errors, including when the user closes the popup.
       // We can check the error code to decide if we should log it.
@@ -80,7 +83,7 @@ export default function LoginPage() {
             <BrainCircuit className="h-20 w-20 text-primary" />
           </motion.div>
           <div className="flex flex-col items-center gap-2">
-            <h2 className="text-2xl font-bold tracking-tight">Loading your session...</h2>
+            <h2 className="text-2xl font-bold tracking-tight">Redirecting...</h2>
             <p className="text-muted-foreground">Getting your math challenges ready!</p>
           </div>
         </motion.div>
