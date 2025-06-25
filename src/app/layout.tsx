@@ -18,9 +18,9 @@ export const metadata: Metadata = {
   description: 'Turning Math into Magic! Engage in fun, adaptive math challenges designed to sharpen your memory and calculation skills.',
   manifest: '/manifest.json',
   icons: {
-    apple: '/icons/icon-192x192.png',
+    apple: 'https://files.catbox.moe/ttdrfr.png',
   },
-  themeColor: '#818cf8',
+  themeColor: '#6495ED',
 };
 
 export default function RootLayout({
