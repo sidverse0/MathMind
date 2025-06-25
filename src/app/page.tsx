@@ -23,14 +23,14 @@ const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 export default function LandingPage() {
-  const { user, signInWithGoogle, loading } = useUser();
+  const { user, loading } = useUser();
   const router = useRouter();
 
   const handleJourneyClick = () => {
     if (user) {
       router.push('/app');
     } else {
-      signInWithGoogle();
+      router.push('/login');
     }
   };
 
@@ -128,7 +128,7 @@ export default function LandingPage() {
                     className="flex flex-col sm:flex-row items-center gap-4"
                 >
                     <Button size="lg" className="text-lg shadow-lg shadow-primary/30" onClick={handleJourneyClick} disabled={loading}>
-                        {loading ? "Loading..." : (user ? "Go to Dashboard" : "Start Your Journey")} <ArrowRight className="ml-2" />
+                        {loading ? "Loading..." : (user ? "Go to Dashboard" : "Get Started")} <ArrowRight className="ml-2" />
                     </Button>
                     <Link href="/about">
                         <Button size="lg" variant="outline" className="text-lg">
