@@ -1,12 +1,12 @@
 
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { BrainCircuit } from 'lucide-react';
+import { BrainCircuit, Loader2 } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 
 const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -21,6 +21,7 @@ const GoogleIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export default function LoginPage() {
   const { user, signInWithGoogle, loading } = useUser();
+  const [isSigningIn, setIsSigningIn] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -30,14 +31,40 @@ export default function LoginPage() {
     }
   }, [user, loading, router]);
 
+  const handleSignIn = async () => {
+    setIsSigningIn(true);
+    await signInWithGoogle();
+    // Don't need to set isSigningIn to false, as a redirect will occur
+  };
+
   // While loading, or if user exists (and we're about to redirect), show loading indicator.
   if (loading || user) {
     return (
-      <div className="min-h-screen w-full flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-4">
-            <BrainCircuit className="h-12 w-12 text-primary animate-pulse" />
-            <p className="text-lg text-muted-foreground">Loading your session...</p>
-        </div>
+      <div className="min-h-screen w-full flex items-center justify-center bg-background text-foreground">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          className="flex flex-col items-center gap-6"
+        >
+          <motion.div
+            animate={{
+              scale: [1, 1.1, 1],
+              rotate: [0, 5, -5, 0],
+            }}
+            transition={{
+              duration: 2.5,
+              ease: 'easeInOut',
+              repeat: Infinity,
+            }}
+          >
+            <BrainCircuit className="h-20 w-20 text-primary" />
+          </motion.div>
+          <div className="flex flex-col items-center gap-2">
+            <h2 className="text-2xl font-bold tracking-tight">Loading your session...</h2>
+            <p className="text-muted-foreground">Getting your math challenges ready!</p>
+          </div>
+        </motion.div>
       </div>
     );
   }
@@ -80,10 +107,20 @@ export default function LoginPage() {
               <Button
                 size="lg"
                 className="w-full text-lg shadow-lg hover:shadow-primary/30 transition-shadow"
-                onClick={signInWithGoogle}
+                onClick={handleSignIn}
+                disabled={isSigningIn || loading}
               >
-                <GoogleIcon className="mr-3 h-6 w-6" />
-                Continue with Google
+                {isSigningIn ? (
+                    <>
+                        <Loader2 className="mr-3 h-6 w-6 animate-spin" />
+                        Signing In...
+                    </>
+                ) : (
+                    <>
+                        <GoogleIcon className="mr-3 h-6 w-6" />
+                        Continue with Google
+                    </>
+                )}
               </Button>
             </motion.div>
           </CardContent>

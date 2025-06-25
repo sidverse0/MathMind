@@ -1,4 +1,3 @@
-
 'use client';
 
 import { UserNav } from '@/components/user-nav';
@@ -23,8 +22,31 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   if (loading || !user) {
     return (
-      <div className="min-h-screen w-full flex items-center justify-center bg-background">
-        <p className="text-lg">Loading...</p>
+      <div className="min-h-screen w-full flex items-center justify-center bg-background text-foreground">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          className="flex flex-col items-center gap-6"
+        >
+          <motion.div
+            animate={{
+              scale: [1, 1.1, 1],
+              rotate: [0, 5, -5, 0],
+            }}
+            transition={{
+              duration: 2.5,
+              ease: 'easeInOut',
+              repeat: Infinity,
+            }}
+          >
+            <BrainCircuit className="h-20 w-20 text-primary" />
+          </motion.div>
+          <div className="flex flex-col items-center gap-2">
+            <h2 className="text-2xl font-bold tracking-tight">Loading your session...</h2>
+            <p className="text-muted-foreground">Getting your math challenges ready!</p>
+          </div>
+        </motion.div>
       </div>
     );
   }

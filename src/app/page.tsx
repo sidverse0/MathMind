@@ -2,7 +2,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { ArrowRight, BrainCircuit, MessageCircle } from 'lucide-react';
+import { ArrowRight, BrainCircuit, MessageCircle, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -127,8 +127,15 @@ export default function LandingPage() {
                     transition={{ duration: 0.5, delay: 0.4 }}
                     className="flex flex-col sm:flex-row items-center gap-4"
                 >
-                    <Button size="lg" className="text-lg shadow-lg shadow-primary/30" onClick={handleJourneyClick} disabled={loading}>
-                        {loading ? "Loading..." : (user ? "Go to Dashboard" : "Get Started")} <ArrowRight className="ml-2" />
+                    <Button size="lg" className="text-lg shadow-lg shadow-primary/30 min-w-[240px]" onClick={handleJourneyClick} disabled={loading}>
+                        {loading ? (
+                            <Loader2 className="h-6 w-6 animate-spin" />
+                        ) : (
+                            <>
+                                {user ? "Go to Dashboard" : "Start Your Journey"}
+                                <ArrowRight className="ml-2" />
+                            </>
+                        )}
                     </Button>
                     <Link href="/about">
                         <Button size="lg" variant="outline" className="text-lg">
