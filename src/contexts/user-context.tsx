@@ -99,8 +99,16 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
     try {
       await signInWithPopup(auth, googleProvider);
-    } catch (error) {
-      console.error("Error signing in with Google", error);
+    } catch (error: any) {
+      if (error.code === 'auth/unauthorized-domain') {
+        console.error(
+          'Firebase Auth Error: This domain is not authorized for OAuth operations. ' +
+          "Please go to your Firebase project's Authentication settings, " +
+          "click on the 'Settings' tab, and add 'localhost' to the 'Authorized domains' list."
+        );
+      } else {
+        console.error("Error signing in with Google", error);
+      }
     }
   };
 
