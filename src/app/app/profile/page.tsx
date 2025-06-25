@@ -33,8 +33,8 @@ export default function ProfilePage() {
   };
 
   const statItems = [
-    { label: "Total Score", value: userData?.score.toLocaleString() || "0", icon: <Trophy className="h-6 w-6 text-orange-400"/> },
-    { label: "Coins", value: userData?.coins.toLocaleString() || "0", icon: <Coins className="h-6 w-6 text-yellow-400"/> },
+    { label: "Total Score", value: (userData?.score ?? 0).toLocaleString(), icon: <Trophy className="h-6 w-6 text-orange-400"/> },
+    { label: "Coins", value: (userData?.coins ?? 0).toLocaleString(), icon: <Coins className="h-6 w-6 text-yellow-400"/> },
     { label: "Global Rank", value: "#3", icon: <Star className="h-6 w-6 text-indigo-400"/> },
     { label: "Top Skill", value: "Addition", icon: <BarChart className="h-6 w-6 text-blue-400"/> },
     { label: "Avg. Time", value: "4.2s", icon: <Clock className="h-6 w-6 text-red-400"/> },

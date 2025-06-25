@@ -130,14 +130,14 @@ export default function DashboardPage() {
                     <Trophy className="h-5 w-5 text-orange-400" />
                     <span>Total Score</span>
                   </div>
-                  <span className="font-bold">{userData?.score.toLocaleString()}</span>
+                  <span className="font-bold">{(userData?.score ?? 0).toLocaleString()}</span>
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
                   <div className="flex items-center gap-3">
                     <Coins className="h-5 w-5 text-yellow-400" />
                     <span>Coins Earned</span>
                   </div>
-                  <span className="font-bold">{userData?.coins.toLocaleString()}</span>
+                  <span className="font-bold">{(userData?.coins ?? 0).toLocaleString()}</span>
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
                   <div className="flex items-center gap-3">
