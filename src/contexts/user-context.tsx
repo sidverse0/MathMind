@@ -44,7 +44,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // If firebase is not configured, don't do anything
     if (!auth || !db) {
         console.warn("Firebase is not configured. Please add your Firebase credentials to the .env file.");
         setLoading(false);
@@ -53,7 +52,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
     let unsubscribe: Unsubscribe | undefined;
 
-    const authUnsubscribe = onAuthStateChanged(auth, async (authUser) => {
+    const authUnsubscribe = onAuthStateChanged(auth, (authUser) => {
       if (authUser) {
         setUser(authUser);
         const userRef = doc(db, 'users', authUser.uid);
@@ -63,10 +62,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         unsubscribe = onSnapshot(userRef, async (docSnap) => {
           if (docSnap.exists()) {
             const data = docSnap.data();
-            // Ensure inventory exists and has all keys to prevent runtime errors
             const fullInventory = { ...defaultInventory, ...(data.inventory || {}) };
             setUserData({ ...data, inventory: fullInventory } as UserData);
+            setLoading(false); // Only set loading to false when we have user data.
           } else {
+            // User is authenticated but doesn't have a document in Firestore.
+            // Create one now. loading remains true until the new doc is created and this listener re-runs.
             const newUser: UserData = {
               uid: authUser.uid,
               email: authUser.email,
@@ -79,15 +80,15 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
               score: 0,
               createdAt: Timestamp.now(),
             };
+            // `setDoc` will trigger the onSnapshot listener again, which will then set loading to false.
             await setDoc(userRef, newUser);
           }
-          setLoading(false);
         });
       } else {
         setUser(null);
         setUserData(null);
         if (unsubscribe) unsubscribe();
-        setLoading(false);
+        setLoading(false); // No user, so we are done loading.
       }
     });
 

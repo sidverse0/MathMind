@@ -32,14 +32,17 @@ export default function LoginPage() {
   }, [user, loading, router]);
 
   const handleSignIn = async () => {
+    // Prevent multiple sign-in attempts
+    if (isSigningIn) return;
+    
     setIsSigningIn(true);
     try {
       await signInWithGoogle();
-      // On success, the onAuthStateChanged listener in the UserContext will update the user state,
+      // On success, the `onAuthStateChanged` listener in the UserContext will update the user state,
       // and the useEffect hook in this component will handle the redirection.
+      // We leave `isSigningIn` as true to keep the button in a loading state until redirection occurs.
     } catch (error: any) {
       // This will catch errors, including when the user closes the popup.
-      // We can check the error code to decide if we should log it.
       if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
         if (error.code === 'auth/unauthorized-domain') {
           console.error(
@@ -51,12 +54,12 @@ export default function LoginPage() {
           console.error("Error signing in with Google", error);
         }
       }
-      // Always reset the button state on any kind of error or cancellation.
+      // Reset the button state ONLY on error or cancellation.
       setIsSigningIn(false);
     }
   };
 
-  // While loading, or if user exists (and we're about to redirect), show loading indicator.
+  // While loading authentication state, or if user is logged in (and we're about to redirect), show loading indicator.
   if (loading || user) {
     return (
       <div className="min-h-screen w-full flex items-center justify-center bg-background text-foreground">
