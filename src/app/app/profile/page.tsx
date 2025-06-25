@@ -15,6 +15,7 @@ import { useUser, type UserData } from '@/contexts/user-context';
 import { useRouter } from 'next/navigation';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { format } from 'date-fns';
 
 export default function ProfilePage() {
   const { userData, updateUserData, signOut } = useUser();
@@ -61,6 +62,8 @@ export default function ProfilePage() {
     { label: "Avg. Time", value: "4.2s", icon: <Clock className="h-6 w-6 text-red-400"/> },
     { label: "Accuracy", value: "88%", icon: <Target className="h-6 w-6 text-green-400"/> }
   ];
+  
+  const joinedDate = userData?.createdAt ? format(userData.createdAt.toDate(), 'MMMM d, yyyy') : 'today';
 
   if (!userData) return <p>Loading profile...</p>
 
@@ -154,7 +157,7 @@ export default function ProfilePage() {
                             </DialogContent>
                         </Dialog>
                     </div>
-                    <CardDescription className="text-base">Mathlete since today</CardDescription>
+                    <CardDescription className="text-base">Mathlete since {joinedDate}</CardDescription>
                 </CardHeader>
                 <CardContent className="p-4 sm:p-6">
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

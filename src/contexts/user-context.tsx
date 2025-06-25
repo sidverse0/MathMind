@@ -5,7 +5,7 @@ import type { User } from 'firebase/auth';
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { auth, db, googleProvider } from '@/lib/firebase';
 import { signInWithPopup, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
-import { doc, getDoc, setDoc, onSnapshot, Unsubscribe, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, onSnapshot, Unsubscribe, updateDoc, Timestamp } from 'firebase/firestore';
 import type { PowerUpType } from '@/lib/types';
 
 export interface UserData {
@@ -18,6 +18,7 @@ export interface UserData {
   difficulty: number;
   inventory: Record<PowerUpType, number>;
   score: number;
+  createdAt?: Timestamp;
 }
 
 interface UserContextType {
@@ -76,9 +77,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
               difficulty: 5,
               inventory: defaultInventory,
               score: 0,
+              createdAt: Timestamp.now(),
             };
             await setDoc(userRef, newUser);
-            setUserData(newUser);
           }
           setLoading(false);
         });
