@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
@@ -16,7 +17,7 @@ import { adjustDifficulty } from '@/ai/flows/adaptive-difficulty';
 import { useToast } from '@/hooks/use-toast';
 
 const SUMMARY_PIE_COLORS: { [key: string]: string } = {
-  'Correct': 'hsl(var(--primary))', // Blue
+  'Correct': 'hsl(142, 71%, 45%)', // Green
   'Incorrect': 'hsl(var(--destructive))', // Red
   'Skipped': 'hsl(var(--chart-3))', // Ocean/Light Blue
 };
@@ -84,7 +85,7 @@ function SummaryContent() {
     const statCards = [
         { label: "Accuracy", value: `${accuracy}%`, icon: <Target className="h-6 w-6 text-green-500"/> },
         { label: "Avg. Time / Q", value: `${avgTime}s`, icon: <Clock className="h-6 w-6 text-yellow-500"/> },
-        { label: "Correct", value: correct, icon: <CheckCircle className="h-6 w-6 text-primary"/> },
+        { label: "Correct", value: correct, icon: <CheckCircle className="h-6 w-6 text-green-500"/> },
         { label: "Incorrect", value: incorrect, icon: <XCircle className="h-6 w-6 text-destructive"/> },
         { label: "Skipped", value: skipped, icon: <SkipForward className="h-6 w-6 text-muted-foreground"/> },
     ];
