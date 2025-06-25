@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -127,7 +128,7 @@ export default function ProfilePage() {
                                 </div>
                                 <DialogFooter>
                                     <DialogClose asChild>
-                                        <Button type="button" variant="secondary">Cancel</Button>
+                                        <Button type="button" variant="outline">Cancel</Button>
                                     </DialogClose>
                                     <DialogClose asChild>
                                         <Button type="submit" onClick={handleSaveChanges}>
