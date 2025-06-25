@@ -72,7 +72,7 @@ export default function LeaderboardPage() {
         <Trophy className="h-10 w-10 text-yellow-500" />
         <div>
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Leaderboard</h1>
-            <p className="text-muted-foreground mt-1 text-base">See how you stack up against the top MathMagicians.</p>
+            <p className="text-muted-foreground mt-1 text-base">See how you stack up against the top MathMinds.</p>
         </div>
       </motion.div>
       <Card className="shadow-lg">

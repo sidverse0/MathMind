@@ -3,17 +3,18 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from "@/components/ui/toaster"
-import { Inter } from 'next/font/google';
+import { PT_Sans } from 'next/font/google';
 import { UserProvider } from '@/contexts/user-context';
 
-const inter = Inter({ 
+const ptSans = PT_Sans({ 
   subsets: ['latin'], 
-  variable: '--font-inter',
+  variable: '--font-pt-sans',
+  weight: ['400', '700'],
   display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: 'MathMagix',
+  title: 'MathMind',
   description: 'Turning Math into Magic! Engage in fun, adaptive math challenges designed to sharpen your memory and calculation skills.',
   icons: null,
 };
@@ -25,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} font-body antialiased`}>
+      <body className={`${ptSans.variable} font-body antialiased`}>
         <UserProvider>
           <ThemeProvider
             attribute="class"

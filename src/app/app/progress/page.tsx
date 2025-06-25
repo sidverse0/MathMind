@@ -60,7 +60,7 @@ export default function ProgressPage() {
     >
         <motion.div variants={itemVariants}>
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Your Progress</h1>
-            <p className="text-muted-foreground mt-2 text-base">Track your journey to becoming a MathMagician.</p>
+            <p className="text-muted-foreground mt-2 text-base">Track your journey to becoming a MathMind.</p>
         </motion.div>
 
         <motion.div 

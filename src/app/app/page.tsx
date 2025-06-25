@@ -51,7 +51,7 @@ export default function DashboardPage() {
       >
         <div>
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Welcome back, {userData?.name}!</h1>
-            <p className="text-muted-foreground mt-2 text-base">Your mind is a muscle. Let's make it stronger today.</p>
+            <p className="text-muted-foreground mt-2 text-base">Think Smart. Solve Fast.</p>
         </div>
         <Link href="https://files.catbox.moe/i6khoe.jpg" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 group">
             <div className="relative w-14 h-14">

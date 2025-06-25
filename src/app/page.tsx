@@ -41,7 +41,7 @@ export default function LandingPage() {
           <Link href="/" className="mr-auto flex items-center gap-2">
             <BrainCircuit className="h-6 w-6 text-primary" />
             <h1 className="text-xl font-bold tracking-tight font-headline">
-              MathMagix
+              MathMind
             </h1>
           </Link>
           <div className="flex items-center space-x-2">
@@ -106,7 +106,7 @@ export default function LandingPage() {
                     className="flex flex-col items-center gap-2"
                 >
                     <h2 className="text-4xl md:text-6xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-500 to-teal-500">
-                        MathMagix
+                        MathMind
                     </h2>
                     <p className="text-lg md:text-xl text-muted-foreground font-medium">
                         Turning Math into Magic!
@@ -119,7 +119,7 @@ export default function LandingPage() {
                     transition={{ duration: 0.5, delay: 0.3 }}
                     className="max-w-2xl text-base md:text-lg text-muted-foreground"
                 >
-                    Engage in fun, adaptive math challenges designed to sharpen your memory and calculation skills. Rise through the ranks and become a MathMagician!
+                    Engage in fun, adaptive math challenges designed to sharpen your memory and calculation skills. Rise through the ranks and become a MathMind!
                 </motion.p>
                 <motion.div
                     initial={{ scale: 0.9, opacity: 0 }}

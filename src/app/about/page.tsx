@@ -15,7 +15,7 @@ const featureCards = [
     {
         icon: <Trophy className="h-8 w-8 text-primary" />,
         title: "Compete & Conquer",
-        description: "Climb the leaderboards, earn achievements, and see how you stack up against other MathMagicians."
+        description: "Climb the leaderboards, earn achievements, and see how you stack up against other MathMinds."
     },
     {
         icon: <BarChart className="h-8 w-8 text-primary" />,
@@ -37,7 +37,7 @@ export default function AboutPage() {
           <Link href="/" className="mr-auto flex items-center gap-2">
             <BrainCircuit className="h-6 w-6 text-primary" />
             <h1 className="text-xl font-bold tracking-tight font-headline">
-              MathMagix
+              MathMind
             </h1>
           </Link>
           <div className="flex items-center space-x-2">
@@ -60,7 +60,7 @@ export default function AboutPage() {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="text-4xl md:text-5xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-500 to-teal-500"
             >
-                Features of MathMagix
+                Features of MathMind
             </motion.h2>
             <motion.p
                 initial={{ opacity: 0, y: 20 }}
@@ -68,7 +68,7 @@ export default function AboutPage() {
                 transition={{ duration: 0.5, delay: 0.3 }}
                 className="mt-4 max-w-3xl mx-auto text-base md:text-lg text-muted-foreground"
             >
-                Discover the magic behind our app. We've packed MathMagix with features to make learning math fun, engaging, and effective for everyone.
+                Discover the magic behind our app. We've packed MathMind with features to make learning math fun, engaging, and effective for everyone.
             </motion.p>
           </div>
         </section>
@@ -107,7 +107,7 @@ export default function AboutPage() {
       
       <footer className="border-t bg-background">
         <div className="container py-6 flex flex-col sm:flex-row justify-center items-center gap-4 px-4 sm:px-6 lg:px-8">
-            <p className="text-sm text-muted-foreground text-center">© {new Date().getFullYear()} MathMagix. Built by Sid.</p>
+            <p className="text-sm text-muted-foreground text-center">© {new Date().getFullYear()} MathMind. All rights reserved.</p>
         </div>
       </footer>
     </div>

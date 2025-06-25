@@ -36,7 +36,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <Link href="/app" className='flex items-center gap-2 mr-auto'>
             <BrainCircuit className="h-8 w-8 text-primary" />
             <h1 className="text-2xl font-bold tracking-tight font-headline">
-              MathMagix
+              MathMind
             </h1>
           </Link>
           <div className="flex items-center space-x-2">

@@ -12,8 +12,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['var(--font-inter)', ...fontFamily.sans],
-        headline: ['var(--font-inter)', ...fontFamily.sans],
+        body: ['var(--font-pt-sans)', ...fontFamily.sans],
+        headline: ['var(--font-pt-sans)', ...fontFamily.sans],
       },
       colors: {
         background: 'hsl(var(--background))',
