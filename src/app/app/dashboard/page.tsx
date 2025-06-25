@@ -8,7 +8,10 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from 'next/image';
-import { useUser } from "@/contexts/user-context";
+import { useUser, type UserData } from "@/contexts/user-context";
+import { useEffect, useState } from "react";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 const quickAccessCategories = [
     { name: "Mixed", icon: <Plus className="h-6 w-6" />, href: "/app/challenge?category=mixed" },
@@ -16,15 +19,30 @@ const quickAccessCategories = [
     { name: "Geometry", icon: <Square className="h-6 w-6" />, href: "/app/challenge?category=area-of-squares" },
 ];
 
-const topPlayers = [
-  { rank: 1, name: "Alex", avatar: "https://files.catbox.moe/uvi8l9.png" },
-  { rank: 2, name: "Maria", avatar: "https://files.catbox.moe/rv4git.jpg" },
-];
-
 export default function DashboardPage() {
     const { userData } = useUser();
+    const [topPlayers, setTopPlayers] = useState<UserData[]>([]);
+    const [userRank, setUserRank] = useState<number | null>(null);
 
-    const userRank = { rank: 3, name: "You" };
+
+    useEffect(() => {
+        const fetchLeaderboardData = async () => {
+            if (!db || !userData) return;
+
+            const usersRef = collection(db, 'users');
+            const q = query(usersRef, orderBy('score', 'desc'));
+            const querySnapshot = await getDocs(q);
+            const allUsers = querySnapshot.docs.map(doc => doc.data() as UserData);
+
+            const rank = allUsers.findIndex(p => p.uid === userData.uid) + 1;
+            setUserRank(rank > 0 ? rank : null);
+
+            setTopPlayers(allUsers.slice(0, 2));
+        };
+
+        fetchLeaderboardData();
+    }, [userData]);
+
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -144,7 +162,7 @@ export default function DashboardPage() {
                     <Star className="h-5 w-5 text-indigo-400" />
                     <span>Global Rank</span>
                   </div>
-                  <span className="font-bold">#3</span>
+                  <span className="font-bold">{userRank ? `#${userRank}` : '...'}</span>
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
                   <div className="flex items-center gap-3">
@@ -161,10 +179,10 @@ export default function DashboardPage() {
                  <CardDescription>See who's on top.</CardDescription>
               </CardHeader>
               <CardContent className="flex flex-col gap-3">
-                {topPlayers.map(player => (
-                  <div key={player.rank} className="flex items-center justify-between p-2 rounded-md transition-colors hover:bg-secondary/50">
+                {topPlayers.map((player, index) => (
+                  <div key={player.uid} className="flex items-center justify-between p-2 rounded-md transition-colors hover:bg-secondary/50">
                     <div className="flex items-center gap-3">
-                      <span className="font-bold w-6 text-center">{player.rank}</span>
+                      <span className="font-bold w-6 text-center">{index + 1}</span>
                       <Avatar className="h-8 w-8">
                         <AvatarImage src={player.avatar} alt={player.name} />
                         <AvatarFallback>{player.name.charAt(0)}</AvatarFallback>
@@ -173,16 +191,18 @@ export default function DashboardPage() {
                     </div>
                   </div>
                 ))}
-                 <div className="flex items-center justify-between p-2 rounded-md transition-colors bg-primary/10 border border-primary/20">
-                    <div className="flex items-center gap-3">
-                      <span className="font-bold w-6 text-center">{userRank.rank}</span>
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={userData?.avatar} alt={userData?.name} />
-                        <AvatarFallback>{userData?.name?.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      <span className="font-medium text-primary">{userRank.name}</span>
+                 {userRank && userData && (
+                    <div className="flex items-center justify-between p-2 rounded-md transition-colors bg-primary/10 border border-primary/20">
+                        <div className="flex items-center gap-3">
+                        <span className="font-bold w-6 text-center">{userRank}</span>
+                        <Avatar className="h-8 w-8">
+                            <AvatarImage src={userData?.avatar} alt={userData?.name || ''} />
+                            <AvatarFallback>{userData?.name?.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <span className="font-medium text-primary">You</span>
+                        </div>
                     </div>
-                  </div>
+                 )}
                 <Link href="/app/leaderboard" className="w-full">
                   <Button variant="secondary" className="w-full mt-2">
                     View Full Leaderboard

@@ -5,40 +5,40 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Trophy } from "lucide-react";
+import { Trophy, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { useUser } from '@/contexts/user-context';
+import { useUser, type UserData } from '@/contexts/user-context';
+import { db } from '@/lib/firebase';
+import { collection, query, orderBy, getDocs } from 'firebase/firestore';
 
-const leaderboardData = [
-  { rank: 1, name: "Alex", score: 15420, avatar: "https://files.catbox.moe/uvi8l9.png" },
-  { rank: 2, name: "Maria", score: 14890, avatar: "https://files.catbox.moe/rv4git.jpg" },
-  { rank: 4, name: "David", score: 13900, avatar: "https://files.catbox.moe/uvi8l9.png" },
-  { rank: 5, name: "Sophia", score: 13750, avatar: "https://files.catbox.moe/rv4git.jpg" },
-  { rank: 6, name: "Liam", score: 12100, avatar: "https://files.catbox.moe/uvi8l9.png" },
-  { rank: 7, name: "Olivia", score: 11500, avatar: "https://files.catbox.moe/rv4git.jpg" },
-];
 
 export default function LeaderboardPage() {
   const { userData } = useUser();
-  const [dynamicLeaderboard, setDynamicLeaderboard] = useState<any[]>([]);
+  const [leaderboard, setLeaderboard] = useState<UserData[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (userData) {
-      const userEntry = {
-        rank: 3, // This is hardcoded for now, would need a backend to calculate rank
-        name: "You",
-        score: userData.score,
-        avatar: userData.avatar,
+    const fetchLeaderboard = async () => {
+      if (!db) {
+        setLoading(false);
+        return;
       };
-      
-      const combined = [...leaderboardData, userEntry]
-        .sort((a, b) => b.score - a.score)
-        .map((player, index) => ({ ...player, rank: index + 1 }));
+      try {
+        const usersRef = collection(db, 'users');
+        const q = query(usersRef, orderBy('score', 'desc'));
+        const querySnapshot = await getDocs(q);
+        const usersList = querySnapshot.docs.map(doc => doc.data() as UserData);
+        setLeaderboard(usersList);
+      } catch (error) {
+        console.error("Error fetching leaderboard:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      setDynamicLeaderboard(combined);
-    }
-  }, [userData]);
+    fetchLeaderboard();
+  }, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -61,6 +61,14 @@ export default function LeaderboardPage() {
     if (rank === 3) return "border-orange-600 shadow-orange-600/50";
     return "border-transparent";
   };
+  
+  if (loading) {
+    return (
+        <div className="flex justify-center items-center h-64">
+            <Loader2 className="h-10 w-10 animate-spin text-primary" />
+        </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-8">
@@ -86,35 +94,40 @@ export default function LeaderboardPage() {
               </TableRow>
             </TableHeader>
             <motion.tbody variants={containerVariants} initial="hidden" animate="visible">
-              {dynamicLeaderboard.map((player) => (
-                <motion.tr 
-                    key={player.rank} 
-                    variants={itemVariants} 
-                    className={cn(
-                        "transition-colors",
-                        player.name === "You" ? "bg-primary/10 hover:bg-primary/20" : ""
-                    )}
-                >
-                  <TableCell className="font-bold text-lg text-center">
-                    <div className="flex items-center justify-center gap-2">
-                        {player.rank === 1 && <Trophy className="w-6 h-6 inline-block text-yellow-400" />}
-                        {player.rank === 2 && <Trophy className="w-6 h-6 inline-block text-slate-400" />}
-                        {player.rank === 3 && <Trophy className="w-6 h-6 inline-block text-orange-600" />}
-                        {player.rank}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-4">
-                        <Avatar className={cn("h-10 w-10 md:h-12 md:w-12 border-4 shadow-md", getRankColor(player.rank))}>
-                            <AvatarImage src={player.avatar} alt={player.name} />
-                            <AvatarFallback>{player.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <span className="font-medium text-base">{player.name}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right font-bold text-lg md:text-xl">{player.score.toLocaleString()}</TableCell>
-                </motion.tr>
-              ))}
+              {leaderboard.map((player, index) => {
+                const rank = index + 1;
+                const isCurrentUser = player.uid === userData?.uid;
+
+                return (
+                    <motion.tr 
+                        key={player.uid} 
+                        variants={itemVariants} 
+                        className={cn(
+                            "transition-colors",
+                            isCurrentUser ? "bg-primary/10 hover:bg-primary/20" : ""
+                        )}
+                    >
+                    <TableCell className="font-bold text-lg text-center">
+                        <div className="flex items-center justify-center gap-2">
+                            {rank === 1 && <Trophy className="w-6 h-6 inline-block text-yellow-400" />}
+                            {rank === 2 && <Trophy className="w-6 h-6 inline-block text-slate-400" />}
+                            {rank === 3 && <Trophy className="w-6 h-6 inline-block text-orange-600" />}
+                            {rank}
+                        </div>
+                    </TableCell>
+                    <TableCell>
+                        <div className="flex items-center gap-4">
+                            <Avatar className={cn("h-10 w-10 md:h-12 md:w-12 border-4 shadow-md", getRankColor(rank))}>
+                                <AvatarImage src={player.avatar} alt={player.name} />
+                                <AvatarFallback>{player.name?.charAt(0) || 'U'}</AvatarFallback>
+                            </Avatar>
+                            <span className="font-medium text-base">{isCurrentUser ? 'You' : player.name}</span>
+                        </div>
+                    </TableCell>
+                    <TableCell className="text-right font-bold text-lg md:text-xl">{player.score.toLocaleString()}</TableCell>
+                    </motion.tr>
+                )
+            })}
             </motion.tbody>
           </Table>
         </CardContent>

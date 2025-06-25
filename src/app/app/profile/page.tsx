@@ -11,19 +11,33 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { useUser } from '@/contexts/user-context';
+import { useUser, type UserData } from '@/contexts/user-context';
 import { useRouter } from 'next/navigation';
+import { db } from '@/lib/firebase';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 
 export default function ProfilePage() {
   const { userData, updateUserData, signOut } = useUser();
   const router = useRouter();
   const [tempName, setTempName] = useState(userData?.name || '');
   const [tempGender, setTempGender] = useState<'male' | 'female'>(userData?.gender || 'male');
+  const [userRank, setUserRank] = useState<number | null>(null);
 
   useEffect(() => {
     if (userData) {
       setTempName(userData.name || '');
       setTempGender(userData.gender || 'male');
+
+      const fetchRank = async () => {
+        if (!db) return;
+        const usersRef = collection(db, 'users');
+        const q = query(usersRef, orderBy('score', 'desc'));
+        const querySnapshot = await getDocs(q);
+        const allUsers = querySnapshot.docs.map(doc => doc.data() as UserData);
+        const rank = allUsers.findIndex(p => p.uid === userData.uid) + 1;
+        setUserRank(rank > 0 ? rank : null);
+      }
+      fetchRank();
     }
   }, [userData]);
 
@@ -42,7 +56,7 @@ export default function ProfilePage() {
   const statItems = [
     { label: "Total Score", value: (userData?.score ?? 0).toLocaleString(), icon: <Trophy className="h-6 w-6 text-orange-400"/> },
     { label: "Coins", value: (userData?.coins ?? 0).toLocaleString(), icon: <Coins className="h-6 w-6 text-yellow-400"/> },
-    { label: "Global Rank", value: "#3", icon: <Star className="h-6 w-6 text-indigo-400"/> },
+    { label: "Global Rank", value: userRank ? `#${userRank}` : '...', icon: <Star className="h-6 w-6 text-indigo-400"/> },
     { label: "Top Skill", value: "Addition", icon: <BarChart className="h-6 w-6 text-blue-400"/> },
     { label: "Avg. Time", value: "4.2s", icon: <Clock className="h-6 w-6 text-red-400"/> },
     { label: "Accuracy", value: "88%", icon: <Target className="h-6 w-6 text-green-400"/> }
