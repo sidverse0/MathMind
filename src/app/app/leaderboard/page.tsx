@@ -28,7 +28,7 @@ export default function LeaderboardPage() {
         const usersRef = collection(db, 'users');
         const q = query(usersRef, orderBy('score', 'desc'));
         const querySnapshot = await getDocs(q);
-        const usersList = querySnapshot.docs.map(doc => doc.data() as UserData);
+        const usersList = querySnapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id }) as UserData);
         setLeaderboard(usersList);
       } catch (error) {
         console.error("Error fetching leaderboard:", error);

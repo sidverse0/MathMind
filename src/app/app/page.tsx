@@ -32,7 +32,7 @@ export default function DashboardPage() {
             const usersRef = collection(db, 'users');
             const q = query(usersRef, orderBy('score', 'desc'));
             const querySnapshot = await getDocs(q);
-            const allUsers = querySnapshot.docs.map(doc => doc.data() as UserData);
+            const allUsers = querySnapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id }) as UserData);
 
             const rank = allUsers.findIndex(p => p.uid === userData.uid) + 1;
             setUserRank(rank > 0 ? rank : null);
