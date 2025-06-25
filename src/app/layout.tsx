@@ -5,7 +5,6 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from "@/components/ui/toaster"
 import { PT_Sans } from 'next/font/google';
 import { UserProvider } from '@/contexts/user-context';
-import PwaInstallPrompt from '@/components/pwa-install-prompt';
 
 const ptSans = PT_Sans({ 
   subsets: ['latin'], 
@@ -41,7 +40,6 @@ export default function RootLayout({
           >
             {children}
             <Toaster />
-            <PwaInstallPrompt />
           </ThemeProvider>
         </UserProvider>
       </body>
