@@ -17,6 +17,13 @@ const app = firebaseConfig.apiKey ? (!getApps().length ? initializeApp(firebaseC
 
 const auth = app ? getAuth(app) : null;
 const db = app ? getFirestore(app) : null;
-const googleProvider = app ? new GoogleAuthProvider() : null;
+
+let googleProvider: GoogleAuthProvider | null = null;
+if (app) {
+    googleProvider = new GoogleAuthProvider();
+    googleProvider.setCustomParameters({
+        prompt: 'select_account'
+    });
+}
 
 export { app, auth, db, googleProvider };
