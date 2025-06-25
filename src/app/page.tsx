@@ -1,8 +1,7 @@
-
 'use client';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { ArrowRight, BrainCircuit, MessageCircle, Loader2 } from 'lucide-react';
+import { ArrowRight, BrainCircuit, MessageCircle, Loader2, Heart } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -146,6 +145,29 @@ export default function LandingPage() {
             </div>
         </section>
       </main>
+      <footer className="border-t bg-background">
+        <div className="container py-6">
+            <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className="text-center"
+            >
+            <p className="text-sm text-muted-foreground">
+                Built by{' '}
+                <a 
+                href="#"
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-500 to-teal-500 hover:opacity-80 transition-opacity inline-flex items-center gap-1 group"
+                >
+                Reyaz
+                <Heart className="h-4 w-4 text-primary transition-transform group-hover:scale-125 group-hover:fill-primary" />
+                </a>
+            </p>
+            </motion.div>
+        </div>
+      </footer>
     </div>
   );
 }

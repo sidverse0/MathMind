@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BrainCircuit, ArrowLeft, Zap, Trophy, BarChart } from 'lucide-react';
+import { BrainCircuit, ArrowLeft, Zap, Trophy, BarChart, Heart } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
@@ -106,8 +106,20 @@ export default function AboutPage() {
       </main>
       
       <footer className="border-t bg-background">
-        <div className="container py-6 flex flex-col sm:flex-row justify-center items-center gap-4 px-4 sm:px-6 lg:px-8">
-            <p className="text-sm text-muted-foreground text-center">© {new Date().getFullYear()} MathMind. All rights reserved. | Built by Reyaz</p>
+        <div className="container py-6 flex flex-col sm:flex-row justify-between items-center gap-4 px-4 sm:px-6 lg:px-8">
+            <p className="text-sm text-muted-foreground text-center">© {new Date().getFullYear()} MathMind. All rights reserved.</p>
+            <p className="text-sm text-muted-foreground">
+                Built by{' '}
+                <a 
+                href="#"
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-500 to-teal-500 hover:opacity-80 transition-opacity inline-flex items-center gap-1 group"
+                >
+                Reyaz
+                <Heart className="h-4 w-4 text-primary transition-transform group-hover:scale-125 group-hover:fill-primary" />
+                </a>
+            </p>
         </div>
       </footer>
     </div>
