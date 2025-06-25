@@ -107,7 +107,7 @@ export default function AboutPage() {
       
       <footer className="border-t bg-background">
         <div className="container py-6 flex flex-col sm:flex-row justify-center items-center gap-4 px-4 sm:px-6 lg:px-8">
-            <p className="text-sm text-muted-foreground text-center">© {new Date().getFullYear()} MathMind. All rights reserved.</p>
+            <p className="text-sm text-muted-foreground text-center">© {new Date().getFullYear()} MathMind. All rights reserved. | Built by Reyaz</p>
         </div>
       </footer>
     </div>
