@@ -77,8 +77,8 @@ export default function DashboardPage() {
         className="flex justify-between items-start"
       >
         <div>
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Welcome back, {userName}!</h1>
-            <p className="text-muted-foreground mt-2 text-base">Your mind is a muscle. Let's make it stronger today.</p>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Welcome Back, {userName}!</h1>
+            <p className="text-muted-foreground mt-2 text-base">Think Smart. Solve Fast</p>
         </div>
         <Link href="https://files.catbox.moe/i6khoe.jpg" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 group">
             <div className="relative w-14 h-14">
@@ -89,7 +89,7 @@ export default function DashboardPage() {
                     className="rounded-full object-cover border-4 border-primary/30 shadow-lg transition-transform group-hover:scale-105"
                 />
             </div>
-            <span className="text-xs font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400 transition-opacity group-hover:opacity-80">Owner-Sid</span>
+            <span className="text-xs font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400 transition-opacity group-hover:opacity-80">Owner</span>
         </Link>
       </motion.div>
 

@@ -84,7 +84,7 @@ export default function DashboardPage() {
                     className="rounded-full object-cover border-4 border-primary/30 shadow-lg transition-transform group-hover:scale-105"
                 />
             </div>
-            <span className="text-xs font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400 transition-opacity group-hover:opacity-80">Owner-Sid</span>
+            <span className="text-xs font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-400 transition-opacity group-hover:opacity-80">Owner</span>
         </Link>
       </motion.div>
 
