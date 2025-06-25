@@ -1,10 +1,9 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Trophy, Coins, Star, BarChart, Clock, Target, Edit, BadgeCheck, Save } from "lucide-react";
+import { Trophy, Coins, Star, BarChart, Clock, Target, Edit, BadgeCheck, Save, LogOut } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
@@ -12,9 +11,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useUser } from '@/contexts/user-context';
+import { useRouter } from 'next/navigation';
 
 export default function ProfilePage() {
-  const { userData, updateUserData } = useUser();
+  const { userData, updateUserData, signOut } = useUser();
+  const router = useRouter();
   const [tempName, setTempName] = useState(userData?.name || '');
   const [tempGender, setTempGender] = useState<'male' | 'female'>(userData?.gender || 'male');
 
@@ -30,6 +31,11 @@ export default function ProfilePage() {
       const newAvatar = tempGender === 'female' ? 'https://files.catbox.moe/rv4git.jpg' : 'https://files.catbox.moe/uvi8l9.png';
       updateUserData({ name: tempName, gender: tempGender, avatar: newAvatar });
     }
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push('/');
   };
 
   const statItems = [
@@ -158,6 +164,16 @@ export default function ProfilePage() {
                     </div>
                 </CardContent>
             </Card>
+        </motion.div>
+        <motion.div
+            className="flex justify-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0, transition: { delay: 0.2 } }}
+        >
+            <Button variant="destructive" className="shadow-lg" onClick={handleSignOut}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Log Out
+            </Button>
         </motion.div>
     </div>
   );
