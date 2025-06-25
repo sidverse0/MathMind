@@ -1,40 +1,62 @@
+
 "use client"
 
-import { useState, useEffect } from "react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import Link from 'next/link'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { useUser } from "@/contexts/user-context"
+import Link from "next/link"
+import { LogOut, User as UserIcon } from "lucide-react"
 
 export function UserNav() {
-  const [avatarUrl, setAvatarUrl] = useState("https://files.catbox.moe/uvi8l9.png");
+  const { user, userData, signOut } = useUser()
 
-  useEffect(() => {
-    const updateAvatar = () => {
-        const storedGender = localStorage.getItem('mathMindUserGender');
-        if (storedGender === 'female') {
-          setAvatarUrl('https://files.catbox.moe/rv4git.jpg');
-        } else {
-          setAvatarUrl('https://files.catbox.moe/uvi8l9.png');
-        }
-    };
-    
-    updateAvatar();
-    window.addEventListener('pageshow', updateAvatar);
-    
-    return () => {
-        window.removeEventListener('pageshow', updateAvatar);
-    };
-  }, []);
+  if (!user || !userData) {
+    return null
+  }
 
   return (
-    <Button asChild variant="ghost" className="relative h-8 w-8 rounded-full">
-      <Link href="/app/profile">
-        <Avatar className="h-8 w-8">
-          <AvatarImage src={avatarUrl} alt="@user" />
-          <AvatarFallback>U</AvatarFallback>
-        </Avatar>
-        <span className="sr-only">User Profile</span>
-      </Link>
-    </Button>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+          <Avatar className="h-8 w-8">
+            <AvatarImage src={userData.avatar} alt={userData.name} />
+            <AvatarFallback>{userData.name.charAt(0)}</AvatarFallback>
+          </Avatar>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" align="end" forceMount>
+        <DropdownMenuLabel className="font-normal">
+          <div className="flex flex-col space-y-1">
+            <p className="text-sm font-medium leading-none">{userData.name}</p>
+            <p className="text-xs leading-none text-muted-foreground">
+              {userData.email}
+            </p>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <Link href="/app/profile" passHref>
+            <DropdownMenuItem>
+              <UserIcon className="mr-2 h-4 w-4" />
+              <span>Profile</span>
+            </DropdownMenuItem>
+          </Link>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={signOut}>
+          <LogOut className="mr-2 h-4 w-4" />
+          <span>Log out</span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }

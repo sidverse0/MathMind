@@ -11,13 +11,13 @@ import { ChartContainer, ChartTooltipContent } from '@/components/ui/chart';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { playSound } from '@/lib/audio';
+import { useUser } from '@/contexts/user-context';
 
 const COLORS = ['hsl(var(--chart-1))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))'];
-const COINS_KEY = 'mathmagix_coins';
-const DIFFICULTY_KEY = 'mathmagix_difficulty';
 
 function SummaryContent() {
     const searchParams = useSearchParams();
+    const { userData, updateUserData } = useUser();
 
     const score = Number(searchParams.get('score') || 0);
     const coinsEarned = Number(searchParams.get('coins') || 0);
@@ -32,18 +32,16 @@ function SummaryContent() {
     useEffect(() => {
         playSound('summary');
 
-        // Update total coins in localStorage
-        if (coinsEarned > 0) {
-            const currentCoins = Number(localStorage.getItem(COINS_KEY) || '500');
-            localStorage.setItem(COINS_KEY, String(currentCoins + coinsEarned));
+        if (userData) {
+            const newCoins = (userData.coins || 0) + coinsEarned;
+            const newScore = (userData.score || 0) + score;
+            updateUserData({
+                coins: newCoins,
+                score: newScore,
+                difficulty: finalDifficulty,
+            });
         }
-
-        // Update difficulty in localStorage
-        localStorage.setItem(DIFFICULTY_KEY, String(finalDifficulty));
-
-        // Dispatch storage event to notify other tabs/components
-        window.dispatchEvent(new Event('storage'));
-    }, [coinsEarned, finalDifficulty]);
+    }, [coinsEarned, score, finalDifficulty, userData, updateUserData]);
 
     const pieData = [
         { name: 'Correct', value: correct },

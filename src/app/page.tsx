@@ -1,3 +1,4 @@
+
 'use client';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -6,6 +7,8 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Instagram, Youtube } from 'lucide-react';
+import { useUser } from '@/contexts/user-context';
+import { useRouter } from 'next/navigation';
 
 const TelegramIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -20,6 +23,17 @@ const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 export default function LandingPage() {
+  const { user, signInWithGoogle, loading } = useUser();
+  const router = useRouter();
+
+  const handleJourneyClick = () => {
+    if (user) {
+      router.push('/app');
+    } else {
+      signInWithGoogle();
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -113,11 +127,9 @@ export default function LandingPage() {
                     transition={{ duration: 0.5, delay: 0.4 }}
                     className="flex flex-col sm:flex-row items-center gap-4"
                 >
-                    <Link href="/app">
-                        <Button size="lg" className="text-lg shadow-lg shadow-primary/30">
-                            Start Your Journey <ArrowRight className="ml-2" />
-                        </Button>
-                    </Link>
+                    <Button size="lg" className="text-lg shadow-lg shadow-primary/30" onClick={handleJourneyClick} disabled={loading}>
+                        {loading ? "Loading..." : (user ? "Go to Dashboard" : "Start Your Journey")} <ArrowRight className="ml-2" />
+                    </Button>
                     <Link href="/about">
                         <Button size="lg" variant="outline" className="text-lg">
                             Learn More

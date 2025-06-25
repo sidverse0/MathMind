@@ -1,13 +1,14 @@
+
 'use client';
 
-import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, Gamepad2, Trophy, Coins, BrainCircuit, Star, Sigma, Square, Plus } from "lucide-react";
+import { ArrowRight, Gamepad2, Trophy, Coins, Star, Sigma, Square, Plus, BrainCircuit } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from 'next/image';
+import { useUser } from "@/contexts/user-context";
 
 const quickAccessCategories = [
     { name: "Mixed", icon: <Plus className="h-6 w-6" />, href: "/app/challenge?category=mixed" },
@@ -23,30 +24,7 @@ const topPlayers = [
 const userRank = { rank: 3, name: "You" };
 
 export default function DashboardPage() {
-    const [userName, setUserName] = useState("Mathlete");
-    const [userAvatar, setUserAvatar] = useState("https://files.catbox.moe/uvi8l9.png");
-
-    useEffect(() => {
-        const updateUserData = () => {
-            const storedName = localStorage.getItem('mathMindUserName');
-            if (storedName) {
-                setUserName(storedName);
-            }
-            const storedGender = localStorage.getItem('mathMindUserGender');
-            if (storedGender === 'female') {
-                setUserAvatar('https://files.catbox.moe/rv4git.jpg');
-            } else {
-                setUserAvatar('https://files.catbox.moe/uvi8l9.png');
-            }
-        };
-
-        updateUserData();
-        window.addEventListener('pageshow', updateUserData);
-
-        return () => {
-            window.removeEventListener('pageshow', updateUserData);
-        };
-    }, []);
+    const { userData } = useUser();
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -72,7 +50,7 @@ export default function DashboardPage() {
         className="flex justify-between items-start"
       >
         <div>
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Welcome back, {userName}!</h1>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Welcome back, {userData?.name}!</h1>
             <p className="text-muted-foreground mt-2 text-base">Your mind is a muscle. Let's make it stronger today.</p>
         </div>
         <Link href="https://files.catbox.moe/i6khoe.jpg" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 group">
@@ -152,14 +130,14 @@ export default function DashboardPage() {
                     <Trophy className="h-5 w-5 text-orange-400" />
                     <span>Total Score</span>
                   </div>
-                  <span className="font-bold">14,500</span>
+                  <span className="font-bold">{userData?.score.toLocaleString()}</span>
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
                   <div className="flex items-center gap-3">
                     <Coins className="h-5 w-5 text-yellow-400" />
                     <span>Coins Earned</span>
                   </div>
-                  <span className="font-bold">573</span>
+                  <span className="font-bold">{userData?.coins.toLocaleString()}</span>
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
                   <div className="flex items-center gap-3">
@@ -173,7 +151,7 @@ export default function DashboardPage() {
                     <BrainCircuit className="h-5 w-5 text-primary" />
                     <span>Difficulty</span>
                   </div>
-                  <span className="font-bold">5</span>
+                  <span className="font-bold">{userData?.difficulty}</span>
                 </div>
               </CardContent>
             </MotionCard>
@@ -199,8 +177,8 @@ export default function DashboardPage() {
                     <div className="flex items-center gap-3">
                       <span className="font-bold w-6 text-center">{userRank.rank}</span>
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src={userAvatar} alt={userRank.name} />
-                        <AvatarFallback>{userRank.name.charAt(0)}</AvatarFallback>
+                        <AvatarImage src={userData?.avatar} alt={userData?.name} />
+                        <AvatarFallback>{userData?.name.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <span className="font-medium text-primary">{userRank.name}</span>
                     </div>

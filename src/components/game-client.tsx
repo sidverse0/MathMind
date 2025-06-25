@@ -18,11 +18,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { playSound } from '@/lib/audio';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
+import { useUser } from '@/contexts/user-context';
 
 
 const quickStartCategories: MathCategory[] = ['addition', 'subtraction', 'multiplication', 'mixed'];
-
-const INVENTORY_KEY = 'mathmagix_inventory';
 
 const IntersectIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -81,42 +80,30 @@ const categoryIcons: Record<MathCategory, React.ReactNode> = {
   'compound-interest': <Landmark className="h-8 w-8" />, 'sales-tax': <Receipt className="h-8 w-8" />,
 };
 
-const getInitialInventory = (): Record<PowerUpType, number> => ({
-    extraTime: 0,
-    mistakeShield: 0,
-    numberReveal: 0
-});
-
 function GameClientContent() {
   const { state, selectCategory, startConfiguredGame, submitAnswer, resetGame, endGame, backToConfig, usePowerUp } = useGame();
   const searchParams = useSearchParams();
   const router = useRouter();
   const { toast } = useToast();
+  const { userData, updateUserData } = useUser();
 
   const [difficulty, setDifficulty] = useState<DifficultyLevel>('easy');
   const [numQuestions, setNumQuestions] = useState(10);
   const [isCustomQuestions, setIsCustomQuestions] = useState(false);
-  const [inventory, setInventory] = useState<Record<PowerUpType, number>>(getInitialInventory());
-
-  useEffect(() => {
-    const storedInventory = localStorage.getItem(INVENTORY_KEY);
-    setInventory(storedInventory ? JSON.parse(storedInventory) : getInitialInventory());
-  }, []);
-
+  
   const handleUsePowerUp = (powerUp: PowerUpType) => {
-      if (inventory[powerUp] > 0) {
+      if (userData && userData.inventory[powerUp] > 0) {
           usePowerUp(powerUp);
-          const newInventory = { ...inventory, [powerUp]: inventory[powerUp] - 1 };
-          setInventory(newInventory);
-          localStorage.setItem(INVENTORY_KEY, JSON.stringify(newInventory));
+          const newInventory = { ...userData.inventory, [powerUp]: userData.inventory[powerUp] - 1 };
+          updateUserData({ inventory: newInventory });
           toast({ title: `${powerUp.replace(/([A-Z])/g, ' $1').trim()} used!` });
       }
   };
 
   const powerUpConfig: { type: PowerUpType; icon: React.ReactNode; name: string; colorClass: string; textColorClass: string; }[] = [
-    { type: 'extraTime', icon: <Zap />, name: 'Extra Time', colorClass: 'border-chart-4 hover:bg-chart-4/10', textColorClass: 'text-chart-4' },
-    { type: 'mistakeShield', icon: <Shield />, name: 'Mistake Shield', colorClass: 'border-primary hover:bg-primary/10', textColorClass: 'text-primary' },
-    { type: 'numberReveal', icon: <Eye />, name: 'Number Reveal', colorClass: 'border-chart-2 hover:bg-chart-2/10', textColorClass: 'text-chart-2' },
+    { type: 'extraTime', icon: <Zap className="text-yellow-500" />, name: 'Extra Time', colorClass: 'border-yellow-500/50 hover:bg-yellow-500/10', textColorClass: 'text-yellow-500' },
+    { type: 'mistakeShield', icon: <Shield className="text-blue-500" />, name: 'Mistake Shield', colorClass: 'border-blue-500/50 hover:bg-blue-500/10', textColorClass: 'text-blue-500' },
+    { type: 'numberReveal', icon: <Eye className="text-green-500" />, name: 'Number Reveal', colorClass: 'border-green-500/50 hover:bg-green-500/10', textColorClass: 'text-green-500' },
   ];
 
   // Sound effect logic
@@ -441,17 +428,16 @@ function GameClientContent() {
                                       size="icon"
                                       variant="outline"
                                       className={cn(
-                                        "h-16 w-16 rounded-full shadow-lg relative transition-all border-2",
+                                        "h-16 w-16 rounded-full shadow-lg relative transition-all border-4",
                                         p.colorClass,
-                                        p.textColorClass,
-                                        state.isShieldActive && p.type === 'mistakeShield' ? 'ring-2 ring-offset-2 ring-offset-background ring-primary' : '',
+                                        state.isShieldActive && p.type === 'mistakeShield' ? 'ring-4 ring-offset-2 ring-offset-background ring-blue-500' : '',
                                         '[&>svg]:h-8 [&>svg]:w-8'
                                       )}
                                       onClick={() => handleUsePowerUp(p.type)}
-                                      disabled={inventory[p.type] === 0 || (p.type === 'mistakeShield' && state.isShieldActive)}
+                                      disabled={!userData || userData.inventory[p.type] === 0 || (p.type === 'mistakeShield' && state.isShieldActive)}
                                     >
                                       {p.icon}
-                                      {inventory[p.type] > 0 && <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">{inventory[p.type]}</span>}
+                                      {userData && userData.inventory[p.type] > 0 && <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">{userData.inventory[p.type]}</span>}
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { UserNav } from '@/components/user-nav';
@@ -6,8 +7,28 @@ import { Button } from '@/components/ui/button';
 import { BrainCircuit, MoreVertical } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useUser } from '@/contexts/user-context';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/');
+    }
+  }, [user, loading, router]);
+
+  if (loading || !user) {
+    return (
+      <div className="min-h-screen w-full flex items-center justify-center bg-background">
+        <p className="text-lg">Loading...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-secondary/50">
       <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
