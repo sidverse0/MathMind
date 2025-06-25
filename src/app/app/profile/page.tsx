@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Trophy, Coins, Star, BarChart, Clock, Target, Edit, BadgeCheck, Save, LogOut } from "lucide-react";
+import { Trophy, Coins, Star, BarChart, Clock, Target, Edit, BadgeCheck, Save, LogOut, CalendarDays } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation';
 import { db } from '@/lib/firebase';
 import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { format } from 'date-fns';
+import { Badge } from '@/components/ui/badge';
 
 export default function ProfilePage() {
   const { userData, updateUserData, signOut } = useUser();
@@ -157,7 +158,16 @@ export default function ProfilePage() {
                             </DialogContent>
                         </Dialog>
                     </div>
-                    <CardDescription className="text-base">Mathlete since {joinedDate}</CardDescription>
+                     <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                    >
+                        <Badge variant="secondary" className="text-base font-medium py-1.5 px-4 shadow-sm mt-2">
+                            <CalendarDays className="mr-2 h-4 w-4" />
+                            Mathlete since {joinedDate}
+                        </Badge>
+                    </motion.div>
                 </CardHeader>
                 <CardContent className="p-4 sm:p-6">
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
