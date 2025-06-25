@@ -50,7 +50,7 @@ export default function DashboardPage() {
         className="flex justify-between items-start"
       >
         <div>
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Welcome Back, {userData?.name}!</h1>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Welcome back, {userData?.name}!</h1>
             <p className="text-muted-foreground mt-2 text-base">Think Smart. Solve Fast.</p>
         </div>
         <Link href="https://files.catbox.moe/i6khoe.jpg" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 group">
@@ -151,7 +151,7 @@ export default function DashboardPage() {
                     <BrainCircuit className="h-5 w-5 text-primary" />
                     <span>Difficulty</span>
                   </div>
-                  <span className="font-bold">{userData?.difficulty}</span>
+                  <span className="font-bold">{userData?.difficulty ?? 5}</span>
                 </div>
               </CardContent>
             </MotionCard>

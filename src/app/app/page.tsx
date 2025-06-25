@@ -151,7 +151,7 @@ export default function DashboardPage() {
                     <BrainCircuit className="h-5 w-5 text-primary" />
                     <span>Difficulty</span>
                   </div>
-                  <span className="font-bold">{userData?.difficulty}</span>
+                  <span className="font-bold">{userData?.difficulty ?? 5}</span>
                 </div>
               </CardContent>
             </MotionCard>

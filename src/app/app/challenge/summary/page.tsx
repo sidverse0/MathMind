@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Suspense, useEffect } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
@@ -12,12 +12,16 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { playSound } from '@/lib/audio';
 import { useUser } from '@/contexts/user-context';
+import { adjustDifficulty } from '@/ai/flows/adaptive-difficulty';
+import { useToast } from '@/hooks/use-toast';
 
 const COLORS = ['hsl(var(--chart-1))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))'];
 
 function SummaryContent() {
     const searchParams = useSearchParams();
     const { userData, updateUserData } = useUser();
+    const { toast } = useToast();
+    const [summaryApplied, setSummaryApplied] = useState(false);
 
     const score = Number(searchParams.get('score') || 0);
     const coinsEarned = Number(searchParams.get('coins') || 0);
@@ -30,18 +34,42 @@ function SummaryContent() {
     const finalDifficulty = Number(searchParams.get('difficulty') || 5);
 
     useEffect(() => {
-        playSound('summary');
+        const applySummary = async () => {
+            if (userData && !summaryApplied) {
+                setSummaryApplied(true);
+                playSound('summary');
 
-        if (userData) {
-            const newCoins = (userData.coins || 0) + coinsEarned;
-            const newScore = (userData.score || 0) + score;
-            updateUserData({
-                coins: newCoins,
-                score: newScore,
-                difficulty: finalDifficulty,
-            });
-        }
-    }, [coinsEarned, score, finalDifficulty, userData, updateUserData]);
+                // 1. Adjust difficulty
+                let newDifficulty = finalDifficulty;
+                try {
+                    const difficultyAdjustment = await adjustDifficulty({
+                        accuracy: accuracy / 100, // expecting 0-1
+                        averageTime: avgTime,
+                        currentDifficulty: userData.difficulty,
+                    });
+                    newDifficulty = difficultyAdjustment.newDifficulty;
+                    toast({
+                        title: "Difficulty Adjusted!",
+                        description: difficultyAdjustment.reason,
+                    });
+                } catch (error) {
+                    console.error("Failed to adjust difficulty:", error);
+                    // Keep original difficulty on error
+                }
+
+                // 2. Update user data
+                const newCoins = (userData.coins || 0) + coinsEarned;
+                const newScore = (userData.score || 0) + score;
+                await updateUserData({
+                    coins: newCoins,
+                    score: newScore,
+                    difficulty: newDifficulty,
+                });
+            }
+        };
+
+        applySummary();
+    }, [userData, summaryApplied, coinsEarned, score, finalDifficulty, accuracy, avgTime, updateUserData, toast]);
 
     const pieData = [
         { name: 'Correct', value: correct },

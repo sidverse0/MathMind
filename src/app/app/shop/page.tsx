@@ -76,7 +76,7 @@ export default function ShopPage() {
         <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 p-3 rounded-xl bg-background shadow-lg border-2 border-yellow-400/50">
                 <Coins className="w-8 h-8 text-yellow-500" /> 
-                <span className="text-3xl font-bold tracking-tight">{userData.coins.toLocaleString()}</span>
+                <span className="text-3xl font-bold tracking-tight">{(userData?.coins ?? 0).toLocaleString()}</span>
                 <span className="text-muted-foreground self-end pb-1">Coins</span>
             </div>
             <Link href="/app" passHref>
@@ -101,7 +101,7 @@ export default function ShopPage() {
             >
                 <Card className="h-full flex flex-col transition-all duration-300 hover:shadow-xl hover:border-primary/50 group overflow-hidden relative">
                     <Badge variant="secondary" className="absolute top-4 right-4 z-10 shadow-lg text-base py-1 px-3">
-                        <Package className="h-4 w-4 mr-2"/> Owned: {userData.inventory[item.type] || 0}
+                        <Package className="h-4 w-4 mr-2"/> Owned: {userData?.inventory?.[item.type] || 0}
                     </Badge>
                     <CardHeader className="p-0">
                         <div className="relative h-48 w-full mb-4 overflow-hidden">
@@ -124,7 +124,7 @@ export default function ShopPage() {
                         <Button 
                           className="w-full text-base md:text-lg shadow-md hover:shadow-lg transition-shadow" 
                           onClick={() => handleBuy(item)}
-                          disabled={userData.coins < item.price}
+                          disabled={!userData || userData.coins < item.price}
                         >
                             Buy for <Coins className="w-5 h-5 mx-2" /> {item.price}
                         </Button>
