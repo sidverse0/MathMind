@@ -44,6 +44,14 @@
       "sizes": "512x512",
       "type": "image/png"
     }
+
+{
+  "src": "https://files.catbox.moe/m296gv.png",
+  "sizes": "512x512",
+  "type": "image/png",
+  "purpose": "maskable"
+}
+    
   ],
   "start_url": "/",
   "display": "standalone",
