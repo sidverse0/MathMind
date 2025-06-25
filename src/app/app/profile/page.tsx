@@ -20,8 +20,8 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (userData) {
-      setTempName(userData.name);
-      setTempGender(userData.gender);
+      setTempName(userData.name || '');
+      setTempGender(userData.gender || 'male');
     }
   }, [userData]);
 
