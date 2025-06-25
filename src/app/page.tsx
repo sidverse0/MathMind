@@ -66,7 +66,7 @@ export default function LandingPage() {
                             </a>
                         </Button>
                         <Button asChild variant="outline" size="icon" className="rounded-full">
-                            <a href="https://www.wa.me/+918521672813" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                            <a href="https://www.wa.me/918521672813" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
                                 <WhatsAppIcon />
                             </a>
                         </Button>
