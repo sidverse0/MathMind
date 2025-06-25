@@ -1,4 +1,3 @@
-
 'use client';
 
 import type { User } from 'firebase/auth';
@@ -100,11 +99,16 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     try {
       await signInWithPopup(auth, googleProvider);
     } catch (error: any) {
+      // Gracefully handle the case where the user closes the popup.
+      if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/cancelled-popup-request') {
+        return;
+      }
+      
       if (error.code === 'auth/unauthorized-domain') {
         console.error(
           'Firebase Auth Error: This domain is not authorized for OAuth operations. ' +
           "Please go to your Firebase project's Authentication settings, " +
-          "click on the 'Settings' tab, and add 'localhost' to the 'Authorized domains' list."
+          "click on the 'Settings' tab, and add your domain to the 'Authorized domains' list."
         );
       } else {
         console.error("Error signing in with Google", error);
