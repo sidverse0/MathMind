@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { ArrowRight, Wand2, MessageCircle } from 'lucide-react';
+import { ArrowRight, BrainCircuit, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -25,7 +25,7 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container h-16 flex items-center px-4 sm:px-6 lg:px-8">
           <Link href="/" className="mr-auto flex items-center gap-2">
-            <Wand2 className="h-6 w-6 text-primary" />
+            <BrainCircuit className="h-6 w-6 text-primary" />
             <h1 className="text-xl font-bold tracking-tight font-headline">
               MathMagix
             </h1>
@@ -80,7 +80,7 @@ export default function LandingPage() {
                             animate={{ rotate: [0, 5, -5, 5, 0] }}
                             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                         >
-                           <Wand2 className="h-16 w-16 md:h-20 md:w-20 text-primary" />
+                           <BrainCircuit className="h-16 w-16 md:h-20 md:w-20 text-primary" />
                         </motion.div>
                     </div>
                 </motion.div>

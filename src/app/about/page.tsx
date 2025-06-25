@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BrainCircuit, ArrowLeft, Zap, Trophy, BarChart, Wand2 } from 'lucide-react';
+import { BrainCircuit, ArrowLeft, Zap, Trophy, BarChart } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
@@ -35,7 +35,7 @@ export default function AboutPage() {
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container h-16 flex items-center px-4 sm:px-6 lg:px-8">
           <Link href="/" className="mr-auto flex items-center gap-2">
-            <Wand2 className="h-6 w-6 text-primary" />
+            <BrainCircuit className="h-6 w-6 text-primary" />
             <h1 className="text-xl font-bold tracking-tight font-headline">
               MathMagix
             </h1>

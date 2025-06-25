@@ -3,7 +3,7 @@
 import { UserNav } from '@/components/user-nav';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Button } from '@/components/ui/button';
-import { Wand2, MoreVertical } from 'lucide-react';
+import { BrainCircuit, MoreVertical } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
@@ -13,7 +13,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center px-4 sm:px-6 lg:px-8">
           <Link href="/app" className='flex items-center gap-2 mr-auto'>
-            <Wand2 className="h-8 w-8 text-primary" />
+            <BrainCircuit className="h-8 w-8 text-primary" />
             <h1 className="text-2xl font-bold tracking-tight font-headline">
               MathMagix
             </h1>

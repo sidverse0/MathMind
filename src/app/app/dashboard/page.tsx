@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, Gamepad2, Trophy, Coins, Star, Sigma, Square, Plus, Wand2 } from "lucide-react";
+import { ArrowRight, Gamepad2, Trophy, Coins, Star, Sigma, Square, Plus, BrainCircuit } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -175,7 +175,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50">
                   <div className="flex items-center gap-3">
-                    <Wand2 className="h-5 w-5 text-primary" />
+                    <BrainCircuit className="h-5 w-5 text-primary" />
                     <span>Difficulty</span>
                   </div>
                   <span className="font-bold">{difficulty}</span>
