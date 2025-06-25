@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useReducer, useCallback, useEffect } from 'react';
@@ -371,15 +372,17 @@ function generateChallenge(category: MathCategory, difficulty: number): Challeng
     }
     case 'quadratic-equations': {
         operatorSymbol = 'x₁‚x₂';
-        const r1 = rand(d, -d);
-        const r2 = rand(d, -d);
-        numbers = [r1,r2];
+        let r1 = 0; while(r1 === 0) r1 = rand(d+2, -(d+2));
+        let r2 = 0; while(r2 === 0) r2 = rand(d+2, -(d+2));
+
         const b = -(r1+r2);
         const c = r1*r2;
         const bSign = b >= 0 ? '+' : '-';
         const cSign = c >= 0 ? '+' : '-';
-        question = `x² ${bSign} ${Math.abs(b)}x ${cSign} ${Math.abs(c)} = 0`;
-        answer = `${Math.min(r1,r2)},${Math.max(r1,r2)}`;
+
+        question = `What is the sum of the roots for x² ${bSign} ${Math.abs(b)}x ${cSign} ${Math.abs(c)} = 0?`;
+        answer = r1 + r2;
+        numbers = [b, c]; // Store coefficients
         break;
     }
     case 'prime-numbers': {
@@ -419,7 +422,7 @@ function generateChallenge(category: MathCategory, difficulty: number): Challeng
     }
     case 'roman-numerals': {
         operatorSymbol = 'I';
-        const num = rand(d*5 + 5);
+        const num = rand(d*5 + 5, 1);
         numbers = [num];
         const romanMap: {[key: string]: number} = {M:1000, CM:900, D:500, CD:400, C:100, XC:90, L:50, XL:40, X:10, IX:9, V:5, IV:4, I:1};
         let result = '';
@@ -604,7 +607,7 @@ function generateChallenge(category: MathCategory, difficulty: number): Challeng
         const e = rand(d * 2);
         const f = rand(d * 2);
         numbers = [a, b_val, e, f];
-        answer = b_val - e;
+        answer = a - e; // Co-efficient of x
         question = `Coefficient of x in (${a}x + ${b_val}) - (${e}x + ${f})`;
         break;
     }
@@ -733,55 +736,83 @@ function generateChallenge(category: MathCategory, difficulty: number): Challeng
   }
 
   // Generate options for multiple choice
-    const options: (string | number)[] = [answer];
-    if (currentCategory === 'prime-numbers') {
-        options.push(answer === '1' ? '0' : '1');
-    } else {
-        const answerNum = Number(answer);
-        if (!isNaN(answerNum)) { // Is a number
-            const distractors: Set<number | string> = new Set();
-            const isFloat = String(answer).includes('.');
-            
-            while(distractors.size < 3) {
-                const variation = Math.max(1, Math.ceil(Math.abs(answerNum * 0.2))) + difficulty + 2;
-                const offset = Math.floor(Math.random() * variation) + 1;
-                const plusOrMinus = Math.random() < 0.5 ? -1 : 1;
-                let distractor = answerNum + (offset * plusOrMinus);
-                
-                if (isFloat) {
-                    distractor = parseFloat(distractor.toFixed(2));
-                } else {
-                    distractor = Math.round(distractor);
-                }
-                
-                if (distractor !== answer) {
-                    distractors.add(distractor);
-                }
-            }
-            options.push(...distractors);
-        } else { // Is a string but not 'prime-numbers'
-            const baseString = String(answer).replace(/[^a-zA-Z0-9]/g, '').slice(0, 3);
-            options.push(baseString + 'x', baseString + 'y', baseString + 'z');
+  const options: (string | number)[] = [answer];
+  
+  if (currentCategory === 'prime-numbers') {
+      options.push(answer === '1' ? '0' : '1');
+  } else if (typeof answer === 'string' && isNaN(Number(answer))) {
+      // Logic for non-numeric string answers
+      const distractors: Set<string> = new Set();
+      if (currentCategory === 'roman-numerals') {
+          const numForAnswer = numbers[0];
+          const romanMap: {[key: string]: number} = {M:1000, CM:900, D:500, CD:400, C:100, XC:90, L:50, XL:40, X:10, IX:9, V:5, IV:4, I:1};
+          const toRoman = (n: number): string => {
+              let result = ''; let tempN = n;
+              for (const key in romanMap) {
+                  while (tempN >= romanMap[key]) { result += key; tempN -= romanMap[key]; }
+              }
+              return result || 'N/A';
+          };
+          while (distractors.size < 3) {
+              const offset = rand(5, 1) * (Math.random() < 0.5 ? -1 : 1);
+              const distractorNum = numForAnswer + offset;
+              if (distractorNum > 0 && distractorNum !== numForAnswer) {
+                  distractors.add(toRoman(distractorNum));
+              }
+          }
+      } else if (currentCategory === 'time-calculation') {
+          const [hours, minutes] = String(answer).split(':').map(Number);
+          const totalMinutes = hours * 60 + minutes;
+          while(distractors.size < 3) {
+              const offset = rand(45, 10) * (Math.random() < 0.5 ? -1 : 1);
+              const distractorTotalMinutes = (totalMinutes + offset + 1440) % 1440;
+              const distractorHours = Math.floor(distractorTotalMinutes / 60);
+              const distractorMins = distractorTotalMinutes % 60;
+              const formatted = `${distractorHours}:${String(distractorMins).padStart(2, '0')}`;
+              if (formatted !== answer) distractors.add(formatted);
+          }
+      } else {
+        // Fallback for any other unexpected string answers
+        while (distractors.size < 3) {
+            const r = String(Math.random().toString(36).substring(2, 5));
+            distractors.add(`${String(answer).substring(0, 1)}${r}`);
         }
-    }
+      }
+      options.push(...distractors);
+  } else { // Numeric answers
+      const answerNum = Number(answer);
+      const distractors: Set<number> = new Set();
+      const isFloat = String(answer).includes('.');
+      
+      while(distractors.size < 3) {
+          const variation = Math.max(1, Math.ceil(Math.abs(answerNum * 0.2))) + difficulty + 2;
+          const offset = rand(variation, 1) * (Math.random() < 0.5 ? -1 : 1);
+          let distractor = answerNum + offset;
+          
+          if (isFloat) {
+              distractor = parseFloat(distractor.toFixed(2));
+          } else {
+              distractor = Math.floor(distractor);
+          }
+          
+          if (distractor !== answerNum) {
+              distractors.add(distractor);
+          }
+      }
+      options.push(...distractors);
+  }
 
-    // Ensure uniqueness and correct length, then shuffle
-    let finalOptions = [...new Set(options)];
-    if(finalOptions.length > 1 && finalOptions.length < 4) {
-        while(finalOptions.length < 4) {
-            finalOptions.push(Number(finalOptions[0]) + finalOptions.length + difficulty * 2);
-        }
-    }
-    
-    finalOptions = finalOptions
-        .filter(opt => opt !== answer)
-        .slice(0, 3);
-    finalOptions.push(answer);
-    finalOptions = [...new Set(finalOptions)];
-     while (finalOptions.length < 4 && currentCategory !== 'prime-numbers') {
-        finalOptions.push(String(finalOptions[0]).length + finalOptions.length + difficulty * 3);
-        finalOptions = [...new Set(finalOptions)];
-    }
+  // Ensure uniqueness and correct length, then shuffle
+  let finalOptions = [...new Set(options)];
+  while (finalOptions.length < 4 && finalOptions.length > 0) {
+      const lastOpt = finalOptions[finalOptions.length-1];
+      const newOpt = typeof lastOpt === 'number' ? lastOpt + rand(5,1) : `${lastOpt}X`;
+      if(!finalOptions.includes(newOpt)){
+          finalOptions.push(newOpt);
+      } else {
+          finalOptions.push(Math.random()); // fallback for uniqueness
+      }
+  }
 
 
   return { numbers, operatorSymbol, question: `${question} = ?`, answer, options: finalOptions.sort(() => Math.random() - 0.5).slice(0, 4) };
