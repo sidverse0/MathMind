@@ -113,10 +113,10 @@ function GameClientContent() {
       }
   };
 
-  const powerUpConfig: { type: PowerUpType; icon: React.ReactNode; name: string; colorClass: string }[] = [
-    { type: 'extraTime', icon: <Zap />, name: 'Extra Time', colorClass: 'border-chart-4 hover:bg-chart-4/10' },
-    { type: 'mistakeShield', icon: <Shield />, name: 'Mistake Shield', colorClass: 'border-primary hover:bg-primary/10' },
-    { type: 'numberReveal', icon: <Eye />, name: 'Number Reveal', colorClass: 'border-chart-2 hover:bg-chart-2/10' },
+  const powerUpConfig: { type: PowerUpType; icon: React.ReactNode; name: string; colorClass: string; textColorClass: string; }[] = [
+    { type: 'extraTime', icon: <Zap />, name: 'Extra Time', colorClass: 'border-chart-4 hover:bg-chart-4/10', textColorClass: 'text-chart-4' },
+    { type: 'mistakeShield', icon: <Shield />, name: 'Mistake Shield', colorClass: 'border-primary hover:bg-primary/10', textColorClass: 'text-primary' },
+    { type: 'numberReveal', icon: <Eye />, name: 'Number Reveal', colorClass: 'border-chart-2 hover:bg-chart-2/10', textColorClass: 'text-chart-2' },
   ];
 
   // Sound effect logic
@@ -399,7 +399,7 @@ function GameClientContent() {
                         initial={{ opacity: 0, y: -20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
-                        className="w-full max-w-2xl text-center bg-card border rounded-3xl p-8 mb-8 shadow-xl"
+                        className="w-full max-w-2xl text-center bg-card border-2 border-primary/30 rounded-3xl p-8 mb-8 shadow-xl"
                     >
                         <p className="text-4xl md:text-6xl font-bold tracking-tight text-foreground">
                             {state.currentChallenge?.question}
@@ -441,9 +441,11 @@ function GameClientContent() {
                                       size="icon"
                                       variant="outline"
                                       className={cn(
-                                        "h-16 w-16 rounded-full shadow-lg relative transition-all border-2 text-muted-foreground [&>svg]:h-8 [&>svg]:w-8",
+                                        "h-16 w-16 rounded-full shadow-lg relative transition-all border-2",
                                         p.colorClass,
+                                        p.textColorClass,
                                         state.isShieldActive && p.type === 'mistakeShield' ? 'ring-2 ring-offset-2 ring-offset-background ring-primary' : '',
+                                        '[&>svg]:h-8 [&>svg]:w-8'
                                       )}
                                       onClick={() => handleUsePowerUp(p.type)}
                                       disabled={inventory[p.type] === 0 || (p.type === 'mistakeShield' && state.isShieldActive)}
