@@ -34,12 +34,9 @@ export default function LoginPage() {
   const handleSignIn = async () => {
     setIsSigningIn(true);
     try {
-      const result = await signInWithGoogle();
-      // On success, the context's onAuthStateChanged will handle data creation/fetching,
-      // and we can navigate to the app.
-      if (result.user) {
-        router.push('/app');
-      }
+      await signInWithGoogle();
+      // On success, the onAuthStateChanged listener in the UserContext will update the user state,
+      // and the useEffect hook in this component will handle the redirection.
     } catch (error: any) {
       // This will catch errors, including when the user closes the popup.
       // We can check the error code to decide if we should log it.
