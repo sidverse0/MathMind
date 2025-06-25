@@ -13,9 +13,9 @@ import Link from 'next/link';
 import { useUser } from "@/contexts/user-context";
 
 const shopItems: { name: string; type: PowerUpType; description: string; price: number; icon: React.ReactNode; image: string; hint: string }[] = [
-    { name: "Extra Time", type: 'extraTime', description: "Get 5 extra seconds in the solve phase.", price: 50, icon: <Zap/>, image: "https://files.catbox.moe/hi5fse.png", hint: "lightning bolt" },
-    { name: "Mistake Shield", type: 'mistakeShield', description: "Your first mistake won't count against you.", price: 100, icon: <Shield/>, image: "https://files.catbox.moe/ixplmb.jpg", hint: "glowing shield" },
-    { name: "Number Reveal", type: 'numberReveal', description: "Briefly see the numbers one more time.", price: 200, icon: <Eye/>, image: "https://files.catbox.moe/p4i1e6.png", hint: "magic eye" },
+    { name: "Extra Time", type: 'extraTime', description: "Get 5 extra seconds in the solve phase.", price: 50, icon: <Zap/>, image: "https://files.catbox.moe/cs9xof.png", hint: "lightning bolt" },
+    { name: "Mistake Shield", type: 'mistakeShield', description: "Your first mistake won't count against you.", price: 100, icon: <Shield/>, image: "https://files.catbox.moe/9gqgkm.png", hint: "glowing shield" },
+    { name: "Number Reveal", type: 'numberReveal', description: "Briefly see the numbers one more time.", price: 200, icon: <Eye/>, image: "https://files.catbox.moe/zfnvpq.png", hint: "magic eye" },
 ];
 
 export default function ShopPage() {
