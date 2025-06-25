@@ -155,7 +155,7 @@ export default function LandingPage() {
             transition={{ duration: 0.5, delay: 0.5 }}
             className="flex items-center justify-center gap-3"
             >
-              <Link href="#" target="_blank" rel="noopener noreferrer" className="group">
+              <Link href="https://www.instagram.com/reyaz_sid/" target="_blank" rel="noopener noreferrer" className="group">
                   <div className="relative w-10 h-10">
                       <Image 
                           src="https://files.catbox.moe/j7lhm0.png" 
@@ -168,7 +168,7 @@ export default function LandingPage() {
               <p className="text-sm text-muted-foreground">
                   Built by{' '}
                   <a 
-                  href="#"
+                  href="https://www.instagram.com/reyaz_sid/"
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-500 to-teal-500 hover:opacity-80 transition-opacity inline-flex items-center gap-1 group"
