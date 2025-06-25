@@ -198,9 +198,12 @@ export default function ProfilePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0, transition: { delay: 0.2 } }}
         >
-            <Button variant="destructive" className="shadow-lg" onClick={handleSignOut}>
+            <Button 
+              variant="outline" 
+              className="shadow-lg border-2 border-destructive/50 text-destructive hover:bg-destructive hover:text-destructive-foreground transition-all duration-300 hover:shadow-lg hover:shadow-destructive/20" 
+              onClick={handleSignOut}>
                 <LogOut className="mr-2 h-4 w-4" />
-                Log Out
+                Sign Out
             </Button>
         </motion.div>
     </div>
