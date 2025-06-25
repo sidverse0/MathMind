@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Trophy, Coins, Star, BarChart, Clock, Target, Edit } from "lucide-react";
+import { Trophy, Coins, Star, BarChart, Clock, Target, Edit, BadgeCheck, Save } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
@@ -84,7 +84,10 @@ export default function ProfilePage() {
                 </div>
                 <CardHeader className="pt-16 md:pt-20 text-center">
                     <div className="flex justify-center items-center gap-2">
-                        <CardTitle className="text-3xl md:text-4xl">{name}</CardTitle>
+                        <CardTitle className="text-3xl md:text-4xl flex items-center gap-2">
+                            {name}
+                            <BadgeCheck className="h-7 w-7 text-primary" />
+                        </CardTitle>
                         <Dialog>
                             <DialogTrigger asChild>
                                 <Button variant="ghost" size="icon" onClick={() => { setTempName(name); setTempGender(gender); }}>
@@ -94,35 +97,46 @@ export default function ProfilePage() {
                             </DialogTrigger>
                             <DialogContent className="sm:max-w-[425px]">
                                 <DialogHeader>
-                                    <DialogTitle>Edit profile</DialogTitle>
+                                    <DialogTitle>Edit Profile</DialogTitle>
                                     <DialogDescription>
-                                        Make changes to your profile here. Click save when you're done.
+                                        Make changes to your profile and avatar. Click save when you're done.
                                     </DialogDescription>
                                 </DialogHeader>
-                                <div className="grid gap-4 py-4">
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="name" className="text-right">
-                                            Name
+                                <div className="grid gap-6 py-4">
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="name" className="font-semibold text-left">
+                                            Username
                                         </Label>
-                                        <Input id="name" value={tempName} onChange={(e) => setTempName(e.target.value)} className="col-span-3" />
+                                        <Input id="name" value={tempName} onChange={(e) => setTempName(e.target.value)} />
                                     </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="gender" className="text-right">
-                                            Gender
+                                    <div className="grid gap-2">
+                                        <Label className="font-semibold text-left">
+                                            Avatar
                                         </Label>
                                         <RadioGroup
-                                            id="gender"
                                             value={tempGender}
                                             onValueChange={setTempGender}
-                                            className="col-span-3 flex items-center gap-4"
+                                            className="grid grid-cols-2 gap-4 pt-2"
                                         >
-                                            <div className="flex items-center space-x-2">
-                                                <RadioGroupItem value="male" id="male" />
-                                                <Label htmlFor="male" className="font-normal cursor-pointer">Male</Label>
+                                            <div>
+                                                <RadioGroupItem value="male" id="male" className="peer sr-only" />
+                                                <Label htmlFor="male" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer transition-all">
+                                                    <Avatar className="h-16 w-16 mb-2">
+                                                        <AvatarImage src="https://files.catbox.moe/uvi8l9.png" alt="Male Avatar" />
+                                                        <AvatarFallback>M</AvatarFallback>
+                                                    </Avatar>
+                                                    Male
+                                                </Label>
                                             </div>
-                                            <div className="flex items-center space-x-2">
-                                                <RadioGroupItem value="female" id="female" />
-                                                <Label htmlFor="female" className="font-normal cursor-pointer">Female</Label>
+                                             <div>
+                                                <RadioGroupItem value="female" id="female" className="peer sr-only" />
+                                                <Label htmlFor="female" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer transition-all">
+                                                    <Avatar className="h-16 w-16 mb-2">
+                                                        <AvatarImage src="https://files.catbox.moe/rv4git.jpg" alt="Female Avatar" />
+                                                        <AvatarFallback>F</AvatarFallback>
+                                                    </Avatar>
+                                                    Female
+                                                </Label>
                                             </div>
                                         </RadioGroup>
                                     </div>
@@ -132,7 +146,10 @@ export default function ProfilePage() {
                                         <Button type="button" variant="secondary">Cancel</Button>
                                     </DialogClose>
                                     <DialogClose asChild>
-                                        <Button type="submit" onClick={handleSaveChanges}>Save changes</Button>
+                                        <Button type="submit" onClick={handleSaveChanges}>
+                                            <Save className="mr-2 h-4 w-4" />
+                                            Save Changes
+                                        </Button>
                                     </DialogClose>
                                 </DialogFooter>
                             </DialogContent>
