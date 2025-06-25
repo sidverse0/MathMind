@@ -8,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Instagram, Youtube } from 'lucide-react';
 import { useUser } from '@/contexts/user-context';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const TelegramIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -151,20 +152,30 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            className="text-center"
+            className="flex items-center justify-center gap-3"
             >
-            <p className="text-sm text-muted-foreground">
-                Built by{' '}
-                <a 
-                href="#"
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-500 to-teal-500 hover:opacity-80 transition-opacity inline-flex items-center gap-1 group"
-                >
-                Reyaz
-                <Heart className="h-4 w-4 text-primary transition-transform group-hover:scale-125 group-hover:fill-primary" />
-                </a>
-            </p>
+              <Link href="#" target="_blank" rel="noopener noreferrer" className="group">
+                  <div className="relative w-10 h-10">
+                      <Image 
+                          src="https://files.catbox.moe/j7lhm0.png" 
+                          alt="Owner" 
+                          fill 
+                          className="rounded-full object-cover border-2 border-primary/50 shadow-md transition-transform group-hover:scale-105"
+                      />
+                  </div>
+              </Link>
+              <p className="text-sm text-muted-foreground">
+                  Built by{' '}
+                  <a 
+                  href="#"
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-500 to-teal-500 hover:opacity-80 transition-opacity inline-flex items-center gap-1 group"
+                  >
+                  Reyaz
+                  <Heart className="h-4 w-4 text-primary transition-transform group-hover:scale-125 group-hover:fill-primary" />
+                  </a>
+              </p>
             </motion.div>
         </div>
       </footer>
