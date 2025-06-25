@@ -79,13 +79,14 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
             await setDoc(userRef, newUser);
             setUserData(newUser);
           }
+          setLoading(false);
         });
       } else {
         setUser(null);
         setUserData(null);
         if (unsubscribe) unsubscribe();
+        setLoading(false);
       }
-      setLoading(false);
     });
 
     return () => {
