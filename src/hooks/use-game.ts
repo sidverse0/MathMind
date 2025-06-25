@@ -44,11 +44,29 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       const { difficultyLevel, totalQuestions } = action.payload;
       
       let difficulty: number;
+      let memorizeDuration: number;
+      let solveDuration: number;
+
       switch (difficultyLevel) {
-        case 'easy': difficulty = 2; break;
-        case 'medium': difficulty = 5; break;
-        case 'hard': difficulty = 8; break;
-        default: difficulty = 2;
+        case 'easy': 
+          difficulty = 2; 
+          memorizeDuration = 5000;
+          solveDuration = 15000;
+          break;
+        case 'medium': 
+          difficulty = 5; 
+          memorizeDuration = 3000;
+          solveDuration = 10000;
+          break;
+        case 'hard': 
+          difficulty = 8; 
+          memorizeDuration = 2000;
+          solveDuration = 7000;
+          break;
+        default: 
+          difficulty = 2;
+          memorizeDuration = 5000;
+          solveDuration = 15000;
       }
       
       const challenge = generateChallenge(state.category, difficulty);
@@ -62,7 +80,9 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         difficulty,
         currentQuestionIndex: 1,
         currentChallenge: challenge,
-        remainingTime: state.memorizeDuration,
+        memorizeDuration,
+        solveDuration,
+        remainingTime: memorizeDuration,
       };
     }
     
