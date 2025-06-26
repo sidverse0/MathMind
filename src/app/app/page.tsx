@@ -71,7 +71,7 @@ export default function DashboardPage() {
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Welcome back, {userData?.name}!</h1>
             <p className="text-muted-foreground mt-2 text-base">Think Smart. Solve Fast.</p>
         </div>
-        <Link href="https://files.catbox.moe/j7lhm0.png" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 group">
+        <Link href="https://portfolioxsid.vercel.app" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 group">
             <div className="relative w-14 h-14">
                 <Image 
                     src="https://files.catbox.moe/j7lhm0.png" 
