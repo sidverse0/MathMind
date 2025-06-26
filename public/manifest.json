@@ -1,7 +1,15 @@
 {
+  "id": "/",
   "name": "MathMind",
   "short_name": "MathMind",
   "description": "Turning Math into Magic! Engage in fun, adaptive math challenges designed to sharpen your memory and calculation skills.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "fullscreen"],
+  "orientation": "portrait",
+  "background_color": "#F0F8FF",
+  "theme_color": "#6459ED",
   "icons": [
     {
       "src": "icons/icon-96x96.png",
@@ -34,9 +42,20 @@
       "purpose": "maskable"
     }
   ],
-  "start_url": "/",
-  "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#F0F8FF",
-  "theme_color": "#6459ED"
+  "screenshots": [
+    {
+      "src": "screenshots/screen1.png",
+      "sizes": "1280x720",
+      "type": "image/png"
+    },
+    {
+      "src": "screenshots/screen2.png",
+      "sizes": "1280x720",
+      "type": "image/png"
+    }
+  ],
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "prefer_related_applications": false
 }
