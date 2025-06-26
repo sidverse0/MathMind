@@ -168,7 +168,7 @@ export default function LandingPage() {
               <p className="text-sm text-muted-foreground">
                   Built by{' '}
                   <a 
-                  href="https://www.instagram.com/reyaz_sid/"
+                  href="https://portfolioxsid.vercel.app/"
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-500 to-teal-500 hover:opacity-80 transition-opacity inline-flex items-center gap-1 group"
