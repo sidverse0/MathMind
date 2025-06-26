@@ -4,49 +4,28 @@
   "description": "Turning Math into Magic! Engage in fun, adaptive math challenges designed to sharpen your memory and calculation skills.",
   "icons": [
     {
-      "src": "https://files.catbox.moe/x3t20o.png",
-      "sizes": "72x72",
-      "type": "image/png"
-    },
-    {
-      "src": "https://files.catbox.moe/eu9clr.png",
+      "src": "/icons/icon-96×96.png",
       "sizes": "96x96",
       "type": "image/png"
     },
     {
-      "src": "https://files.catbox.moe/tuae5m.png",
-      "sizes": "128x128",
-      "type": "image/png"
-    },
-    {
-      "src": "https://files.catbox.moe/ic8xwg.png",
+      "src": "/icons/icon-144×144.png",
       "sizes": "144x144",
       "type": "image/png"
     },
     {
-      "src": "https://files.catbox.moe/nhr3c2.png",
-      "sizes": "152x152",
-      "type": "image/png"
-    },
-    {
-      "src": "https://files.catbox.moe/x8m601.png",
+      "src": "/icons/icon-192×192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://files.catbox.moe/j08weh.png",
+      "src": "/icons/icon-384×384.png",
       "sizes": "384x384",
       "type": "image/png"
-    },
-    {
-      "src": "https://files.catbox.moe/2xuj3w.png",
-      "sizes": "512x512",
-      "type": "image/png"
     }
-
 {
-  "src": "https://files.catbox.moe/m296gv.png",
+  "src": "/icons/icon-512×512.png",
   "sizes": "512x512",
   "type": "image/png",
   "purpose": "maskable"
