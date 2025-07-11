@@ -113,7 +113,7 @@ export default function AboutPage() {
               <Link href="#" target="_blank" rel="noopener noreferrer" className="group">
                 <div className="relative w-10 h-10">
                   <Image 
-                    src="https://files.catbox.moe/j7lhm0.png" 
+                    src="https://files.catbox.moe/79x6dy.jpg" 
                     alt="Owner" 
                     fill 
                     className="rounded-full object-cover border-2 border-primary/50 shadow-md transition-transform group-hover:scale-105"
@@ -121,14 +121,14 @@ export default function AboutPage() {
                 </div>
               </Link>
               <p className="text-sm text-muted-foreground">
-                  Built by{' '}
+                  Credit | {' '}
                   <a 
                   href="https://portfolioxsid.vercel.app/"
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-500 to-teal-500 hover:opacity-80 transition-opacity inline-flex items-center gap-1 group"
                   >
-                  Reyaz
+                  SidVerse
                   <Heart className="h-4 w-4 text-primary transition-transform group-hover:scale-125 group-hover:fill-primary" />
                   </a>
               </p>
