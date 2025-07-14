@@ -155,7 +155,7 @@ export default function LandingPage() {
             transition={{ duration: 0.5, delay: 0.5 }}
             className="flex items-center justify-center gap-3"
             >
-              <Link href="https://www.instagram.com/reyaz_sid/" target="_blank" rel="noopener noreferrer" className="group">
+              <Link href="https://www.instagram.com/sidverse.0" target="_blank" rel="noopener noreferrer" className="group">
                   <div className="relative w-10 h-10">
                       <Image 
                           src="https://files.catbox.moe/ckpfrf.png" 
