@@ -158,7 +158,7 @@ export default function LandingPage() {
               <Link href="https://www.instagram.com/reyaz_sid/" target="_blank" rel="noopener noreferrer" className="group">
                   <div className="relative w-10 h-10">
                       <Image 
-                          src="https://files.catbox.moe/79x6dy.jpg" 
+                          src="https://files.catbox.moe/ckpfrf.png" 
                           alt="Owner" 
                           fill 
                           className="rounded-full object-cover border-2 border-primary/50 shadow-md transition-transform group-hover:scale-105"
