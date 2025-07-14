@@ -56,7 +56,7 @@ export default function LandingPage() {
                 <PopoverContent className="w-auto p-2">
                     <div className="flex gap-2">
                         <Button asChild variant="outline" size="icon" className="rounded-full">
-                            <a href="https://www.instagram.com/reyaz_sid" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                            <a href="https://www.instagram.com/sidverse.0" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                                 <Instagram />
                             </a>
                         </Button>
