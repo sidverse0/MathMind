@@ -74,7 +74,7 @@ export default function DashboardPage() {
         <Link href="https://files.catbox.moe/zfnvpq.png" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 group">
             <div className="relative w-14 h-14">
                 <Image 
-                    src="https://files.catbox.moe/j7lhm0.png" 
+                    src="https://files.catbox.moe/ckpfrf.png" 
                     alt="Owner" 
                     fill 
                     className="rounded-full object-cover border-4 border-primary shadow-lg transition-transform group-hover:scale-105"
