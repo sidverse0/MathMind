@@ -1,14 +1,46 @@
+
 'use client';
 
-import { UserNav } from '@/components/user-nav';
-import { ThemeToggle } from '@/components/theme-toggle';
-import { Button } from '@/components/ui/button';
-import { BrainCircuit, MoreVertical } from 'lucide-react';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { BottomNav } from '@/components/bottom-nav';
 import { useUser } from '@/contexts/user-context';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+
+const DottedSpinner = ({ className }: { className?: string }) => {
+    const dots = Array.from({ length: 8 });
+    return (
+        <motion.div
+            className={className}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+        >
+            {dots.map((_, i) => (
+                <motion.div
+                    key={i}
+                    className="absolute w-full h-full"
+                    style={{ transform: `rotate(${i * 45}deg)` }}
+                >
+                    <motion.div
+                        className="w-2 h-2 bg-primary rounded-full"
+                        style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)' }}
+                        animate={{
+                            opacity: [0, 1, 0],
+                            scale: [0.5, 1, 0.5]
+                        }}
+                        transition={{
+                            duration: 1.5,
+                            repeat: Infinity,
+                            delay: i * (1.5 / dots.length),
+                            ease: 'easeInOut'
+                        }}
+                    />
+                </motion.div>
+            ))}
+        </motion.div>
+    );
+};
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useUser();
@@ -16,7 +48,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push('/login');
+      router.push('/');
     }
   }, [user, loading, router]);
 
@@ -24,27 +56,32 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     return (
       <div className="min-h-screen w-full flex items-center justify-center bg-background text-foreground">
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           className="flex flex-col items-center gap-6"
         >
-          <motion.div
-            animate={{
-              scale: [1, 1.1, 1],
-              rotate: [0, 5, -5, 0],
-            }}
-            transition={{
-              duration: 2.5,
-              ease: 'easeInOut',
-              repeat: Infinity,
-            }}
-          >
-            <BrainCircuit className="h-20 w-20 text-primary" />
-          </motion.div>
-          <div className="flex flex-col items-center gap-2">
-            <h2 className="text-2xl font-bold tracking-tight">Loading your session...</h2>
-            <p className="text-muted-foreground">Getting your math challenges ready!</p>
+            <div className="relative w-36 h-36">
+                <DottedSpinner className="absolute inset-0" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                    <motion.div
+                        initial={{ scale: 0.9 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 1.5, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }}
+                    >
+                        <Image
+                            src="https://files.catbox.moe/35yrt5.png"
+                            alt="Loading Icon"
+                            width={80}
+                            height={80}
+                            className="rounded-full border-4 border-primary/50 shadow-lg"
+                        />
+                    </motion.div>
+                </div>
+            </div>
+          <div className="flex flex-col items-center gap-2 text-center">
+            <h2 className="text-2xl font-bold tracking-tight">Securing your session...</h2>
+            <p className="text-muted-foreground">Please wait a moment.</p>
           </div>
         </motion.div>
       </div>
@@ -53,35 +90,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen flex flex-col bg-secondary/50">
-      <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center px-4 sm:px-6 lg:px-8">
-          <Link href="/app" className='flex items-center gap-2 mr-auto'>
-            <BrainCircuit className="h-8 w-8 text-primary" />
-            <h1 className="text-2xl font-bold tracking-tight font-headline">
-              MathMind
-            </h1>
-          </Link>
-          <div className="flex items-center space-x-2">
-            <ThemeToggle />
-            <UserNav />
-            <Button variant="ghost" size="icon" asChild>
-              <Link href="/app/menu">
-                <MoreVertical />
-                <span className="sr-only">Menu</span>
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </header>
       <motion.main
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 15 }}
         transition={{ duration: 0.3 }}
-        className="flex-1 container py-6 md:py-8 px-4 sm:px-6 lg:px-8"
+        className="flex-1 container pt-6 md:pt-8 px-4 sm:px-6 lg:px-8 pb-24 md:pb-8"
       >
         {children}
       </motion.main>
+      <BottomNav />
     </div>
   );
 }
