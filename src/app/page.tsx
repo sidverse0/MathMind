@@ -1,186 +1,240 @@
+
 'use client';
-import { Button } from '@/components/ui/button';
-import { ThemeToggle } from '@/components/theme-toggle';
-import { ArrowRight, BrainCircuit, MessageCircle, Loader2, Heart } from 'lucide-react';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Instagram, Youtube } from 'lucide-react';
-import { useUser } from '@/contexts/user-context';
+
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Loader2, Mail, Lock, User } from 'lucide-react';
+import { useUser } from '@/contexts/user-context';
+import { useToast } from '@/hooks/use-toast';
+import { Input } from '@/components/ui/input';
 import Image from 'next/image';
-import PwaInstallPrompt from '@/components/pwa-install-prompt';
 
-const TelegramIcon = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-        <path d="M22 2l-7 20-4-9-9-4Z"/><path d="M22 2L11 13"/>
-    </svg>
-);
+const DottedSpinner = ({ className }: { className?: string }) => {
+    const dots = Array.from({ length: 8 });
+    return (
+        <motion.div
+            className={className}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+        >
+            {dots.map((_, i) => (
+                <motion.div
+                    key={i}
+                    className="absolute w-full h-full"
+                    style={{ transform: `rotate(${i * 45}deg)` }}
+                >
+                    <motion.div
+                        className="w-2 h-2 bg-primary rounded-full"
+                        style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)' }}
+                        animate={{
+                            opacity: [0, 1, 0],
+                            scale: [0.5, 1, 0.5]
+                        }}
+                        transition={{
+                            duration: 1.5,
+                            repeat: Infinity,
+                            delay: i * (1.5 / dots.length),
+                            ease: 'easeInOut'
+                        }}
+                    />
+                </motion.div>
+            ))}
+        </motion.div>
+    );
+};
 
-const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-    </svg>
-);
-
-export default function LandingPage() {
-  const { user, loading } = useUser();
+export default function LoginPage() {
+  const { user, loading, signInWithEmail, signUpWithEmail } = useUser();
+  const { toast } = useToast();
   const router = useRouter();
 
-  const handleJourneyClick = () => {
-    if (user) {
-      router.push('/app');
-    } else {
-      router.push('/login');
+  const [isLoginView, setIsLoginView] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    if (!loading && user) {
+        router.push('/app');
+    }
+  }, [user, loading, router]);
+
+  if (loading || user) {
+    return (
+      <div className="min-h-screen w-full flex items-center justify-center bg-background text-foreground">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="flex flex-col items-center gap-6"
+        >
+            <div className="relative w-36 h-36">
+                <DottedSpinner className="absolute inset-0" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                    <motion.div
+                        initial={{ scale: 0.9 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 1.5, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }}
+                    >
+                        <Image
+                            src="https://files.catbox.moe/35yrt5.png"
+                            alt="Loading Icon"
+                            width={80}
+                            height={80}
+                            className="rounded-full border-4 border-primary/50 shadow-lg"
+                        />
+                    </motion.div>
+                </div>
+            </div>
+          <div className="flex flex-col items-center gap-2 text-center">
+            <h2 className="text-2xl font-bold tracking-tight">Securing your session...</h2>
+            <p className="text-muted-foreground">Please wait a moment.</p>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+    try {
+      if (isLoginView) {
+        await signInWithEmail(email, password);
+        router.push('/app');
+      } else {
+        await signUpWithEmail(email, password, name);
+        router.push('/app');
+      }
+    } catch (error: any) {
+        let errorMessage = "Please check your credentials and try again.";
+        if (error.code === 'auth/network-request-failed' || error.code === 'auth/web-storage-unsupported' || error.code === 'auth/operation-not-allowed') {
+            errorMessage = "A network or configuration error occurred. Please ensure your domain is authorized in Firebase.";
+        } else if (error.message) {
+            errorMessage = error.message;
+        }
+      
+        toast({
+            variant: "destructive",
+            title: "Authentication Failed",
+            description: errorMessage,
+        });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
-      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container h-16 flex items-center px-4 sm:px-6 lg:px-8">
-          <Link href="/" className="mr-auto flex items-center gap-2">
-            <BrainCircuit className="h-6 w-6 text-primary" />
-            <h1 className="text-xl font-bold tracking-tight font-headline">
-              MathMind
-            </h1>
-          </Link>
-          <div className="flex items-center space-x-2">
-            <Popover>
-                <PopoverTrigger asChild>
-                    <Button variant="outline">
-                        <MessageCircle className="mr-2 h-4 w-4" />
-                        Connect
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-2">
-                    <div className="flex gap-2">
-                        <Button asChild variant="outline" size="icon" className="rounded-full">
-                            <a href="https://www.instagram.com/sidverse.0" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                                <Instagram />
-                            </a>
-                        </Button>
-                        <Button asChild variant="outline" size="icon" className="rounded-full">
-                            <a href="https://www.t.me/pvt_s1n" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
-                                <TelegramIcon />
-                            </a>
-                        </Button>
-                        <Button asChild variant="outline" size="icon" className="rounded-full">
-                            <a href="https://wa.me/918521672813" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-                                <WhatsAppIcon />
-                            </a>
-                        </Button>
-                        <Button asChild variant="outline" size="icon" className="rounded-full">
-                            <a href="https://www.youtube.com/@shaitaanidastaan" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
-                                <Youtube />
-                            </a>
-                        </Button>
-                    </div>
-                </PopoverContent>
-            </Popover>
-            <ThemeToggle />
-          </div>
-        </div>
-      </header>
-      <main className="flex-1">
-        <section className="py-20 md:py-32">
-            <div className="container text-center flex flex-col items-center gap-6 px-4">
-                <motion.div
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ type: "spring", stiffness: 100, delay: 0.1 }}
-                >
-                    <div className="p-4 bg-primary/10 rounded-full inline-block ring-8 ring-primary/5">
-                        <motion.div
-                            animate={{ rotate: [0, 5, -5, 5, 0] }}
-                            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                        >
-                           <BrainCircuit className="h-16 w-16 md:h-20 md:w-20 text-primary" />
-                        </motion.div>
-                    </div>
-                </motion.div>
-                
-                <motion.div
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
-                    className="flex flex-col items-center gap-2"
-                >
-                    <h2 className="text-4xl md:text-6xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-500 to-teal-500">
-                        MathMind
-                    </h2>
-                    <p className="text-lg md:text-xl text-muted-foreground font-medium">
-                        Turning Math into Magic!
-                    </p>
-                </motion.div>
-
-                <motion.p 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.3 }}
-                    className="max-w-2xl text-base md:text-lg text-muted-foreground"
-                >
-                    Engage in fun, Adaptive Math Challenges designed to sharpen your memory and calculation skills.
-                </motion.p>
-                <motion.div
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.5, delay: 0.4 }}
-                    className="flex flex-col sm:flex-row items-center gap-4"
-                >
-                    <Button size="lg" className="text-lg shadow-lg shadow-primary/30 min-w-[240px]" onClick={handleJourneyClick} disabled={loading}>
-                        {loading ? (
-                            <Loader2 className="h-6 w-6 animate-spin" />
-                        ) : (
-                            <>
-                                {user ? "Go to Dashboard" : "Start Your Journey"}
-                                <ArrowRight className="ml-2" />
-                            </>
-                        )}
-                    </Button>
-                    <Link href="/about">
-                        <Button size="lg" variant="outline" className="text-lg">
-                            Learn More
-                        </Button>
-                    </Link>
-                </motion.div>
-            </div>
-        </section>
-      </main>
-      <footer className="border-t bg-background">
-        <div className="container py-6">
+    <div className="min-h-screen flex items-center justify-center bg-secondary/50 p-4">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
+        <Card className="max-w-md w-full shadow-2xl border-2 border-primary/10">
+          <CardHeader className="text-center p-8">
             <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className="flex items-center justify-center gap-3"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2, type: "spring", stiffness: 120 }}
+              className="flex justify-center mb-6"
             >
-              <Link href="https://www.instagram.com/sidverse.0" target="_blank" rel="noopener noreferrer" className="group">
-                  <div className="relative w-10 h-10">
-                      <Image 
-                          src="https://files.catbox.moe/ckpfrf.png" 
-                          alt="Owner" 
-                          fill 
-                          className="rounded-full object-cover border-2 border-primary/50 shadow-md transition-transform group-hover:scale-105"
-                      />
-                  </div>
-              </Link>
-              <p className="text-sm text-muted-foreground">
-                  Credit | {' '}
-                  <a 
-                  href="https://portfolioxsid.vercel.app/"
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-500 to-teal-500 hover:opacity-80 transition-opacity inline-flex items-center gap-1 group"
-                  >
-                  SidVerse.
-                  <Heart className="h-4 w-4 text-primary transition-transform group-hover:scale-125 group-hover:fill-primary" />
-                  </a>
-              </p>
+                <div className="p-3 bg-primary/10 rounded-full inline-block ring-8 ring-primary/5 relative h-24 w-24">
+                    <motion.div
+                        className="relative h-full w-full"
+                        animate={{ rotate: [0, 5, -5, 5, 0] }}
+                        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+                    >
+                       <Image 
+                            src="https://files.catbox.moe/35yrt5.png" 
+                            alt="MathMind App Icon"
+                            fill
+                            className="rounded-full"
+                       />
+                    </motion.div>
+                </div>
             </motion.div>
-        </div>
-      </footer>
-      <PwaInstallPrompt />
+            <CardTitle className="text-3xl font-bold">
+              {isLoginView ? 'Welcome Back!' : 'Create an Account'}
+            </CardTitle>
+            <CardDescription className="text-base text-muted-foreground mt-2">
+              {isLoginView ? 'Sign in to continue your journey.' : 'Join MathMind and start learning!'}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-8 pt-0">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              {!isLoginView && (
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                  <Input 
+                    id="name" 
+                    type="text" 
+                    placeholder="Full Name" 
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    className="pl-10"
+                  />
+                </div>
+              )}
+               <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                  <Input 
+                    id="email" 
+                    type="email" 
+                    placeholder="Email Address" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="pl-10"
+                  />
+                </div>
+              <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                  <Input 
+                    id="password" 
+                    type="password" 
+                    placeholder="Password" 
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength={6}
+                    className="pl-10"
+                  />
+                </div>
+              <Button
+                type="submit"
+                size="lg"
+                className="w-full text-lg shadow-lg hover:shadow-primary/30 transition-shadow mt-4"
+                disabled={isSubmitting || loading}
+              >
+                {isSubmitting ? (
+                    <>
+                        <Loader2 className="mr-3 h-6 w-6 animate-spin" />
+                        {isLoginView ? 'Signing In...' : 'Creating Account...'}
+                    </>
+                ) : (
+                    isLoginView ? 'Sign In' : 'Create Account'
+                )}
+              </Button>
+            </form>
+            <div className="mt-6 text-center">
+              <p className="text-sm text-muted-foreground">
+                {isLoginView ? "Don't have an account?" : 'Already have an account?'}
+                <Button variant="link" onClick={() => setIsLoginView(!isLoginView)} className="font-semibold">
+                  {isLoginView ? 'Sign Up' : 'Sign In'}
+                </Button>
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
     </div>
   );
 }
