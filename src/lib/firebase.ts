@@ -1,6 +1,6 @@
 
 import { initializeApp, getApps, getApp, FirebaseOptions } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig: FirebaseOptions = {
@@ -18,12 +18,4 @@ const app = firebaseConfig.apiKey ? (!getApps().length ? initializeApp(firebaseC
 const auth = app ? getAuth(app) : null;
 const db = app ? getFirestore(app) : null;
 
-let googleProvider: GoogleAuthProvider | null = null;
-if (app) {
-    googleProvider = new GoogleAuthProvider();
-    googleProvider.setCustomParameters({
-        prompt: 'select_account'
-    });
-}
-
-export { app, auth, db, googleProvider };
+export { app, auth, db };
