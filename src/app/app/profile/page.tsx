@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Trophy, Coins, Star, BarChart, Clock, Target, Edit, BadgeCheck, Save, LogOut, CalendarDays } from "lucide-react";
+import { Trophy, Coins, Star, BarChart, Clock, Target, Edit, BadgeCheck, Save, LogOut, CalendarDays, Instagram, Youtube, MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
@@ -17,6 +17,21 @@ import { db } from '@/lib/firebase';
 import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
+import { ThemeToggle } from '@/components/theme-toggle';
+import Image from 'next/image';
+
+const TelegramIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M22 2l-7 20-4-9-9-4Z"/><path d="M22 2L11 13"/>
+    </svg>
+);
+
+const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+    </svg>
+);
+
 
 export default function ProfilePage() {
   const { userData, updateUserData, signOut } = useUser();
@@ -157,6 +172,7 @@ export default function ProfilePage() {
                                 </DialogFooter>
                             </DialogContent>
                         </Dialog>
+                        <ThemeToggle />
                     </div>
                      <motion.div
                         initial={{ opacity: 0, y: 10 }}
@@ -193,8 +209,60 @@ export default function ProfilePage() {
                 </CardContent>
             </Card>
         </motion.div>
+
+        <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0, transition: { delay: 0.1 } }}
+        >
+            <Card className="shadow-lg">
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-3">
+                        <MessageCircle className="h-6 w-6 text-primary" />
+                        Connect with Us
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="flex justify-around items-center p-6 pt-0">
+                    <Button asChild variant="outline" size="icon" className="rounded-full h-14 w-14 hover:bg-pink-500/10 hover:border-pink-500/50">
+                        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                            <Instagram className="h-7 w-7" />
+                        </a>
+                    </Button>
+                    <Button asChild variant="outline" size="icon" className="rounded-full h-14 w-14 hover:bg-sky-500/10 hover:border-sky-500/50">
+                        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+                            <TelegramIcon className="h-7 w-7" />
+                        </a>
+                    </Button>
+                    <Button asChild variant="outline" size="icon" className="rounded-full h-14 w-14 hover:bg-green-500/10 hover:border-green-500/50">
+                        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                            <WhatsAppIcon className="h-7 w-7" />
+                        </a>
+                    </Button>
+                    <Button asChild variant="outline" size="icon" className="rounded-full h-14 w-14 hover:bg-red-500/10 hover:border-red-500/50">
+                        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                            <Youtube className="h-7 w-7" />
+                        </a>
+                    </Button>
+                </CardContent>
+            </Card>
+        </motion.div>
+
         <motion.div
-            className="flex justify-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0, transition: { delay: 0.2 } }}
+        >
+            <Card className="shadow-lg text-center p-6">
+                <div className="flex justify-center mb-4">
+                    <div className="p-2 bg-primary/10 rounded-full inline-block ring-4 ring-primary/5">
+                        <Image src="https://files.catbox.moe/35yrt5.png" alt="App Logo" width={64} height={64} className="rounded-full" />
+                    </div>
+                </div>
+                <CardTitle className="text-2xl">MathMind</CardTitle>
+                <CardDescription className="text-base mt-1">Turning Math into Magic!</CardDescription>
+            </Card>
+        </motion.div>
+
+        <motion.div
+            className="flex justify-center items-center gap-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0, transition: { delay: 0.2 } }}
         >
@@ -205,6 +273,37 @@ export default function ProfilePage() {
                 <LogOut className="mr-2 h-4 w-4" />
                 Sign Out
             </Button>
+        </motion.div>
+        
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0, transition: { delay: 0.3 } }}
+            className="flex flex-col items-center gap-4"
+        >
+            <div className="w-full max-w-sm h-1 bg-gradient-to-r from-transparent via-primary to-transparent" />
+            <div className="flex items-center gap-3">
+              <a href="#" target="_blank" rel="noopener noreferrer" className="group">
+                  <div className="relative w-10 h-10">
+                      <Image 
+                          src="https://files.catbox.moe/j7lhm0.png" 
+                          alt="Owner" 
+                          fill 
+                          className="rounded-full object-cover border-2 border-primary/50 shadow-md transition-transform group-hover:scale-105"
+                      />
+                  </div>
+              </a>
+              <p className="text-sm text-muted-foreground">
+                  made by{' '}
+                  <a 
+                      href="#"
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-500 to-teal-500 hover:opacity-80 transition-opacity"
+                  >
+                  sidverse
+                  </a>
+              </p>
+            </div>
         </motion.div>
     </div>
   );
