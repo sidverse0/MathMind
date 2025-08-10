@@ -3,8 +3,14 @@
 
 import type { User, UserCredential } from 'firebase/auth';
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { auth, db, googleProvider } from '@/lib/firebase';
-import { signInWithPopup, onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
+import { auth, db } from '@/lib/firebase';
+import { 
+    onAuthStateChanged, 
+    signOut as firebaseSignOut,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    updateProfile
+} from 'firebase/auth';
 import { doc, getDoc, setDoc, onSnapshot, Unsubscribe, updateDoc, Timestamp } from 'firebase/firestore';
 import type { PowerUpType } from '@/lib/types';
 
@@ -25,7 +31,8 @@ interface UserContextType {
   user: User | null;
   userData: UserData | null;
   loading: boolean;
-  signInWithGoogle: () => Promise<UserCredential>;
+  signInWithEmail: (email: string, pass: string) => Promise<UserCredential>;
+  signUpWithEmail: (email: string, pass: string, name: string) => Promise<UserCredential>;
   signOut: () => Promise<void>;
   updateUserData: (data: Partial<UserData>) => Promise<void>;
 }
@@ -59,36 +66,21 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         
         if (unsubscribe) unsubscribe();
 
-        unsubscribe = onSnapshot(userRef, async (docSnap) => {
+        unsubscribe = onSnapshot(userRef, (docSnap) => {
           if (docSnap.exists()) {
             const data = docSnap.data();
             const fullInventory = { ...defaultInventory, ...(data.inventory || {}) };
             setUserData({ ...data, inventory: fullInventory } as UserData);
-            setLoading(false); // Only set loading to false when we have user data.
+            setLoading(false);
           } else {
-            // User is authenticated but doesn't have a document in Firestore.
-            // Create one now. loading remains true until the new doc is created and this listener re-runs.
-            const newUser: UserData = {
-              uid: authUser.uid,
-              email: authUser.email,
-              name: authUser.displayName || 'Mathlete',
-              avatar: authUser.photoURL || 'https://files.catbox.moe/uvi8l9.png',
-              gender: 'male',
-              coins: 500,
-              difficulty: 5,
-              inventory: defaultInventory,
-              score: 0,
-              createdAt: Timestamp.now(),
-            };
-            // `setDoc` will trigger the onSnapshot listener again, which will then set loading to false.
-            await setDoc(userRef, newUser);
+             setLoading(false);
           }
         });
       } else {
         setUser(null);
         setUserData(null);
         if (unsubscribe) unsubscribe();
-        setLoading(false); // No user, so we are done loading.
+        setLoading(false);
       }
     });
 
@@ -98,13 +90,39 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
-  const signInWithGoogle = async () => {
-    if (!auth || !googleProvider) {
-        console.error("Firebase is not configured. Please add your Firebase credentials to the .env file.");
-        throw new Error("Firebase not configured");
-    }
-    return signInWithPopup(auth, googleProvider);
-  };
+  const signInWithEmail = async (email: string, pass: string) => {
+    if (!auth) throw new Error("Firebase not configured");
+    return signInWithEmailAndPassword(auth, email, pass);
+  }
+
+  const signUpWithEmail = async (email: string, pass: string, name: string) => {
+    if (!auth || !db) throw new Error("Firebase not configured");
+
+    const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+    const authUser = userCredential.user;
+
+    await updateProfile(authUser, { displayName: name });
+    
+    const newUser: UserData = {
+      uid: authUser.uid,
+      email: authUser.email,
+      name: name,
+      avatar: 'https://files.catbox.moe/uvi8l9.png',
+      gender: 'male',
+      coins: 500,
+      difficulty: 5,
+      inventory: defaultInventory,
+      score: 0,
+      createdAt: Timestamp.now(),
+    };
+    
+    const userRef = doc(db, 'users', authUser.uid);
+    await setDoc(userRef, newUser);
+
+    setUserData(newUser); // Manually set user data to avoid race condition
+
+    return userCredential;
+  }
 
   const signOut = async () => {
     if (!auth) return;
@@ -118,7 +136,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const value = { user, userData, loading, signInWithGoogle, signOut, updateUserData };
+  const value = { user, userData, loading, signInWithEmail, signUpWithEmail, signOut, updateUserData };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
